@@ -1,0 +1,15 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-autosfactorystock-staging-225130-authRole",
+      "UnauthRoleArn": "arn:aws:iam::831885070168:role/amplify-autosfactorystock-staging-225130-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::831885070168:role/amplify-autosfactorystock-staging-225130-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-autosfactorystock-staging-225130-deployment",
+      "UnauthRoleName": "amplify-autosfactorystock-staging-225130-unauthRole",
+      "StackName": "amplify-autosfactorystock-staging-225130",
+      "StackId": "arn:aws:cloudformation:eu-central-1:831885070168:stack/amplify-autosfactorystock-staging-225130/284ac080-153d-11ee-8a0f-027358c7af44",
+      "AmplifyAppId": "dv008awxavvku"
+    }
+  }
+}

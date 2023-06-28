@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import { Authenticator } from '@aws-amplify/ui-react'
 
-function App() {
+import {
+  CocheCreateForm 
+ } from './ui-components';
+ import {
+  NavBarHeader 
+ } from './ui-components';
+import { Fragment } from 'react';
+ 
+function App({ signOut, user }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      
+        <img src='./logo_a_factory.png' alt='logo' style={{ margin: 'auto',textAlign: 'center',display:'flex' }}></img>
+    <Authenticator hideSignUp>
+        <NavBarHeader />
+        <CocheCreateForm/>
+    </Authenticator>
+    </Fragment>
+
+
   );
 }
 

@@ -1,0 +1,6 @@
+type Coche @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  marca: String
+  matricula: String
+  precio: Int
+}
