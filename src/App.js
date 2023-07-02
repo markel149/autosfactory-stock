@@ -1,27 +1,43 @@
 import './App.css';
-import { Authenticator } from '@aws-amplify/ui-react'
-
+import { Authenticator, View, Image, useTheme } from '@aws-amplify/ui-react'
 import {
-  CocheCreateForm 
- } from './ui-components';
- import {
-  NavBarHeader 
- } from './ui-components';
-import { Fragment } from 'react';
- 
-function App({ signOut, user }) {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import  { Clientes }  from './Components/Clientes';
+import { Coches }  from './Components/Coches';
+import { Barra } from './Components/Barra';
+const components = {
+  Header() {
+    const { tokens } = useTheme();
+
+    return (
+      <View textAlign="center" padding={tokens.space.large}>
+        <Image
+          alt="Autosfactory logo"
+          src="https://www.autosfactoryalava.es/wp-content/uploads/2020/04/logo_a_factory.png"
+        />
+      </View>
+    );
+  }
+};
+
+export default function App() {
   return (
-    <Fragment>
-      
-        <img src='./logo_a_factory.png' alt='logo' style={{ margin: 'auto',textAlign: 'center',display:'flex' }}></img>
-    <Authenticator hideSignUp>
-        <NavBarHeader />
-        <CocheCreateForm/>
+    <Authenticator hideSignUp components={components}>
+      {({ signOut, user }) => (
+        <main>
+          <Router>
+            <Barra signOut={signOut}/> 
+            <Switch>
+              <Route exact path="/coches" component={Coches} />
+              <Route exact path="/clientes" component={Clientes} />
+            </Switch>
+          </Router>
+          
+        </main>
+      )}
     </Authenticator>
-    </Fragment>
-
-
   );
 }
-
-export default App;

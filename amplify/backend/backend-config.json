@@ -30,5 +30,95 @@
       "service": "Cognito",
       "serviceType": "imported"
     }
+  },
+  "parameters": {
+    "AMPLIFY_auth_autosfactorystock_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    }
   }
 }

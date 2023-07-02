@@ -1,6 +1,12 @@
 type Coche @model @auth(rules: [{allow: public}]) {
   id: ID!
   marca: String
+  modelo: String
   matricula: String
-  precio: Int
+  color: String
+  kilometros: Int
+  precioCompra: Float
+  precioVenta: Float
+  notas: String
 }
+ 

@@ -1,5 +1,5 @@
 {
-  "authSelections": "userPoolOnly",
+  "authSelections": "identityPoolAndUserPool",
   "resourceName": "autosfactorystock",
   "serviceType": "imported",
   "region": "eu-central-1",

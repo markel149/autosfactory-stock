@@ -10,6 +10,23 @@
       "StackName": "amplify-autosfactorystock-staging-225130",
       "StackId": "arn:aws:cloudformation:eu-central-1:831885070168:stack/amplify-autosfactorystock-staging-225130/284ac080-153d-11ee-8a0f-027358c7af44",
       "AmplifyAppId": "dv008awxavvku"
+    },
+    "categories": {
+      "auth": {
+        "autosfactorystock": {
+          "userPoolId": "eu-central-1_HwsnxEXua",
+          "userPoolName": "autosfactory-stock",
+          "webClientId": "3otq2n7d9lhjhk2oqo06ru4cm",
+          "nativeClientId": "3otq2n7d9lhjhk2oqo06ru4cm",
+          "identityPoolId": "eu-central-1:00f0cbf9-837e-476d-902b-0fd6373d8f70",
+          "identityPoolName": "autosfactory-stock-idpool",
+          "allowUnauthenticatedIdentities": false,
+          "authRoleArn": "arn:aws:iam::831885070168:role/Cognito_autosfactorystockidpoolAuth_Role",
+          "authRoleName": "Cognito_autosfactorystockidpoolAuth_Role",
+          "unauthRoleArn": "arn:aws:iam::831885070168:role/Cognito_autosfactorystockidpoolUnauth_Role",
+          "unauthRoleName": "Cognito_autosfactorystockidpoolUnauth_Role"
+        }
+      }
     }
   }
 }

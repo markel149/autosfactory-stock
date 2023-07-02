@@ -7,13 +7,12 @@
 import * as React from "react";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Coche } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type CocheUpdateFormInputValues = {
+export declare type CreateCocheInputValues = {
     marca?: string;
     modelo?: string;
     matricula?: string;
@@ -23,7 +22,7 @@ export declare type CocheUpdateFormInputValues = {
     precioVenta?: number;
     notas?: string;
 };
-export declare type CocheUpdateFormValidationValues = {
+export declare type CreateCocheValidationValues = {
     marca?: ValidationFunction<string>;
     modelo?: ValidationFunction<string>;
     matricula?: ValidationFunction<string>;
@@ -34,8 +33,8 @@ export declare type CocheUpdateFormValidationValues = {
     notas?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type CocheUpdateFormOverridesProps = {
-    CocheUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type CreateCocheOverridesProps = {
+    CreateCocheGrid?: PrimitiveOverrideProps<GridProps>;
     marca?: PrimitiveOverrideProps<TextFieldProps>;
     modelo?: PrimitiveOverrideProps<TextFieldProps>;
     matricula?: PrimitiveOverrideProps<TextFieldProps>;
@@ -45,15 +44,14 @@ export declare type CocheUpdateFormOverridesProps = {
     precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
     notas?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
-export declare type CocheUpdateFormProps = React.PropsWithChildren<{
-    overrides?: CocheUpdateFormOverridesProps | undefined | null;
+export declare type CreateCocheProps = React.PropsWithChildren<{
+    overrides?: CreateCocheOverridesProps | undefined | null;
 } & {
-    id?: string;
-    coche?: Coche;
-    onSubmit?: (fields: CocheUpdateFormInputValues) => CocheUpdateFormInputValues;
-    onSuccess?: (fields: CocheUpdateFormInputValues) => void;
-    onError?: (fields: CocheUpdateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: CocheUpdateFormInputValues) => CocheUpdateFormInputValues;
-    onValidate?: CocheUpdateFormValidationValues;
+    clearOnSuccess?: boolean;
+    onSubmit?: (fields: CreateCocheInputValues) => CreateCocheInputValues;
+    onSuccess?: (fields: CreateCocheInputValues) => void;
+    onError?: (fields: CreateCocheInputValues, errorMessage: string) => void;
+    onChange?: (fields: CreateCocheInputValues) => CreateCocheInputValues;
+    onValidate?: CreateCocheValidationValues;
 } & React.CSSProperties>;
-export default function CocheUpdateForm(props: CocheUpdateFormProps): React.ReactElement;
+export default function CreateCoche(props: CreateCocheProps): React.ReactElement;

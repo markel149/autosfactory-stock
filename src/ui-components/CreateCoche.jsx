@@ -11,10 +11,9 @@ import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Coche } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-export default function CocheUpdateForm(props) {
+export default function CreateCoche(props) {
   const {
-    id: idProp,
-    coche: cocheModelProp,
+    clearOnSuccess = true,
     onSuccess,
     onError,
     onSubmit,
@@ -47,30 +46,16 @@ export default function CocheUpdateForm(props) {
   const [notas, setNotas] = React.useState(initialValues.notas);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = cocheRecord
-      ? { ...initialValues, ...cocheRecord }
-      : initialValues;
-    setMarca(cleanValues.marca);
-    setModelo(cleanValues.modelo);
-    setMatricula(cleanValues.matricula);
-    setColor(cleanValues.color);
-    setKilometros(cleanValues.kilometros);
-    setPrecioCompra(cleanValues.precioCompra);
-    setPrecioVenta(cleanValues.precioVenta);
-    setNotas(cleanValues.notas);
+    setMarca(initialValues.marca);
+    setModelo(initialValues.modelo);
+    setMatricula(initialValues.matricula);
+    setColor(initialValues.color);
+    setKilometros(initialValues.kilometros);
+    setPrecioCompra(initialValues.precioCompra);
+    setPrecioVenta(initialValues.precioVenta);
+    setNotas(initialValues.notas);
     setErrors({});
   };
-  const [cocheRecord, setCocheRecord] = React.useState(cocheModelProp);
-  React.useEffect(() => {
-    const queryData = async () => {
-      const record = idProp
-        ? await DataStore.query(Coche, idProp)
-        : cocheModelProp;
-      setCocheRecord(record);
-    };
-    queryData();
-  }, [idProp, cocheModelProp]);
-  React.useEffect(resetStateValues, [cocheRecord]);
   const validations = {
     marca: [],
     modelo: [],
@@ -144,13 +129,12 @@ export default function CocheUpdateForm(props) {
               modelFields[key] = undefined;
             }
           });
-          await DataStore.save(
-            Coche.copyOf(cocheRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
-          );
+          await DataStore.save(new Coche(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
+          }
+          if (clearOnSuccess) {
+            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -158,7 +142,7 @@ export default function CocheUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "CocheUpdateForm")}
+      {...getOverrideProps(overrides, "CreateCoche")}
       {...rest}
     >
       <TextField
@@ -426,14 +410,13 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Reset"
+          children="Clear"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || cocheModelProp)}
-          {...getOverrideProps(overrides, "ResetButton")}
+          {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -443,10 +426,7 @@ export default function CocheUpdateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={
-              !(idProp || cocheModelProp) ||
-              Object.values(errors).some((e) => e?.hasError)
-            }
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

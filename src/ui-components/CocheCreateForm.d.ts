@@ -14,20 +14,35 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type CocheCreateFormInputValues = {
     marca?: string;
+    modelo?: string;
     matricula?: string;
-    precio?: number;
+    color?: string;
+    kilometros?: number;
+    precioCompra?: number;
+    precioVenta?: number;
+    notas?: string;
 };
 export declare type CocheCreateFormValidationValues = {
     marca?: ValidationFunction<string>;
+    modelo?: ValidationFunction<string>;
     matricula?: ValidationFunction<string>;
-    precio?: ValidationFunction<number>;
+    color?: ValidationFunction<string>;
+    kilometros?: ValidationFunction<number>;
+    precioCompra?: ValidationFunction<number>;
+    precioVenta?: ValidationFunction<number>;
+    notas?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheCreateFormOverridesProps = {
     CocheCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     marca?: PrimitiveOverrideProps<TextFieldProps>;
+    modelo?: PrimitiveOverrideProps<TextFieldProps>;
     matricula?: PrimitiveOverrideProps<TextFieldProps>;
-    precio?: PrimitiveOverrideProps<TextFieldProps>;
+    color?: PrimitiveOverrideProps<TextFieldProps>;
+    kilometros?: PrimitiveOverrideProps<TextFieldProps>;
+    precioCompra?: PrimitiveOverrideProps<TextFieldProps>;
+    precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
+    notas?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CocheCreateFormProps = React.PropsWithChildren<{
     overrides?: CocheCreateFormOverridesProps | undefined | null;

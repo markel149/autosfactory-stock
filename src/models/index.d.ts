@@ -13,8 +13,13 @@ type EagerCoche = {
   };
   readonly id: string;
   readonly marca?: string | null;
+  readonly modelo?: string | null;
   readonly matricula?: string | null;
-  readonly precio?: number | null;
+  readonly color?: string | null;
+  readonly kilometros?: number | null;
+  readonly precioCompra?: number | null;
+  readonly precioVenta?: number | null;
+  readonly notas?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -26,8 +31,13 @@ type LazyCoche = {
   };
   readonly id: string;
   readonly marca?: string | null;
+  readonly modelo?: string | null;
   readonly matricula?: string | null;
-  readonly precio?: number | null;
+  readonly color?: string | null;
+  readonly kilometros?: number | null;
+  readonly precioCompra?: number | null;
+  readonly precioVenta?: number | null;
+  readonly notas?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

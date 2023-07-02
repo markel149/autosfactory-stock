@@ -39,4 +39,5 @@ export { default as ProfileCard } from "./ProfileCard";
 export { default as NavBarHeader } from "./NavBarHeader";
 export { default as studioTheme } from "./studioTheme";
 export { default as CocheCreateForm } from "./CocheCreateForm";
+export { default as CreateCoche } from "./CreateCoche";
 export { default as CocheUpdateForm } from "./CocheUpdateForm";

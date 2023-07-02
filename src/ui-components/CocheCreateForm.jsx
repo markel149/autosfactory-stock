@@ -24,23 +24,47 @@ export default function CocheCreateForm(props) {
   } = props;
   const initialValues = {
     marca: "",
+    modelo: "",
     matricula: "",
-    precio: "",
+    color: "",
+    kilometros: "",
+    precioCompra: "",
+    precioVenta: "",
+    notas: "",
   };
   const [marca, setMarca] = React.useState(initialValues.marca);
+  const [modelo, setModelo] = React.useState(initialValues.modelo);
   const [matricula, setMatricula] = React.useState(initialValues.matricula);
-  const [precio, setPrecio] = React.useState(initialValues.precio);
+  const [color, setColor] = React.useState(initialValues.color);
+  const [kilometros, setKilometros] = React.useState(initialValues.kilometros);
+  const [precioCompra, setPrecioCompra] = React.useState(
+    initialValues.precioCompra
+  );
+  const [precioVenta, setPrecioVenta] = React.useState(
+    initialValues.precioVenta
+  );
+  const [notas, setNotas] = React.useState(initialValues.notas);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setMarca(initialValues.marca);
+    setModelo(initialValues.modelo);
     setMatricula(initialValues.matricula);
-    setPrecio(initialValues.precio);
+    setColor(initialValues.color);
+    setKilometros(initialValues.kilometros);
+    setPrecioCompra(initialValues.precioCompra);
+    setPrecioVenta(initialValues.precioVenta);
+    setNotas(initialValues.notas);
     setErrors({});
   };
   const validations = {
     marca: [],
+    modelo: [],
     matricula: [],
-    precio: [],
+    color: [],
+    kilometros: [],
+    precioCompra: [],
+    precioVenta: [],
+    notas: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -69,8 +93,13 @@ export default function CocheCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           marca,
+          modelo,
           matricula,
-          precio,
+          color,
+          kilometros,
+          precioCompra,
+          precioVenta,
+          notas,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -117,15 +146,7 @@ export default function CocheCreateForm(props) {
       {...rest}
     >
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Marca</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Marca"
         isRequired={false}
         isReadOnly={false}
         value={marca}
@@ -134,8 +155,13 @@ export default function CocheCreateForm(props) {
           if (onChange) {
             const modelFields = {
               marca: value,
+              modelo,
               matricula,
-              precio,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
             };
             const result = onChange(modelFields);
             value = result?.marca ?? value;
@@ -151,15 +177,38 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "marca")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Matricula</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Modelo"
+        isRequired={false}
+        isReadOnly={false}
+        value={modelo}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              marca,
+              modelo: value,
+              matricula,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+            };
+            const result = onChange(modelFields);
+            value = result?.modelo ?? value;
+          }
+          if (errors.modelo?.hasError) {
+            runValidationTasks("modelo", value);
+          }
+          setModelo(value);
+        }}
+        onBlur={() => runValidationTasks("modelo", modelo)}
+        errorMessage={errors.modelo?.errorMessage}
+        hasError={errors.modelo?.hasError}
+        {...getOverrideProps(overrides, "modelo")}
+      ></TextField>
+      <TextField
+        label="Matricula"
         isRequired={false}
         isReadOnly={false}
         value={matricula}
@@ -168,8 +217,13 @@ export default function CocheCreateForm(props) {
           if (onChange) {
             const modelFields = {
               marca,
+              modelo,
               matricula: value,
-              precio,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
             };
             const result = onChange(modelFields);
             value = result?.matricula ?? value;
@@ -185,20 +239,43 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "matricula")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Precio</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Color"
+        isRequired={false}
+        isReadOnly={false}
+        value={color}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              marca,
+              modelo,
+              matricula,
+              color: value,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+            };
+            const result = onChange(modelFields);
+            value = result?.color ?? value;
+          }
+          if (errors.color?.hasError) {
+            runValidationTasks("color", value);
+          }
+          setColor(value);
+        }}
+        onBlur={() => runValidationTasks("color", color)}
+        errorMessage={errors.color?.errorMessage}
+        hasError={errors.color?.hasError}
+        {...getOverrideProps(overrides, "color")}
+      ></TextField>
+      <TextField
+        label="Kilometros"
         isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
-        value={precio}
+        value={kilometros}
         onChange={(e) => {
           let value = isNaN(parseInt(e.target.value))
             ? e.target.value
@@ -206,21 +283,127 @@ export default function CocheCreateForm(props) {
           if (onChange) {
             const modelFields = {
               marca,
+              modelo,
               matricula,
-              precio: value,
+              color,
+              kilometros: value,
+              precioCompra,
+              precioVenta,
+              notas,
             };
             const result = onChange(modelFields);
-            value = result?.precio ?? value;
+            value = result?.kilometros ?? value;
           }
-          if (errors.precio?.hasError) {
-            runValidationTasks("precio", value);
+          if (errors.kilometros?.hasError) {
+            runValidationTasks("kilometros", value);
           }
-          setPrecio(value);
+          setKilometros(value);
         }}
-        onBlur={() => runValidationTasks("precio", precio)}
-        errorMessage={errors.precio?.errorMessage}
-        hasError={errors.precio?.hasError}
-        {...getOverrideProps(overrides, "precio")}
+        onBlur={() => runValidationTasks("kilometros", kilometros)}
+        errorMessage={errors.kilometros?.errorMessage}
+        hasError={errors.kilometros?.hasError}
+        {...getOverrideProps(overrides, "kilometros")}
+      ></TextField>
+      <TextField
+        label="Precio compra"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={precioCompra}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              marca,
+              modelo,
+              matricula,
+              color,
+              kilometros,
+              precioCompra: value,
+              precioVenta,
+              notas,
+            };
+            const result = onChange(modelFields);
+            value = result?.precioCompra ?? value;
+          }
+          if (errors.precioCompra?.hasError) {
+            runValidationTasks("precioCompra", value);
+          }
+          setPrecioCompra(value);
+        }}
+        onBlur={() => runValidationTasks("precioCompra", precioCompra)}
+        errorMessage={errors.precioCompra?.errorMessage}
+        hasError={errors.precioCompra?.hasError}
+        {...getOverrideProps(overrides, "precioCompra")}
+      ></TextField>
+      <TextField
+        label="Precio venta"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={precioVenta}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              marca,
+              modelo,
+              matricula,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta: value,
+              notas,
+            };
+            const result = onChange(modelFields);
+            value = result?.precioVenta ?? value;
+          }
+          if (errors.precioVenta?.hasError) {
+            runValidationTasks("precioVenta", value);
+          }
+          setPrecioVenta(value);
+        }}
+        onBlur={() => runValidationTasks("precioVenta", precioVenta)}
+        errorMessage={errors.precioVenta?.errorMessage}
+        hasError={errors.precioVenta?.hasError}
+        {...getOverrideProps(overrides, "precioVenta")}
+      ></TextField>
+      <TextField
+        label="Notas"
+        isRequired={false}
+        isReadOnly={false}
+        value={notas}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              marca,
+              modelo,
+              matricula,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.notas ?? value;
+          }
+          if (errors.notas?.hasError) {
+            runValidationTasks("notas", value);
+          }
+          setNotas(value);
+        }}
+        onBlur={() => runValidationTasks("notas", notas)}
+        errorMessage={errors.notas?.errorMessage}
+        hasError={errors.notas?.hasError}
+        {...getOverrideProps(overrides, "notas")}
       ></TextField>
       <Flex
         justifyContent="space-between"
