@@ -13,29 +13,29 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type ClienteCreateFormInputValues = {
-    Nombre?: string;
-    Apellido1?: string;
-    Apellido2?: string;
+    nombre?: string;
+    apellido1?: string;
+    apellido2?: string;
     email?: string;
-    Telefono?: string;
+    telefono?: string;
     dni?: string;
 };
 export declare type ClienteCreateFormValidationValues = {
-    Nombre?: ValidationFunction<string>;
-    Apellido1?: ValidationFunction<string>;
-    Apellido2?: ValidationFunction<string>;
+    nombre?: ValidationFunction<string>;
+    apellido1?: ValidationFunction<string>;
+    apellido2?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
-    Telefono?: ValidationFunction<string>;
+    telefono?: ValidationFunction<string>;
     dni?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ClienteCreateFormOverridesProps = {
     ClienteCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    Nombre?: PrimitiveOverrideProps<TextFieldProps>;
-    Apellido1?: PrimitiveOverrideProps<TextFieldProps>;
-    Apellido2?: PrimitiveOverrideProps<TextFieldProps>;
+    nombre?: PrimitiveOverrideProps<TextFieldProps>;
+    apellido1?: PrimitiveOverrideProps<TextFieldProps>;
+    apellido2?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
-    Telefono?: PrimitiveOverrideProps<TextFieldProps>;
+    telefono?: PrimitiveOverrideProps<TextFieldProps>;
     dni?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type ClienteCreateFormProps = React.PropsWithChildren<{

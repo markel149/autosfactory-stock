@@ -1,11 +1,11 @@
 type Cliente @model @auth(rules: [{allow: public}]) {
   id: ID!
-  Nombre: String
-  Apellido1: String
-  Apellido2: String
+  nombre: String!
+  apellido1: String!
+  apellido2: String
   email: AWSEmail
-  Telefono: AWSPhone
-  dni: String
+  telefono: AWSPhone
+  dni: String!
 }
 
 type Coche @model @auth(rules: [{allow: public}]) {
@@ -18,5 +18,4 @@ type Coche @model @auth(rules: [{allow: public}]) {
   precioCompra: Float!
   precioVenta: Float
   notas: String
-}
- 
+} 

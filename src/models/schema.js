@@ -10,22 +10,22 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "Nombre": {
-                    "name": "Nombre",
+                "nombre": {
+                    "name": "nombre",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
-                "Apellido1": {
-                    "name": "Apellido1",
+                "apellido1": {
+                    "name": "apellido1",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
-                "Apellido2": {
-                    "name": "Apellido2",
+                "apellido2": {
+                    "name": "apellido2",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -38,8 +38,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Telefono": {
-                    "name": "Telefono",
+                "telefono": {
+                    "name": "telefono",
                     "isArray": false,
                     "type": "AWSPhone",
                     "isRequired": false,
@@ -49,7 +49,7 @@ export const schema = {
                     "name": "dni",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -206,5 +206,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "26aeefb67e7691c25af164aac364b517"
+    "version": "4cbd8424c179f72c4464d3b2a15f2362"
 };

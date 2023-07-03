@@ -12,12 +12,12 @@ type EagerCliente = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly Nombre?: string | null;
-  readonly Apellido1?: string | null;
-  readonly Apellido2?: string | null;
+  readonly nombre: string;
+  readonly apellido1: string;
+  readonly apellido2?: string | null;
   readonly email?: string | null;
-  readonly Telefono?: string | null;
-  readonly dni?: string | null;
+  readonly telefono?: string | null;
+  readonly dni: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -28,12 +28,12 @@ type LazyCliente = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly Nombre?: string | null;
-  readonly Apellido1?: string | null;
-  readonly Apellido2?: string | null;
+  readonly nombre: string;
+  readonly apellido1: string;
+  readonly apellido2?: string | null;
   readonly email?: string | null;
-  readonly Telefono?: string | null;
-  readonly dni?: string | null;
+  readonly telefono?: string | null;
+  readonly dni: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

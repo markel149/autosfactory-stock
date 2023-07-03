@@ -50,6 +50,10 @@ export function Clientes({ signOut, user }) {
 
     async function formSuccess2(){
       const c = await DataStore.query(Cliente)
+      // for (const item in c) {
+      //   await DataStore.save(item)
+
+      // }
       setClientes(c)
       setOpenEditar(false)
       // return (
@@ -87,10 +91,15 @@ export function Clientes({ signOut, user }) {
       setOpenEditar(false);
     };
 
+    async function handleDeleteClient(cliente) {
+      const toDelete = await DataStore.query(Cliente, cliente.id);
+      DataStore.delete(toDelete);
+    }
+
     return (
       <div>
         <h2 style={{textAlign: 'center'}}>Mis clientes</h2>
-        <Button variant="outlined" onClick={() => handleClickOpen()}>
+        <Button variant="outlined" onClick={handleClickOpen}>
         Añadir Cliente
       </Button>
       <Dialog
@@ -156,10 +165,10 @@ export function Clientes({ signOut, user }) {
               <TableCell align="center">{row.Telefono}</TableCell>
               <TableCell align="center">{row.dni}</TableCell>
               <TableCell align="center">
-              <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />}>
+              <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />} style={{ marginRight: 10 }}>
                 Edit
               </Button>
-              <Button variant="contained" color='error' startIcon={<DeleteIcon />}>
+              <Button variant="contained" color='error' onClick={() => handleDeleteClient(row)} startIcon={<DeleteIcon />}>
                 Delete
               </Button>
               </TableCell>

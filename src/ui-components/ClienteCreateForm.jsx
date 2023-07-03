@@ -23,36 +23,36 @@ export default function ClienteCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    Nombre: "",
-    Apellido1: "",
-    Apellido2: "",
+    nombre: "",
+    apellido1: "",
+    apellido2: "",
     email: "",
-    Telefono: "",
+    telefono: "",
     dni: "",
   };
-  const [Nombre, setNombre] = React.useState(initialValues.Nombre);
-  const [Apellido1, setApellido1] = React.useState(initialValues.Apellido1);
-  const [Apellido2, setApellido2] = React.useState(initialValues.Apellido2);
+  const [nombre, setNombre] = React.useState(initialValues.nombre);
+  const [apellido1, setApellido1] = React.useState(initialValues.apellido1);
+  const [apellido2, setApellido2] = React.useState(initialValues.apellido2);
   const [email, setEmail] = React.useState(initialValues.email);
-  const [Telefono, setTelefono] = React.useState(initialValues.Telefono);
+  const [telefono, setTelefono] = React.useState(initialValues.telefono);
   const [dni, setDni] = React.useState(initialValues.dni);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setNombre(initialValues.Nombre);
-    setApellido1(initialValues.Apellido1);
-    setApellido2(initialValues.Apellido2);
+    setNombre(initialValues.nombre);
+    setApellido1(initialValues.apellido1);
+    setApellido2(initialValues.apellido2);
     setEmail(initialValues.email);
-    setTelefono(initialValues.Telefono);
+    setTelefono(initialValues.telefono);
     setDni(initialValues.dni);
     setErrors({});
   };
   const validations = {
-    Nombre: [],
-    Apellido1: [],
-    Apellido2: [],
+    nombre: [{ type: "Required" }],
+    apellido1: [{ type: "Required" }],
+    apellido2: [],
     email: [{ type: "Email" }],
-    Telefono: [{ type: "Phone" }],
-    dni: [],
+    telefono: [{ type: "Phone" }],
+    dni: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -80,11 +80,11 @@ export default function ClienteCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          Nombre,
-          Apellido1,
-          Apellido2,
+          nombre,
+          apellido1,
+          apellido2,
           email,
-          Telefono,
+          telefono,
           dni,
         };
         const validationResponses = await Promise.all(
@@ -133,90 +133,90 @@ export default function ClienteCreateForm(props) {
     >
       <TextField
         label="Nombre"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
-        value={Nombre}
+        value={nombre}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Nombre: value,
-              Apellido1,
-              Apellido2,
+              nombre: value,
+              apellido1,
+              apellido2,
               email,
-              Telefono,
+              telefono,
               dni,
             };
             const result = onChange(modelFields);
-            value = result?.Nombre ?? value;
+            value = result?.nombre ?? value;
           }
-          if (errors.Nombre?.hasError) {
-            runValidationTasks("Nombre", value);
+          if (errors.nombre?.hasError) {
+            runValidationTasks("nombre", value);
           }
           setNombre(value);
         }}
-        onBlur={() => runValidationTasks("Nombre", Nombre)}
-        errorMessage={errors.Nombre?.errorMessage}
-        hasError={errors.Nombre?.hasError}
-        {...getOverrideProps(overrides, "Nombre")}
+        onBlur={() => runValidationTasks("nombre", nombre)}
+        errorMessage={errors.nombre?.errorMessage}
+        hasError={errors.nombre?.hasError}
+        {...getOverrideProps(overrides, "nombre")}
       ></TextField>
       <TextField
         label="Apellido1"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
-        value={Apellido1}
+        value={apellido1}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Nombre,
-              Apellido1: value,
-              Apellido2,
+              nombre,
+              apellido1: value,
+              apellido2,
               email,
-              Telefono,
+              telefono,
               dni,
             };
             const result = onChange(modelFields);
-            value = result?.Apellido1 ?? value;
+            value = result?.apellido1 ?? value;
           }
-          if (errors.Apellido1?.hasError) {
-            runValidationTasks("Apellido1", value);
+          if (errors.apellido1?.hasError) {
+            runValidationTasks("apellido1", value);
           }
           setApellido1(value);
         }}
-        onBlur={() => runValidationTasks("Apellido1", Apellido1)}
-        errorMessage={errors.Apellido1?.errorMessage}
-        hasError={errors.Apellido1?.hasError}
-        {...getOverrideProps(overrides, "Apellido1")}
+        onBlur={() => runValidationTasks("apellido1", apellido1)}
+        errorMessage={errors.apellido1?.errorMessage}
+        hasError={errors.apellido1?.hasError}
+        {...getOverrideProps(overrides, "apellido1")}
       ></TextField>
       <TextField
         label="Apellido2"
         isRequired={false}
         isReadOnly={false}
-        value={Apellido2}
+        value={apellido2}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Nombre,
-              Apellido1,
-              Apellido2: value,
+              nombre,
+              apellido1,
+              apellido2: value,
               email,
-              Telefono,
+              telefono,
               dni,
             };
             const result = onChange(modelFields);
-            value = result?.Apellido2 ?? value;
+            value = result?.apellido2 ?? value;
           }
-          if (errors.Apellido2?.hasError) {
-            runValidationTasks("Apellido2", value);
+          if (errors.apellido2?.hasError) {
+            runValidationTasks("apellido2", value);
           }
           setApellido2(value);
         }}
-        onBlur={() => runValidationTasks("Apellido2", Apellido2)}
-        errorMessage={errors.Apellido2?.errorMessage}
-        hasError={errors.Apellido2?.hasError}
-        {...getOverrideProps(overrides, "Apellido2")}
+        onBlur={() => runValidationTasks("apellido2", apellido2)}
+        errorMessage={errors.apellido2?.errorMessage}
+        hasError={errors.apellido2?.hasError}
+        {...getOverrideProps(overrides, "apellido2")}
       ></TextField>
       <TextField
         label="Email"
@@ -227,11 +227,11 @@ export default function ClienteCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Nombre,
-              Apellido1,
-              Apellido2,
+              nombre,
+              apellido1,
+              apellido2,
               email: value,
-              Telefono,
+              telefono,
               dni,
             };
             const result = onChange(modelFields);
@@ -252,45 +252,45 @@ export default function ClienteCreateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="tel"
-        value={Telefono}
+        value={telefono}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Nombre,
-              Apellido1,
-              Apellido2,
+              nombre,
+              apellido1,
+              apellido2,
               email,
-              Telefono: value,
+              telefono: value,
               dni,
             };
             const result = onChange(modelFields);
-            value = result?.Telefono ?? value;
+            value = result?.telefono ?? value;
           }
-          if (errors.Telefono?.hasError) {
-            runValidationTasks("Telefono", value);
+          if (errors.telefono?.hasError) {
+            runValidationTasks("telefono", value);
           }
           setTelefono(value);
         }}
-        onBlur={() => runValidationTasks("Telefono", Telefono)}
-        errorMessage={errors.Telefono?.errorMessage}
-        hasError={errors.Telefono?.hasError}
-        {...getOverrideProps(overrides, "Telefono")}
+        onBlur={() => runValidationTasks("telefono", telefono)}
+        errorMessage={errors.telefono?.errorMessage}
+        hasError={errors.telefono?.hasError}
+        {...getOverrideProps(overrides, "telefono")}
       ></TextField>
       <TextField
         label="Dni"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={dni}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Nombre,
-              Apellido1,
-              Apellido2,
+              nombre,
+              apellido1,
+              apellido2,
               email,
-              Telefono,
+              telefono,
               dni: value,
             };
             const result = onChange(modelFields);
