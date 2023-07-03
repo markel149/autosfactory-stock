@@ -158,11 +158,11 @@ export function Clientes({ signOut, user }) {
               key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="center">{row.Nombre}</TableCell>
-              <TableCell align="center">{row.Apellido1}</TableCell>
-              <TableCell align="center">{row.Apellido2}</TableCell>
+              <TableCell align="center">{row.nombre}</TableCell>
+              <TableCell align="center">{row.apellido1}</TableCell>
+              <TableCell align="center">{row.apellido2}</TableCell>
               <TableCell align="center">{row.email}</TableCell>
-              <TableCell align="center">{row.Telefono}</TableCell>
+              <TableCell align="center">{row.telefono}</TableCell>
               <TableCell align="center">{row.dni}</TableCell>
               <TableCell align="center">
               <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />} style={{ marginRight: 10 }}>

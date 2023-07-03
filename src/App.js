@@ -3,7 +3,8 @@ import { Authenticator, View, Image, useTheme } from '@aws-amplify/ui-react'
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  HashRouter
 } from "react-router-dom";
 import  { Clientes }  from './Components/Clientes';
 import { Coches }  from './Components/Coches';
@@ -28,13 +29,13 @@ export default function App() {
     <Authenticator hideSignUp components={components}>
       {({ signOut, user }) => (
         <main>
-          <Router>
+          <HashRouter>
             <Barra signOut={signOut}/> 
             <Switch>
               <Route exact path="/coches" component={Coches} />
               <Route exact path="/clientes" component={Clientes} />
             </Switch>
-          </Router>
+          </HashRouter>
           
         </main>
       )}
