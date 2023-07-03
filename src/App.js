@@ -1,7 +1,6 @@
 import './App.css';
 import { Authenticator, View, Image, useTheme } from '@aws-amplify/ui-react'
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   HashRouter

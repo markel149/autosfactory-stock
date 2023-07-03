@@ -66,7 +66,7 @@ export default function ClienteUpdateForm(props) {
     apellido1: [{ type: "Required" }],
     apellido2: [],
     email: [{ type: "Email" }],
-    telefono: [{ type: "Phone" }],
+    telefono: [],
     dni: [{ type: "Required" }],
   };
   const runValidationTasks = async (
@@ -267,7 +267,6 @@ export default function ClienteUpdateForm(props) {
         label="Telefono"
         isRequired={false}
         isReadOnly={false}
-        type="tel"
         value={telefono}
         onChange={(e) => {
           let { value } = e.target;

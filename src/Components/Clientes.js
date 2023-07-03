@@ -18,16 +18,20 @@ import Slide from '@mui/material/Slide';
 import { ClienteCreateForm, ClienteUpdateForm } from '../ui-components';
 import Edit from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+import AddIcon from '@mui/icons-material/Add';
+
 
 const initialState = []
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export function Clientes({ signOut, user }) {
-    const [clientes, setClientes] = useState(initialState)
 
+    const [clientes, setClientes] = useState(initialState)
     useEffect(() => {
       const pullData = async() => {
         const c = await DataStore.query(Cliente)
@@ -42,27 +46,13 @@ export function Clientes({ signOut, user }) {
       const c = await DataStore.query(Cliente)
       setClientes(c)
       setOpen(false)
-      // return (
-      //   <Alert severity="success">This is a success alert — check it out!</Alert>
-      // )
-
     }
 
     async function formSuccess2(){
       const c = await DataStore.query(Cliente)
-      // for (const item in c) {
-      //   await DataStore.save(item)
-
-      // }
       setClientes(c)
       setOpenEditar(false)
-      // return (
-      //   <Alert severity="success">This is a success alert — check it out!</Alert>
-      // )
-
     }
-
-    const [clienteEditar, setClienteEditar] = useState(initialState)
 
     const [open, setOpen] = React.useState(false);
 
@@ -73,7 +63,8 @@ export function Clientes({ signOut, user }) {
     const handleClose = () => {
       setOpen(false);
     };
-
+    
+    const [clienteEditar, setClienteEditar] = useState(initialState)
     const [openEditar, setOpenEditar] = React.useState(false);
 
     const handleClickOpenEditar = (cliente) => {
@@ -91,15 +82,38 @@ export function Clientes({ signOut, user }) {
       setOpenEditar(false);
     };
 
+    const [clienteDelete, setClienteDelete] = useState(initialState)
+    const [openDelete, setOpenDelete] = React.useState(false);
+
+    const handleCloseDelete = () => {
+      setOpenDelete(false);
+    };
+
+    const  handleDeleteClientClick = (cliente) => {
+      setClienteDelete(cliente)
+      openDeleter()
+      console.log(cliente)
+      console.log(clienteDelete)
+    }
+
+    const openDeleter = () => {
+      setOpenDelete(true);
+    }
+
+
     async function handleDeleteClient(cliente) {
       const toDelete = await DataStore.query(Cliente, cliente.id);
       DataStore.delete(toDelete);
+      const c = await DataStore.query(Cliente)
+      setClientes(c)
+      setOpenDelete(false)
     }
+
 
     return (
       <div>
         <h2 style={{textAlign: 'center'}}>Mis clientes</h2>
-        <Button variant="outlined" onClick={handleClickOpen}>
+        <Button variant="outlined" onClick={handleClickOpen} style={{ marginLeft: 20 }} startIcon={<AddIcon></AddIcon>}>
         Añadir Cliente
       </Button>
       <Dialog
@@ -139,8 +153,35 @@ export function Clientes({ signOut, user }) {
         </DialogActions>
       </Dialog>
 
+      <Dialog
+        open={openDelete}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDelete}
+        maxWidth='lg'
+        fullWidth={true}
+        color='secondary'
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle align='center'>{"Borrar cliente"}</DialogTitle>
+        <DialogContent style={{ textAlign: 'center'}}>
+          Vas a borrar el cliente {clienteDelete.nombre} {clienteDelete.apellido1} con DNI: {clienteDelete.dni}. Si continua con este proceso no podra recuperar los datos. ¿Quieres continuar?
+          <br></br>
+          <br></br>
+          <Button variant="outlined" onClick={() => setOpenDelete(false)} startIcon={<CancelIcon />} style={{ marginRight: 10 }}>
+                Cancelar
+          </Button>
+          <Button variant="contained" color='error' onClick={() => handleDeleteClient(clienteDelete)} startIcon={<DeleteIcon />}>
+                Delete
+          </Button>
+        </DialogContent>
+        <DialogActions>
+
+        </DialogActions>
+      </Dialog>
+
         <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650 }} aria-label="simple table" stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell align="center"><b>Nombre</b></TableCell>
@@ -168,7 +209,7 @@ export function Clientes({ signOut, user }) {
               <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />} style={{ marginRight: 10 }}>
                 Edit
               </Button>
-              <Button variant="contained" color='error' onClick={() => handleDeleteClient(row)} startIcon={<DeleteIcon />}>
+              <Button variant="contained" color='error' onClick={() => handleDeleteClientClick(row)} startIcon={<DeleteIcon />}>
                 Delete
               </Button>
               </TableCell>

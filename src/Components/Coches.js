@@ -15,7 +15,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { CocheCreateForm } from '../ui-components';
+import { CocheCreateForm, CocheUpdateForm } from '../ui-components';
+import Edit from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 const initialState = []
 
@@ -46,6 +49,20 @@ export function Coches({ signOut, user }) {
 
     }
 
+    async function formSuccess2(){
+      const c = await DataStore.query(Coche)
+      // for (const item in c) {
+      //   await DataStore.save(item)
+
+      // }
+      setCoches(c)
+      setOpenEditar(false)
+      // return (
+      //   <Alert severity="success">This is a success alert — check it out!</Alert>
+      // )
+
+    }
+
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -56,10 +73,36 @@ export function Coches({ signOut, user }) {
       setOpen(false);
     };
 
+    const [cocheEditar, setCocheEditar] = useState(initialState)
+
+    const [openEditar, setOpenEditar] = React.useState(false);
+
+    const handleClickOpenEditar = (coche) => {
+      setCocheEditar(coche)
+      openEditor()
+      console.log(coche)
+      console.log(cocheEditar)
+    };
+
+    const openEditor = () => {
+      setOpenEditar(true);
+    }
+
+    const handleCloseEditar = () => {
+      setOpenEditar(false);
+    };
+
+    async function handleDeleteClient(coche) {
+      const toDelete = await DataStore.query(Coche, coche.id);
+      DataStore.delete(toDelete);
+      const c = await DataStore.query(Coche)
+      setCoches(c)
+    }
+
     return (
       <div>
         <h2 style={{textAlign: 'center'}}>Stock coches</h2>
-        <Button variant="outlined" onClick={handleClickOpen}>
+        <Button variant="outlined" onClick={handleClickOpen} style={{marginLeft: 20}} startIcon={<AddIcon></AddIcon>}>
         Añadir Coche
       </Button>
       <Dialog
@@ -76,6 +119,24 @@ export function Coches({ signOut, user }) {
             <CocheCreateForm onSuccess={formSuccess}></CocheCreateForm>
         </DialogContent>
         <DialogActions>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openEditar}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseEditar}
+        maxWidth='lg'
+        fullWidth={true}
+        color='secondary'
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle align='center'>{"Editar coche"}</DialogTitle>
+        <DialogContent>
+            <CocheUpdateForm onSuccess={formSuccess2} coche={cocheEditar}/>
+        </DialogContent>
+        <DialogActions>
 
         </DialogActions>
       </Dialog>
@@ -87,6 +148,7 @@ export function Coches({ signOut, user }) {
             <TableCell align="center"><b>Marca</b></TableCell>
             <TableCell align="center"><b>Modelo</b></TableCell>
             <TableCell align="center"><b>Matricula</b></TableCell>
+            <TableCell align="center"><b>Acciones</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -98,6 +160,14 @@ export function Coches({ signOut, user }) {
               <TableCell align="center">{row.marca}</TableCell>
               <TableCell align="center">{row.modelo}</TableCell>
               <TableCell align="center">{row.matricula}</TableCell>
+              <TableCell align="center">
+              <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />} style={{ marginRight: 10 }}>
+                Edit
+              </Button>
+              <Button variant="contained" color='error' onClick={() => handleDeleteClient(row)} startIcon={<DeleteIcon />}>
+                Delete
+              </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

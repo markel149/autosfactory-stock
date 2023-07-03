@@ -11,7 +11,7 @@ import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Cliente } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-export default function ClienteCreateForm(props) {
+export default function CreateClient(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -128,7 +128,7 @@ export default function ClienteCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "ClienteCreateForm")}
+      {...getOverrideProps(overrides, "CreateClient")}
       {...rest}
     >
       <TextField
