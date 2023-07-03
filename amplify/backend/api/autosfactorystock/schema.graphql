@@ -1,12 +1,23 @@
+type Cliente @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Nombre: String
+  Apellido1: String
+  Apellido2: String
+  email: AWSEmail
+  Telefono: AWSPhone
+  dni: String
+}
+
 type Coche @model @auth(rules: [{allow: public}]) {
   id: ID!
-  marca: String
-  modelo: String
-  matricula: String
+  marca: String!
+  modelo: String!
+  matricula: String!
   color: String
   kilometros: Int
-  precioCompra: Float
+  precioCompra: Float!
   precioVenta: Float
   notas: String
+  Cliente: Cliente @hasOne
 }
  

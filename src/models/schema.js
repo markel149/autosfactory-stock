@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "Coche": {
-            "name": "Coche",
+        "Cliente": {
+            "name": "Cliente",
             "fields": {
                 "id": {
                     "name": "id",
@@ -10,57 +10,43 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "marca": {
-                    "name": "marca",
+                "Nombre": {
+                    "name": "Nombre",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "modelo": {
-                    "name": "modelo",
+                "Apellido1": {
+                    "name": "Apellido1",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "matricula": {
-                    "name": "matricula",
+                "Apellido2": {
+                    "name": "Apellido2",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "color": {
-                    "name": "color",
+                "email": {
+                    "name": "email",
                     "isArray": false,
-                    "type": "String",
+                    "type": "AWSEmail",
                     "isRequired": false,
                     "attributes": []
                 },
-                "kilometros": {
-                    "name": "kilometros",
+                "Telefono": {
+                    "name": "Telefono",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "AWSPhone",
                     "isRequired": false,
                     "attributes": []
                 },
-                "precioCompra": {
-                    "name": "precioCompra",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "precioVenta": {
-                    "name": "precioVenta",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "notas": {
-                    "name": "notas",
+                "dni": {
+                    "name": "dni",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -81,6 +67,139 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Clientes",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Coche": {
+            "name": "Coche",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "marca": {
+                    "name": "marca",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "modelo": {
+                    "name": "modelo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "matricula": {
+                    "name": "matricula",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "color": {
+                    "name": "color",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "kilometros": {
+                    "name": "kilometros",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "precioCompra": {
+                    "name": "precioCompra",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "precioVenta": {
+                    "name": "precioVenta",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "notas": {
+                    "name": "notas",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Cliente": {
+                    "name": "Cliente",
+                    "isArray": false,
+                    "type": {
+                        "model": "Cliente"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": [
+                            "id"
+                        ],
+                        "targetNames": [
+                            "cocheClienteId"
+                        ]
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "cocheClienteId": {
+                    "name": "cocheClienteId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -112,5 +231,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "016b677aae31c82ef101bc2f96685895"
+    "version": "6ed96ac8b2d9f945eb2f3c7808c6cafd"
 };

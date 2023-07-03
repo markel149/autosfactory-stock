@@ -57,12 +57,12 @@ export default function CreateCoche(props) {
     setErrors({});
   };
   const validations = {
-    marca: [],
-    modelo: [],
-    matricula: [],
+    marca: [{ type: "Required" }],
+    modelo: [{ type: "Required" }],
+    matricula: [{ type: "Required" }],
     color: [],
     kilometros: [],
-    precioCompra: [],
+    precioCompra: [{ type: "Required" }],
     precioVenta: [],
     notas: [],
   };
@@ -147,7 +147,7 @@ export default function CreateCoche(props) {
     >
       <TextField
         label="Marca"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={marca}
         onChange={(e) => {
@@ -178,7 +178,7 @@ export default function CreateCoche(props) {
       ></TextField>
       <TextField
         label="Modelo"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={modelo}
         onChange={(e) => {
@@ -209,7 +209,7 @@ export default function CreateCoche(props) {
       ></TextField>
       <TextField
         label="Matricula"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={matricula}
         onChange={(e) => {
@@ -306,7 +306,7 @@ export default function CreateCoche(props) {
       ></TextField>
       <TextField
         label="Precio compra"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         type="number"
         step="any"
