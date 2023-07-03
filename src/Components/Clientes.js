@@ -20,6 +20,9 @@ import Edit from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
+import PersonIcon from '@mui/icons-material/Person';
+import { Typography } from '@mui/material';
+
 
 
 const initialState = []
@@ -100,7 +103,6 @@ export function Clientes({ signOut, user }) {
       setOpenDelete(true);
     }
 
-
     async function handleDeleteClient(cliente) {
       const toDelete = await DataStore.query(Cliente, cliente.id);
       DataStore.delete(toDelete);
@@ -112,7 +114,9 @@ export function Clientes({ signOut, user }) {
 
     return (
       <div>
-        <h2 style={{textAlign: 'center'}}>Mis clientes</h2>
+        <Typography>
+          <h2 style={{textAlign: 'center'}}>CLIENTES</h2>
+        </Typography>
         <Button variant="outlined" onClick={handleClickOpen} style={{ marginLeft: 20 }} startIcon={<AddIcon></AddIcon>}>
         Añadir Cliente
       </Button>
@@ -184,6 +188,7 @@ export function Clientes({ signOut, user }) {
         <Table sx={{ minWidth: 650 }} aria-label="simple table" stickyHeader>
         <TableHead>
           <TableRow>
+            <TableCell align="center"></TableCell>
             <TableCell align="center"><b>Nombre</b></TableCell>
             <TableCell align="center"><b>Apellido</b></TableCell>
             <TableCell align="center"><b>Segundo Apellido</b></TableCell>
@@ -199,6 +204,7 @@ export function Clientes({ signOut, user }) {
               key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
+              <TableCell align="center"><PersonIcon></PersonIcon></TableCell>
               <TableCell align="center">{row.nombre}</TableCell>
               <TableCell align="center">{row.apellido1}</TableCell>
               <TableCell align="center">{row.apellido2}</TableCell>

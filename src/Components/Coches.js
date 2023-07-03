@@ -20,6 +20,8 @@ import Edit from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import { Typography } from '@mui/material';
 
 
 const initialState = []
@@ -120,7 +122,10 @@ export function Coches({ signOut, user }) {
 
     return (
       <div>
-        <h2 style={{textAlign: 'center'}}>Stock coches</h2>
+        <Typography>
+          <h2 style={{textAlign: 'center'}}>STOCK COCHES</h2>
+        </Typography>
+        
         <Button variant="outlined" onClick={handleClickOpen} style={{marginLeft: 20}} startIcon={<AddIcon></AddIcon>}>
         Añadir Coche
       </Button>
@@ -191,6 +196,7 @@ export function Coches({ signOut, user }) {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
+            <TableCell align="center"></TableCell>
             <TableCell align="center"><b>Marca</b></TableCell>
             <TableCell align="center"><b>Modelo</b></TableCell>
             <TableCell align="center"><b>Matricula</b></TableCell>
@@ -203,6 +209,7 @@ export function Coches({ signOut, user }) {
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
+              <TableCell align="center"><DirectionsCarIcon></DirectionsCarIcon></TableCell>
               <TableCell align="center">{row.marca}</TableCell>
               <TableCell align="center">{row.modelo}</TableCell>
               <TableCell align="center">{row.matricula}</TableCell>
