@@ -21,6 +21,8 @@ export declare type CocheCreateFormInputValues = {
     precioCompra?: number;
     precioVenta?: number;
     notas?: string;
+    fechaCompra?: string;
+    fechaVenta?: string;
 };
 export declare type CocheCreateFormValidationValues = {
     marca?: ValidationFunction<string>;
@@ -31,6 +33,8 @@ export declare type CocheCreateFormValidationValues = {
     precioCompra?: ValidationFunction<number>;
     precioVenta?: ValidationFunction<number>;
     notas?: ValidationFunction<string>;
+    fechaCompra?: ValidationFunction<string>;
+    fechaVenta?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheCreateFormOverridesProps = {
@@ -43,6 +47,8 @@ export declare type CocheCreateFormOverridesProps = {
     precioCompra?: PrimitiveOverrideProps<TextFieldProps>;
     precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
     notas?: PrimitiveOverrideProps<TextFieldProps>;
+    fechaCompra?: PrimitiveOverrideProps<TextFieldProps>;
+    fechaVenta?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CocheCreateFormProps = React.PropsWithChildren<{
     overrides?: CocheCreateFormOverridesProps | undefined | null;

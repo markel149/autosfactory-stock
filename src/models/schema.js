@@ -160,6 +160,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "fechaCompra": {
+                    "name": "fechaCompra",
+                    "isArray": false,
+                    "type": "AWSDate",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaVenta": {
+                    "name": "fechaVenta",
+                    "isArray": false,
+                    "type": "AWSDate",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -206,5 +220,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "d50196cd10688ca915b49e8c38f6cf36"
+    "version": "e29dc222a1f9d9e53bd309f2d7d084ae"
 };

@@ -22,6 +22,8 @@ export declare type CocheUpdateFormInputValues = {
     precioCompra?: number;
     precioVenta?: number;
     notas?: string;
+    fechaCompra?: string;
+    fechaVenta?: string;
 };
 export declare type CocheUpdateFormValidationValues = {
     marca?: ValidationFunction<string>;
@@ -32,6 +34,8 @@ export declare type CocheUpdateFormValidationValues = {
     precioCompra?: ValidationFunction<number>;
     precioVenta?: ValidationFunction<number>;
     notas?: ValidationFunction<string>;
+    fechaCompra?: ValidationFunction<string>;
+    fechaVenta?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheUpdateFormOverridesProps = {
@@ -44,6 +48,8 @@ export declare type CocheUpdateFormOverridesProps = {
     precioCompra?: PrimitiveOverrideProps<TextFieldProps>;
     precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
     notas?: PrimitiveOverrideProps<TextFieldProps>;
+    fechaCompra?: PrimitiveOverrideProps<TextFieldProps>;
+    fechaVenta?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CocheUpdateFormProps = React.PropsWithChildren<{
     overrides?: CocheUpdateFormOverridesProps | undefined | null;

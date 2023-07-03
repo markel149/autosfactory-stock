@@ -32,6 +32,8 @@ export default function CocheUpdateForm(props) {
     precioCompra: "",
     precioVenta: "",
     notas: "",
+    fechaCompra: "",
+    fechaVenta: "",
   };
   const [marca, setMarca] = React.useState(initialValues.marca);
   const [modelo, setModelo] = React.useState(initialValues.modelo);
@@ -45,6 +47,10 @@ export default function CocheUpdateForm(props) {
     initialValues.precioVenta
   );
   const [notas, setNotas] = React.useState(initialValues.notas);
+  const [fechaCompra, setFechaCompra] = React.useState(
+    initialValues.fechaCompra
+  );
+  const [fechaVenta, setFechaVenta] = React.useState(initialValues.fechaVenta);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = cocheRecord
@@ -58,6 +64,8 @@ export default function CocheUpdateForm(props) {
     setPrecioCompra(cleanValues.precioCompra);
     setPrecioVenta(cleanValues.precioVenta);
     setNotas(cleanValues.notas);
+    setFechaCompra(cleanValues.fechaCompra);
+    setFechaVenta(cleanValues.fechaVenta);
     setErrors({});
   };
   const [cocheRecord, setCocheRecord] = React.useState(cocheModelProp);
@@ -80,6 +88,8 @@ export default function CocheUpdateForm(props) {
     precioCompra: [{ type: "Required" }],
     precioVenta: [],
     notas: [],
+    fechaCompra: [],
+    fechaVenta: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -115,6 +125,8 @@ export default function CocheUpdateForm(props) {
           precioCompra,
           precioVenta,
           notas,
+          fechaCompra,
+          fechaVenta,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -178,6 +190,8 @@ export default function CocheUpdateForm(props) {
               precioCompra,
               precioVenta,
               notas,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.marca ?? value;
@@ -209,6 +223,8 @@ export default function CocheUpdateForm(props) {
               precioCompra,
               precioVenta,
               notas,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.modelo ?? value;
@@ -240,6 +256,8 @@ export default function CocheUpdateForm(props) {
               precioCompra,
               precioVenta,
               notas,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.matricula ?? value;
@@ -271,6 +289,8 @@ export default function CocheUpdateForm(props) {
               precioCompra,
               precioVenta,
               notas,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.color ?? value;
@@ -306,6 +326,8 @@ export default function CocheUpdateForm(props) {
               precioCompra,
               precioVenta,
               notas,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.kilometros ?? value;
@@ -341,6 +363,8 @@ export default function CocheUpdateForm(props) {
               precioCompra: value,
               precioVenta,
               notas,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.precioCompra ?? value;
@@ -376,6 +400,8 @@ export default function CocheUpdateForm(props) {
               precioCompra,
               precioVenta: value,
               notas,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.precioVenta ?? value;
@@ -407,6 +433,8 @@ export default function CocheUpdateForm(props) {
               precioCompra,
               precioVenta,
               notas: value,
+              fechaCompra,
+              fechaVenta,
             };
             const result = onChange(modelFields);
             value = result?.notas ?? value;
@@ -420,6 +448,74 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.notas?.errorMessage}
         hasError={errors.notas?.hasError}
         {...getOverrideProps(overrides, "notas")}
+      ></TextField>
+      <TextField
+        label="Fecha compra"
+        isRequired={false}
+        isReadOnly={false}
+        type="date"
+        value={fechaCompra}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              marca,
+              modelo,
+              matricula,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra: value,
+              fechaVenta,
+            };
+            const result = onChange(modelFields);
+            value = result?.fechaCompra ?? value;
+          }
+          if (errors.fechaCompra?.hasError) {
+            runValidationTasks("fechaCompra", value);
+          }
+          setFechaCompra(value);
+        }}
+        onBlur={() => runValidationTasks("fechaCompra", fechaCompra)}
+        errorMessage={errors.fechaCompra?.errorMessage}
+        hasError={errors.fechaCompra?.hasError}
+        {...getOverrideProps(overrides, "fechaCompra")}
+      ></TextField>
+      <TextField
+        label="Fecha venta"
+        isRequired={false}
+        isReadOnly={false}
+        type="date"
+        value={fechaVenta}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              marca,
+              modelo,
+              matricula,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.fechaVenta ?? value;
+          }
+          if (errors.fechaVenta?.hasError) {
+            runValidationTasks("fechaVenta", value);
+          }
+          setFechaVenta(value);
+        }}
+        onBlur={() => runValidationTasks("fechaVenta", fechaVenta)}
+        errorMessage={errors.fechaVenta?.errorMessage}
+        hasError={errors.fechaVenta?.hasError}
+        {...getOverrideProps(overrides, "fechaVenta")}
       ></TextField>
       <Flex
         justifyContent="space-between"

@@ -58,6 +58,8 @@ type EagerCoche = {
   readonly precioCompra: number;
   readonly precioVenta?: number | null;
   readonly notas?: string | null;
+  readonly fechaCompra?: string | null;
+  readonly fechaVenta?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -76,6 +78,8 @@ type LazyCoche = {
   readonly precioCompra: number;
   readonly precioVenta?: number | null;
   readonly notas?: string | null;
+  readonly fechaCompra?: string | null;
+  readonly fechaVenta?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

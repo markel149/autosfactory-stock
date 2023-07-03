@@ -19,6 +19,8 @@ import { CocheCreateForm, CocheUpdateForm } from '../ui-components';
 import Edit from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Cancel';
+
 
 const initialState = []
 
@@ -92,11 +94,28 @@ export function Coches({ signOut, user }) {
       setOpenEditar(false);
     };
 
-    async function handleDeleteClient(coche) {
+    const [cocheDelete, setCocheDelete] = useState(initialState)
+    const [openDelete, setOpenDelete] = React.useState(false);
+
+    const handleCloseDelete = () => {
+      setOpenDelete(false);
+    };
+
+    const  handleDeleteCocheClick = (coche) => {
+      setCocheDelete(coche)
+      openDeleter()
+    }
+
+    const openDeleter = () => {
+      setOpenDelete(true);
+    }
+
+    async function handleDeleteCoche(coche) {
       const toDelete = await DataStore.query(Coche, coche.id);
       DataStore.delete(toDelete);
       const c = await DataStore.query(Coche)
       setCoches(c)
+      setOpenDelete(false)
     }
 
     return (
@@ -141,6 +160,33 @@ export function Coches({ signOut, user }) {
         </DialogActions>
       </Dialog>
 
+      <Dialog
+        open={openDelete}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDelete}
+        maxWidth='lg'
+        fullWidth={true}
+        color='secondary'
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle align='center'>{"Borrar coche"}</DialogTitle>
+        <DialogContent style={{ textAlign: 'center'}}>
+          Vas a borrar el coche {cocheDelete.marca} {cocheDelete.modelo} con matricula {cocheDelete.matricula}. Si continua con este proceso no podra recuperar los datos. ¿Quieres continuar?
+          <br></br>
+          <br></br>
+          <Button variant="outlined" onClick={() => setOpenDelete(false)} startIcon={<CancelIcon />} style={{ marginRight: 10 }}>
+                Cancelar
+          </Button>
+          <Button variant="contained" color='error' onClick={() => handleDeleteCoche(cocheDelete)} startIcon={<DeleteIcon />}>
+                Delete
+          </Button>
+        </DialogContent>
+        <DialogActions>
+
+        </DialogActions>
+      </Dialog>
+
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -164,7 +210,7 @@ export function Coches({ signOut, user }) {
               <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />} style={{ marginRight: 10 }}>
                 Edit
               </Button>
-              <Button variant="contained" color='error' onClick={() => handleDeleteClient(row)} startIcon={<DeleteIcon />}>
+              <Button variant="contained" color='error' onClick={() => handleDeleteCocheClick(row)} startIcon={<DeleteIcon />}>
                 Delete
               </Button>
               </TableCell>

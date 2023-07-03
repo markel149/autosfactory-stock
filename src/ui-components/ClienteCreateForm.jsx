@@ -132,7 +132,12 @@ export default function ClienteCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Nombre"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Nombre</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={nombre}
@@ -161,7 +166,12 @@ export default function ClienteCreateForm(props) {
         {...getOverrideProps(overrides, "nombre")}
       ></TextField>
       <TextField
-        label="Apellido1"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Apellido1</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={apellido1}
@@ -277,7 +287,12 @@ export default function ClienteCreateForm(props) {
         {...getOverrideProps(overrides, "telefono")}
       ></TextField>
       <TextField
-        label="Dni"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Dni</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={dni}

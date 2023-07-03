@@ -18,5 +18,7 @@ type Coche @model @auth(rules: [{allow: public}]) {
   precioCompra: Float!
   precioVenta: Float
   notas: String
+  fechaCompra: AWSDate
+  fechaVenta: AWSDate
 }
  

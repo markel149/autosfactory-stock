@@ -40,6 +40,6 @@ export { default as NavBarHeader } from "./NavBarHeader";
 export { default as studioTheme } from "./studioTheme";
 export { default as ClienteCreateForm } from "./ClienteCreateForm";
 export { default as ClienteUpdateForm } from "./ClienteUpdateForm";
-export { default as CreateClient } from "./CreateClient";
 export { default as CocheCreateForm } from "./CocheCreateForm";
+export { default as CreateClient } from "./CreateClient";
 export { default as CocheUpdateForm } from "./CocheUpdateForm";
