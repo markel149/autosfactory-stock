@@ -160,24 +160,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Cliente": {
-                    "name": "Cliente",
-                    "isArray": false,
-                    "type": {
-                        "model": "Cliente"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": [
-                            "id"
-                        ],
-                        "targetNames": [
-                            "cocheClienteId"
-                        ]
-                    }
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -193,13 +175,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
-                },
-                "cocheClienteId": {
-                    "name": "cocheClienteId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -231,5 +206,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "6ed96ac8b2d9f945eb2f3c7808c6cafd"
+    "version": "26aeefb67e7691c25af164aac364b517"
 };

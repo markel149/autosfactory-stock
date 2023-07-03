@@ -15,7 +15,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { ClienteCreateForm } from '../ui-components';
+import { ClienteCreateForm, ClienteUpdateForm } from '../ui-components';
+import Edit from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const initialState = []
 
@@ -46,6 +48,18 @@ export function Clientes({ signOut, user }) {
 
     }
 
+    async function formSuccess2(){
+      const c = await DataStore.query(Cliente)
+      setClientes(c)
+      setOpenEditar(false)
+      // return (
+      //   <Alert severity="success">This is a success alert — check it out!</Alert>
+      // )
+
+    }
+
+    const [clienteEditar, setClienteEditar] = useState(initialState)
+
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -56,10 +70,27 @@ export function Clientes({ signOut, user }) {
       setOpen(false);
     };
 
+    const [openEditar, setOpenEditar] = React.useState(false);
+
+    const handleClickOpenEditar = (cliente) => {
+      setClienteEditar(cliente)
+      openEditor()
+      console.log(cliente)
+      console.log(clienteEditar)
+    };
+
+    const openEditor = () => {
+      setOpenEditar(true);
+    }
+
+    const handleCloseEditar = () => {
+      setOpenEditar(false);
+    };
+
     return (
       <div>
-        <h2 style={{textAlign: 'center'}}>Stock clientes</h2>
-        <Button variant="outlined" onClick={handleClickOpen}>
+        <h2 style={{textAlign: 'center'}}>Mis clientes</h2>
+        <Button variant="outlined" onClick={() => handleClickOpen()}>
         Añadir Cliente
       </Button>
       <Dialog
@@ -67,11 +98,32 @@ export function Clientes({ signOut, user }) {
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
+        maxWidth='lg'
+        fullWidth={true}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Estas dando de alta un nuevo cliente"}</DialogTitle>
+        <DialogTitle align='center'>{"Alta de nuevo cliente"}</DialogTitle>
         <DialogContent>
             <ClienteCreateForm onSuccess={formSuccess}></ClienteCreateForm>
+        </DialogContent>
+        <DialogActions>
+
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openEditar}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseEditar}
+        maxWidth='lg'
+        fullWidth={true}
+        color='secondary'
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle align='center'>{"Editar cliente"}</DialogTitle>
+        <DialogContent>
+            <ClienteUpdateForm onSuccess={formSuccess2} cliente={clienteEditar}/>
         </DialogContent>
         <DialogActions>
 
@@ -88,20 +140,29 @@ export function Clientes({ signOut, user }) {
             <TableCell align="center"><b>Email</b></TableCell>
             <TableCell align="center"><b>Telefono</b></TableCell>
             <TableCell align="center"><b>DNI</b></TableCell>
+            <TableCell align="center"><b>Acciones</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {clientes.map((row) => (
             <TableRow
-              key={row.name}
+              key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell align="center">{row.Nombre}</TableCell>
               <TableCell align="center">{row.Apellido1}</TableCell>
               <TableCell align="center">{row.Apellido2}</TableCell>
-              <TableCell align="center">{row.Apellido2}</TableCell>
-              <TableCell align="center">{row.Apellido2}</TableCell>
-              <TableCell align="center">{row.Apellido2}</TableCell>
+              <TableCell align="center">{row.email}</TableCell>
+              <TableCell align="center">{row.Telefono}</TableCell>
+              <TableCell align="center">{row.dni}</TableCell>
+              <TableCell align="center">
+              <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />}>
+                Edit
+              </Button>
+              <Button variant="contained" color='error' startIcon={<DeleteIcon />}>
+                Delete
+              </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

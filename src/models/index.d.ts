@@ -1,6 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled, AsyncItem } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
 
 
@@ -58,10 +58,8 @@ type EagerCoche = {
   readonly precioCompra: number;
   readonly precioVenta?: number | null;
   readonly notas?: string | null;
-  readonly Cliente?: Cliente | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly cocheClienteId?: string | null;
 }
 
 type LazyCoche = {
@@ -78,10 +76,8 @@ type LazyCoche = {
   readonly precioCompra: number;
   readonly precioVenta?: number | null;
   readonly notas?: string | null;
-  readonly Cliente: AsyncItem<Cliente | undefined>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly cocheClienteId?: string | null;
 }
 
 export declare type Coche = LazyLoading extends LazyLoadingDisabled ? EagerCoche : LazyCoche

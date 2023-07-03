@@ -63,13 +63,15 @@ export function Coches({ signOut, user }) {
         Añadir Coche
       </Button>
       <Dialog
+        fullWidth={true}
+        maxWidth='lg'
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Estas dando de alta un nuevo coche"}</DialogTitle>
+        <DialogTitle align='center'>{"Alta de nuevo coche"}</DialogTitle>
         <DialogContent>
             <CocheCreateForm onSuccess={formSuccess}></CocheCreateForm>
         </DialogContent>
