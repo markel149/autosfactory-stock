@@ -328,7 +328,7 @@ export function Coches({ signOut, user }) {
           <ListItem >
             <ListItemText
               primary="Importe de compra"
-              secondary={cocheInfo.precioCompra}
+              secondary={cocheInfo.precioCompra + "€"}
             />
           </ListItem>
           <Divider />
@@ -382,7 +382,7 @@ export function Coches({ signOut, user }) {
           <ListItem >
             <ListItemText
               primary="Importe de venta"
-              secondary={cocheInfo.precioVenta}
+              secondary={cocheInfo.precioVenta + "€"}
             />
           </ListItem>
           <Divider />
@@ -397,6 +397,13 @@ export function Coches({ signOut, user }) {
             <ListItemText
               primary="P.V.P"
               secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Ganancias por venta"
+              secondary={cocheInfo.precioVenta - cocheInfo.precioCompra + "€"}
             />
           </ListItem>
           <Divider />
