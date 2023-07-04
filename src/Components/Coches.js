@@ -271,6 +271,41 @@ export function Coches({ signOut, user }) {
           <h3 style={{textAlign: 'center'}}>Especificaciones tecnicas</h3>
         </Typography>
         <List>
+        <ListItem >
+            <ListItemText
+              primary="Año"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Combustible"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Cambio"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Potencia"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="C.C."
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
           <ListItem >
             <ListItemText
               primary="Kilometros"
@@ -280,7 +315,7 @@ export function Coches({ signOut, user }) {
           <Divider />
           <ListItem >
             <ListItemText
-              primary="color"
+              primary="Color"
               secondary={cocheInfo.color}
             />
           </ListItem>
@@ -292,7 +327,7 @@ export function Coches({ signOut, user }) {
         <List>
           <ListItem >
             <ListItemText
-              primary="Precio de compra"
+              primary="Importe de compra"
               secondary={cocheInfo.precioCompra}
             />
           </ListItem>
@@ -304,6 +339,41 @@ export function Coches({ signOut, user }) {
             />
           </ListItem>
           <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Nº Factura compra"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Nombre de vendedor"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Localidad vendedor"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="NIF/CIF Vendedor"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider></Divider>
+          <ListItem >
+            <ListItemText
+              primary="Precio de venta"
+              secondary="No seais impacientes que todavia no he metido esto."
+            />
+          </ListItem>
+          <Divider />
         </List>
         <Typography>
           <h3 style={{textAlign: 'center'}}>Detalles de venta</h3>
@@ -311,7 +381,7 @@ export function Coches({ signOut, user }) {
         <List>
           <ListItem >
             <ListItemText
-              primary="Precio de venta"
+              primary="Importe de venta"
               secondary={cocheInfo.precioVenta}
             />
           </ListItem>
@@ -320,6 +390,13 @@ export function Coches({ signOut, user }) {
             <ListItemText
               primary="Fecha de venta"
               secondary={cocheInfo.fechaVenta}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="P.V.P"
+              secondary="No seais impacientes que todavia no he metido esto."
             />
           </ListItem>
           <Divider />
