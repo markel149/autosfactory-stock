@@ -22,6 +22,16 @@ import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { Typography } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+
+import ListItemText from '@mui/material/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const initialState = []
@@ -119,6 +129,17 @@ export function Coches({ signOut, user }) {
       setCoches(c)
       setOpenDelete(false)
     }
+    const [cocheInfo, setCocheInfo] = useState(initialState)
+    const [openInfo, setOpenInfo] = React.useState(false);
+
+    const handleClickOpenInfo = (coche) => {
+      setCocheInfo(coche)
+      setOpenInfo(true);
+    };
+
+    const handleCloseInfo = () => {
+      setOpenInfo(false);
+    };
 
     return (
       <div>
@@ -192,6 +213,119 @@ export function Coches({ signOut, user }) {
         </DialogActions>
       </Dialog>
 
+      <Dialog
+        fullScreen
+        open={openInfo}
+        onClose={handleCloseInfo}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleCloseInfo}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              {cocheInfo.marca} {cocheInfo.modelo} - {cocheInfo.matricula}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Typography>
+          <h3 style={{textAlign: 'center'}}>Información general</h3>
+        </Typography>
+        <List> 
+          <ListItem >
+            <ListItemText
+              primary="Marca"
+              secondary={cocheInfo.marca}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Modelo"
+              secondary={cocheInfo.modelo}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Matricula"
+              secondary={cocheInfo.matricula}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Notas"
+              secondary={cocheInfo.notas}
+            />
+          </ListItem>
+          <Divider />
+        </List>
+        <Typography>
+          <h3 style={{textAlign: 'center'}}>Especificaciones tecnicas</h3>
+        </Typography>
+        <List>
+          <ListItem >
+            <ListItemText
+              primary="Kilometros"
+              secondary={cocheInfo.kilometros}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="color"
+              secondary={cocheInfo.color}
+            />
+          </ListItem>
+          <Divider />
+        </List>
+        <Typography>
+          <h3 style={{textAlign: 'center'}}>Detalles de compra</h3>
+        </Typography>
+        <List>
+          <ListItem >
+            <ListItemText
+              primary="Precio de compra"
+              secondary={cocheInfo.precioCompra}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Fecha de compra"
+              secondary={cocheInfo.fechaCompra}
+            />
+          </ListItem>
+          <Divider />
+        </List>
+        <Typography>
+          <h3 style={{textAlign: 'center'}}>Detalles de venta</h3>
+        </Typography>
+        <List>
+          <ListItem >
+            <ListItemText
+              primary="Precio de venta"
+              secondary={cocheInfo.precioVenta}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText
+              primary="Fecha de venta"
+              secondary={cocheInfo.fechaVenta}
+            />
+          </ListItem>
+          <Divider />
+        </List>
+      </Dialog>
+
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -214,11 +348,14 @@ export function Coches({ signOut, user }) {
               <TableCell align="center">{row.modelo}</TableCell>
               <TableCell align="center">{row.matricula}</TableCell>
               <TableCell align="center">
+              <Button variant="outlined" onClick={() => handleClickOpenInfo(row)} startIcon={<InfoIcon />} style={{ marginRight: 10 }}>
+                Detalles
+              </Button>
               <Button variant="outlined" onClick={() => handleClickOpenEditar(row)} startIcon={<Edit />} style={{ marginRight: 10 }}>
-                Edit
+                Editar
               </Button>
               <Button variant="contained" color='error' onClick={() => handleDeleteCocheClick(row)} startIcon={<DeleteIcon />}>
-                Delete
+                Borrar
               </Button>
               </TableCell>
             </TableRow>
