@@ -7,12 +7,13 @@
 import * as React from "react";
 import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
+import { Coche } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type CocheCreateFormInputValues = {
+export declare type NewForm14InputValues = {
     matricula?: string;
     marca?: string;
     modelo?: string;
@@ -37,7 +38,7 @@ export declare type CocheCreateFormInputValues = {
     vendido?: boolean;
     clienteID?: string;
 };
-export declare type CocheCreateFormValidationValues = {
+export declare type NewForm14ValidationValues = {
     matricula?: ValidationFunction<string>;
     marca?: ValidationFunction<string>;
     modelo?: ValidationFunction<string>;
@@ -63,8 +64,8 @@ export declare type CocheCreateFormValidationValues = {
     clienteID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type CocheCreateFormOverridesProps = {
-    CocheCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type NewForm14OverridesProps = {
+    NewForm14Grid?: PrimitiveOverrideProps<GridProps>;
     matricula?: PrimitiveOverrideProps<TextFieldProps>;
     marca?: PrimitiveOverrideProps<TextFieldProps>;
     modelo?: PrimitiveOverrideProps<TextFieldProps>;
@@ -89,14 +90,15 @@ export declare type CocheCreateFormOverridesProps = {
     vendido?: PrimitiveOverrideProps<SwitchFieldProps>;
     clienteID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type CocheCreateFormProps = React.PropsWithChildren<{
-    overrides?: CocheCreateFormOverridesProps | undefined | null;
+export declare type NewForm14Props = React.PropsWithChildren<{
+    overrides?: NewForm14OverridesProps | undefined | null;
 } & {
-    clearOnSuccess?: boolean;
-    onSubmit?: (fields: CocheCreateFormInputValues) => CocheCreateFormInputValues;
-    onSuccess?: (fields: CocheCreateFormInputValues) => void;
-    onError?: (fields: CocheCreateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: CocheCreateFormInputValues) => CocheCreateFormInputValues;
-    onValidate?: CocheCreateFormValidationValues;
+    id?: string;
+    coche?: Coche;
+    onSubmit?: (fields: NewForm14InputValues) => NewForm14InputValues;
+    onSuccess?: (fields: NewForm14InputValues) => void;
+    onError?: (fields: NewForm14InputValues, errorMessage: string) => void;
+    onChange?: (fields: NewForm14InputValues) => NewForm14InputValues;
+    onValidate?: NewForm14ValidationValues;
 } & React.CSSProperties>;
-export default function CocheCreateForm(props: CocheCreateFormProps): React.ReactElement;
+export default function NewForm14(props: NewForm14Props): React.ReactElement;

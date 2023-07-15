@@ -1,6 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/datastore";
 
 
 
@@ -18,6 +18,7 @@ type EagerCliente = {
   readonly email?: string | null;
   readonly telefono?: string | null;
   readonly dni: string;
+  readonly Coches?: (Coche | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -34,6 +35,7 @@ type LazyCliente = {
   readonly email?: string | null;
   readonly telefono?: string | null;
   readonly dni: string;
+  readonly Coches: AsyncCollection<Coche>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -50,9 +52,9 @@ type EagerCoche = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
+  readonly matricula: string;
   readonly marca: string;
   readonly modelo: string;
-  readonly matricula: string;
   readonly color?: string | null;
   readonly kilometros?: number | null;
   readonly precioCompra: number;
@@ -60,6 +62,19 @@ type EagerCoche = {
   readonly notas?: string | null;
   readonly fechaCompra?: string | null;
   readonly fechaVenta?: string | null;
+  readonly localidadVendedor?: string | null;
+  readonly nifVendedor?: string | null;
+  readonly numeroFactura?: string | null;
+  readonly anio?: number | null;
+  readonly combustible?: string | null;
+  readonly cambio?: string | null;
+  readonly potencia?: number | null;
+  readonly cc?: string | null;
+  readonly nombreVendedor?: string | null;
+  readonly precioVentaPublico?: number | null;
+  readonly precioReparaciones?: number | null;
+  readonly vendido?: boolean | null;
+  readonly clienteID?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -70,9 +85,9 @@ type LazyCoche = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
+  readonly matricula: string;
   readonly marca: string;
   readonly modelo: string;
-  readonly matricula: string;
   readonly color?: string | null;
   readonly kilometros?: number | null;
   readonly precioCompra: number;
@@ -80,6 +95,19 @@ type LazyCoche = {
   readonly notas?: string | null;
   readonly fechaCompra?: string | null;
   readonly fechaVenta?: string | null;
+  readonly localidadVendedor?: string | null;
+  readonly nifVendedor?: string | null;
+  readonly numeroFactura?: string | null;
+  readonly anio?: number | null;
+  readonly combustible?: string | null;
+  readonly cambio?: string | null;
+  readonly potencia?: number | null;
+  readonly cc?: string | null;
+  readonly nombreVendedor?: string | null;
+  readonly precioVentaPublico?: number | null;
+  readonly precioReparaciones?: number | null;
+  readonly vendido?: boolean | null;
+  readonly clienteID?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

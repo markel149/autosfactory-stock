@@ -6,11 +6,185 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Coche } from "../models";
+import {
+  Autocomplete,
+  Badge,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Icon,
+  ScrollView,
+  SwitchField,
+  Text,
+  TextField,
+  useTheme,
+} from "@aws-amplify/ui-react";
+import {
+  getOverrideProps,
+  useDataStoreBinding,
+} from "@aws-amplify/ui-react/internal";
+import { Coche, Cliente } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
+function ArrayField({
+  items = [],
+  onChange,
+  label,
+  inputFieldRef,
+  children,
+  hasError,
+  setFieldValue,
+  currentFieldValue,
+  defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
+  errorMessage,
+}) {
+  const labelElement = <Text>{label}</Text>;
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
+  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
+  const [isEditing, setIsEditing] = React.useState();
+  React.useEffect(() => {
+    if (isEditing) {
+      inputFieldRef?.current?.focus();
+    }
+  }, [isEditing]);
+  const removeItem = async (removeIndex) => {
+    const newItems = items.filter((value, index) => index !== removeIndex);
+    await onChange(newItems);
+    setSelectedBadgeIndex(undefined);
+  };
+  const addItem = async () => {
+    if (
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
+      !hasError
+    ) {
+      const newItems = [...items];
+      if (selectedBadgeIndex !== undefined) {
+        newItems[selectedBadgeIndex] = currentFieldValue;
+        setSelectedBadgeIndex(undefined);
+      } else {
+        newItems.push(currentFieldValue);
+      }
+      await onChange(newItems);
+      setIsEditing(false);
+    }
+  };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
+  return (
+    <React.Fragment>
+      {labelElement}
+      {isEditing && children}
+      {!isEditing ? (
+        <>
+          <Button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Add item
+          </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
+        </>
+      ) : (
+        <Flex justifyContent="flex-end">
+          {(currentFieldValue || isEditing) && (
+            <Button
+              children="Cancel"
+              type="button"
+              size="small"
+              onClick={() => {
+                setFieldValue(defaultFieldValue);
+                setIsEditing(false);
+                setSelectedBadgeIndex(undefined);
+              }}
+            ></Button>
+          )}
+          <Button
+            size="small"
+            variation="link"
+            isDisabled={hasError}
+            onClick={addItem}
+          >
+            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+          </Button>
+        </Flex>
+      )}
+      {arraySection}
+    </React.Fragment>
+  );
+}
 export default function CocheCreateForm(props) {
   const {
     clearOnSuccess = true,
@@ -23,9 +197,9 @@ export default function CocheCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    matricula: "",
     marca: "",
     modelo: "",
-    matricula: "",
     color: "",
     kilometros: "",
     precioCompra: "",
@@ -33,10 +207,23 @@ export default function CocheCreateForm(props) {
     notas: "",
     fechaCompra: "",
     fechaVenta: "",
+    localidadVendedor: "",
+    nifVendedor: "",
+    numeroFactura: "",
+    anio: "",
+    combustible: "",
+    cambio: "",
+    potencia: "",
+    cc: "",
+    nombreVendedor: "",
+    precioVentaPublico: "",
+    precioReparaciones: "",
+    vendido: false,
+    clienteID: undefined,
   };
+  const [matricula, setMatricula] = React.useState(initialValues.matricula);
   const [marca, setMarca] = React.useState(initialValues.marca);
   const [modelo, setModelo] = React.useState(initialValues.modelo);
-  const [matricula, setMatricula] = React.useState(initialValues.matricula);
   const [color, setColor] = React.useState(initialValues.color);
   const [kilometros, setKilometros] = React.useState(initialValues.kilometros);
   const [precioCompra, setPrecioCompra] = React.useState(
@@ -50,11 +237,38 @@ export default function CocheCreateForm(props) {
     initialValues.fechaCompra
   );
   const [fechaVenta, setFechaVenta] = React.useState(initialValues.fechaVenta);
+  const [localidadVendedor, setLocalidadVendedor] = React.useState(
+    initialValues.localidadVendedor
+  );
+  const [nifVendedor, setNifVendedor] = React.useState(
+    initialValues.nifVendedor
+  );
+  const [numeroFactura, setNumeroFactura] = React.useState(
+    initialValues.numeroFactura
+  );
+  const [anio, setAnio] = React.useState(initialValues.anio);
+  const [combustible, setCombustible] = React.useState(
+    initialValues.combustible
+  );
+  const [cambio, setCambio] = React.useState(initialValues.cambio);
+  const [potencia, setPotencia] = React.useState(initialValues.potencia);
+  const [cc, setCc] = React.useState(initialValues.cc);
+  const [nombreVendedor, setNombreVendedor] = React.useState(
+    initialValues.nombreVendedor
+  );
+  const [precioVentaPublico, setPrecioVentaPublico] = React.useState(
+    initialValues.precioVentaPublico
+  );
+  const [precioReparaciones, setPrecioReparaciones] = React.useState(
+    initialValues.precioReparaciones
+  );
+  const [vendido, setVendido] = React.useState(initialValues.vendido);
+  const [clienteID, setClienteID] = React.useState(initialValues.clienteID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
+    setMatricula(initialValues.matricula);
     setMarca(initialValues.marca);
     setModelo(initialValues.modelo);
-    setMatricula(initialValues.matricula);
     setColor(initialValues.color);
     setKilometros(initialValues.kilometros);
     setPrecioCompra(initialValues.precioCompra);
@@ -62,12 +276,39 @@ export default function CocheCreateForm(props) {
     setNotas(initialValues.notas);
     setFechaCompra(initialValues.fechaCompra);
     setFechaVenta(initialValues.fechaVenta);
+    setLocalidadVendedor(initialValues.localidadVendedor);
+    setNifVendedor(initialValues.nifVendedor);
+    setNumeroFactura(initialValues.numeroFactura);
+    setAnio(initialValues.anio);
+    setCombustible(initialValues.combustible);
+    setCambio(initialValues.cambio);
+    setPotencia(initialValues.potencia);
+    setCc(initialValues.cc);
+    setNombreVendedor(initialValues.nombreVendedor);
+    setPrecioVentaPublico(initialValues.precioVentaPublico);
+    setPrecioReparaciones(initialValues.precioReparaciones);
+    setVendido(initialValues.vendido);
+    setClienteID(initialValues.clienteID);
+    setCurrentClienteIDValue(undefined);
+    setCurrentClienteIDDisplayValue("");
     setErrors({});
   };
+  const [currentClienteIDDisplayValue, setCurrentClienteIDDisplayValue] =
+    React.useState("");
+  const [currentClienteIDValue, setCurrentClienteIDValue] =
+    React.useState(undefined);
+  const clienteIDRef = React.createRef();
+  const clienteRecords = useDataStoreBinding({
+    type: "collection",
+    model: Cliente,
+  }).items;
+  const getDisplayValue = {
+    clienteID: (r) => `${r?.nombre ? r?.nombre + " - " : ""}${r?.id}`,
+  };
   const validations = {
+    matricula: [{ type: "Required" }],
     marca: [{ type: "Required" }],
     modelo: [{ type: "Required" }],
-    matricula: [{ type: "Required" }],
     color: [],
     kilometros: [],
     precioCompra: [{ type: "Required" }],
@@ -75,6 +316,19 @@ export default function CocheCreateForm(props) {
     notas: [],
     fechaCompra: [],
     fechaVenta: [],
+    localidadVendedor: [],
+    nifVendedor: [],
+    numeroFactura: [],
+    anio: [],
+    combustible: [],
+    cambio: [],
+    potencia: [],
+    cc: [],
+    nombreVendedor: [],
+    precioVentaPublico: [],
+    precioReparaciones: [],
+    vendido: [],
+    clienteID: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -102,9 +356,9 @@ export default function CocheCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          matricula,
           marca,
           modelo,
-          matricula,
           color,
           kilometros,
           precioCompra,
@@ -112,6 +366,19 @@ export default function CocheCreateForm(props) {
           notas,
           fechaCompra,
           fechaVenta,
+          localidadVendedor,
+          nifVendedor,
+          numeroFactura,
+          anio,
+          combustible,
+          cambio,
+          potencia,
+          cc,
+          nombreVendedor,
+          precioVentaPublico,
+          precioReparaciones,
+          vendido,
+          clienteID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -160,6 +427,57 @@ export default function CocheCreateForm(props) {
       <TextField
         label={
           <span style={{ display: "inline-flex" }}>
+            <span>Matricula</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
+        isRequired={true}
+        isReadOnly={false}
+        value={matricula}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula: value,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.matricula ?? value;
+          }
+          if (errors.matricula?.hasError) {
+            runValidationTasks("matricula", value);
+          }
+          setMatricula(value);
+        }}
+        onBlur={() => runValidationTasks("matricula", matricula)}
+        errorMessage={errors.matricula?.errorMessage}
+        hasError={errors.matricula?.hasError}
+        {...getOverrideProps(overrides, "matricula")}
+      ></TextField>
+      <TextField
+        label={
+          <span style={{ display: "inline-flex" }}>
             <span>Marca</span>
             <span style={{ color: "red" }}>*</span>
           </span>
@@ -171,9 +489,9 @@ export default function CocheCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              matricula,
               marca: value,
               modelo,
-              matricula,
               color,
               kilometros,
               precioCompra,
@@ -181,6 +499,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.marca ?? value;
@@ -209,9 +540,9 @@ export default function CocheCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo: value,
-              matricula,
               color,
               kilometros,
               precioCompra,
@@ -219,6 +550,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.modelo ?? value;
@@ -234,44 +578,6 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "modelo")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Matricula</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
-        isRequired={true}
-        isReadOnly={false}
-        value={matricula}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              marca,
-              modelo,
-              matricula: value,
-              color,
-              kilometros,
-              precioCompra,
-              precioVenta,
-              notas,
-              fechaCompra,
-              fechaVenta,
-            };
-            const result = onChange(modelFields);
-            value = result?.matricula ?? value;
-          }
-          if (errors.matricula?.hasError) {
-            runValidationTasks("matricula", value);
-          }
-          setMatricula(value);
-        }}
-        onBlur={() => runValidationTasks("matricula", matricula)}
-        errorMessage={errors.matricula?.errorMessage}
-        hasError={errors.matricula?.hasError}
-        {...getOverrideProps(overrides, "matricula")}
-      ></TextField>
-      <TextField
         label="Color"
         isRequired={false}
         isReadOnly={false}
@@ -280,9 +586,9 @@ export default function CocheCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo,
-              matricula,
               color: value,
               kilometros,
               precioCompra,
@@ -290,6 +596,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.color ?? value;
@@ -317,9 +636,9 @@ export default function CocheCreateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo,
-              matricula,
               color,
               kilometros: value,
               precioCompra,
@@ -327,6 +646,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.kilometros ?? value;
@@ -359,9 +691,9 @@ export default function CocheCreateForm(props) {
             : parseFloat(e.target.value);
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo,
-              matricula,
               color,
               kilometros,
               precioCompra: value,
@@ -369,6 +701,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioCompra ?? value;
@@ -396,9 +741,9 @@ export default function CocheCreateForm(props) {
             : parseFloat(e.target.value);
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo,
-              matricula,
               color,
               kilometros,
               precioCompra,
@@ -406,6 +751,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioVenta ?? value;
@@ -429,9 +787,9 @@ export default function CocheCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo,
-              matricula,
               color,
               kilometros,
               precioCompra,
@@ -439,6 +797,19 @@ export default function CocheCreateForm(props) {
               notas: value,
               fechaCompra,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.notas ?? value;
@@ -463,9 +834,9 @@ export default function CocheCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo,
-              matricula,
               color,
               kilometros,
               precioCompra,
@@ -473,6 +844,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra: value,
               fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.fechaCompra ?? value;
@@ -497,9 +881,9 @@ export default function CocheCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              matricula,
               marca,
               modelo,
-              matricula,
               color,
               kilometros,
               precioCompra,
@@ -507,6 +891,19 @@ export default function CocheCreateForm(props) {
               notas,
               fechaCompra,
               fechaVenta: value,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.fechaVenta ?? value;
@@ -521,6 +918,680 @@ export default function CocheCreateForm(props) {
         hasError={errors.fechaVenta?.hasError}
         {...getOverrideProps(overrides, "fechaVenta")}
       ></TextField>
+      <TextField
+        label="Localidad vendedor"
+        isRequired={false}
+        isReadOnly={false}
+        value={localidadVendedor}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor: value,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.localidadVendedor ?? value;
+          }
+          if (errors.localidadVendedor?.hasError) {
+            runValidationTasks("localidadVendedor", value);
+          }
+          setLocalidadVendedor(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("localidadVendedor", localidadVendedor)
+        }
+        errorMessage={errors.localidadVendedor?.errorMessage}
+        hasError={errors.localidadVendedor?.hasError}
+        {...getOverrideProps(overrides, "localidadVendedor")}
+      ></TextField>
+      <TextField
+        label="Nif vendedor"
+        isRequired={false}
+        isReadOnly={false}
+        value={nifVendedor}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor: value,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.nifVendedor ?? value;
+          }
+          if (errors.nifVendedor?.hasError) {
+            runValidationTasks("nifVendedor", value);
+          }
+          setNifVendedor(value);
+        }}
+        onBlur={() => runValidationTasks("nifVendedor", nifVendedor)}
+        errorMessage={errors.nifVendedor?.errorMessage}
+        hasError={errors.nifVendedor?.hasError}
+        {...getOverrideProps(overrides, "nifVendedor")}
+      ></TextField>
+      <TextField
+        label="Numero factura"
+        isRequired={false}
+        isReadOnly={false}
+        value={numeroFactura}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura: value,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.numeroFactura ?? value;
+          }
+          if (errors.numeroFactura?.hasError) {
+            runValidationTasks("numeroFactura", value);
+          }
+          setNumeroFactura(value);
+        }}
+        onBlur={() => runValidationTasks("numeroFactura", numeroFactura)}
+        errorMessage={errors.numeroFactura?.errorMessage}
+        hasError={errors.numeroFactura?.hasError}
+        {...getOverrideProps(overrides, "numeroFactura")}
+      ></TextField>
+      <TextField
+        label="Anio"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={anio}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio: value,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.anio ?? value;
+          }
+          if (errors.anio?.hasError) {
+            runValidationTasks("anio", value);
+          }
+          setAnio(value);
+        }}
+        onBlur={() => runValidationTasks("anio", anio)}
+        errorMessage={errors.anio?.errorMessage}
+        hasError={errors.anio?.hasError}
+        {...getOverrideProps(overrides, "anio")}
+      ></TextField>
+      <TextField
+        label="Combustible"
+        isRequired={false}
+        isReadOnly={false}
+        value={combustible}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible: value,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.combustible ?? value;
+          }
+          if (errors.combustible?.hasError) {
+            runValidationTasks("combustible", value);
+          }
+          setCombustible(value);
+        }}
+        onBlur={() => runValidationTasks("combustible", combustible)}
+        errorMessage={errors.combustible?.errorMessage}
+        hasError={errors.combustible?.hasError}
+        {...getOverrideProps(overrides, "combustible")}
+      ></TextField>
+      <TextField
+        label="Cambio"
+        isRequired={false}
+        isReadOnly={false}
+        value={cambio}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio: value,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.cambio ?? value;
+          }
+          if (errors.cambio?.hasError) {
+            runValidationTasks("cambio", value);
+          }
+          setCambio(value);
+        }}
+        onBlur={() => runValidationTasks("cambio", cambio)}
+        errorMessage={errors.cambio?.errorMessage}
+        hasError={errors.cambio?.hasError}
+        {...getOverrideProps(overrides, "cambio")}
+      ></TextField>
+      <TextField
+        label="Potencia"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={potencia}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia: value,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.potencia ?? value;
+          }
+          if (errors.potencia?.hasError) {
+            runValidationTasks("potencia", value);
+          }
+          setPotencia(value);
+        }}
+        onBlur={() => runValidationTasks("potencia", potencia)}
+        errorMessage={errors.potencia?.errorMessage}
+        hasError={errors.potencia?.hasError}
+        {...getOverrideProps(overrides, "potencia")}
+      ></TextField>
+      <TextField
+        label="Cc"
+        isRequired={false}
+        isReadOnly={false}
+        value={cc}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc: value,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.cc ?? value;
+          }
+          if (errors.cc?.hasError) {
+            runValidationTasks("cc", value);
+          }
+          setCc(value);
+        }}
+        onBlur={() => runValidationTasks("cc", cc)}
+        errorMessage={errors.cc?.errorMessage}
+        hasError={errors.cc?.hasError}
+        {...getOverrideProps(overrides, "cc")}
+      ></TextField>
+      <TextField
+        label="Nombre vendedor"
+        isRequired={false}
+        isReadOnly={false}
+        value={nombreVendedor}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor: value,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.nombreVendedor ?? value;
+          }
+          if (errors.nombreVendedor?.hasError) {
+            runValidationTasks("nombreVendedor", value);
+          }
+          setNombreVendedor(value);
+        }}
+        onBlur={() => runValidationTasks("nombreVendedor", nombreVendedor)}
+        errorMessage={errors.nombreVendedor?.errorMessage}
+        hasError={errors.nombreVendedor?.hasError}
+        {...getOverrideProps(overrides, "nombreVendedor")}
+      ></TextField>
+      <TextField
+        label="Precio venta publico"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={precioVentaPublico}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico: value,
+              precioReparaciones,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.precioVentaPublico ?? value;
+          }
+          if (errors.precioVentaPublico?.hasError) {
+            runValidationTasks("precioVentaPublico", value);
+          }
+          setPrecioVentaPublico(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("precioVentaPublico", precioVentaPublico)
+        }
+        errorMessage={errors.precioVentaPublico?.errorMessage}
+        hasError={errors.precioVentaPublico?.hasError}
+        {...getOverrideProps(overrides, "precioVentaPublico")}
+      ></TextField>
+      <TextField
+        label="Precio reparaciones"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={precioReparaciones}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones: value,
+              vendido,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.precioReparaciones ?? value;
+          }
+          if (errors.precioReparaciones?.hasError) {
+            runValidationTasks("precioReparaciones", value);
+          }
+          setPrecioReparaciones(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("precioReparaciones", precioReparaciones)
+        }
+        errorMessage={errors.precioReparaciones?.errorMessage}
+        hasError={errors.precioReparaciones?.hasError}
+        {...getOverrideProps(overrides, "precioReparaciones")}
+      ></TextField>
+      <SwitchField
+        label="Vendido"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={vendido}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido: value,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.vendido ?? value;
+          }
+          if (errors.vendido?.hasError) {
+            runValidationTasks("vendido", value);
+          }
+          setVendido(value);
+        }}
+        onBlur={() => runValidationTasks("vendido", vendido)}
+        errorMessage={errors.vendido?.errorMessage}
+        hasError={errors.vendido?.hasError}
+        {...getOverrideProps(overrides, "vendido")}
+      ></SwitchField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.clienteID ?? value;
+          }
+          setClienteID(value);
+          setCurrentClienteIDValue(undefined);
+        }}
+        currentFieldValue={currentClienteIDValue}
+        label={"Cliente id"}
+        items={clienteID ? [clienteID] : []}
+        hasError={errors?.clienteID?.hasError}
+        errorMessage={errors?.clienteID?.errorMessage}
+        getBadgeText={(value) =>
+          value
+            ? getDisplayValue.clienteID(
+                clienteRecords.find((r) => r.id === value)
+              )
+            : ""
+        }
+        setFieldValue={(value) => {
+          setCurrentClienteIDDisplayValue(
+            value
+              ? getDisplayValue.clienteID(
+                  clienteRecords.find((r) => r.id === value)
+                )
+              : ""
+          );
+          setCurrentClienteIDValue(value);
+        }}
+        inputFieldRef={clienteIDRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Cliente id"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Cliente"
+          value={currentClienteIDDisplayValue}
+          options={clienteRecords
+            .filter(
+              (r, i, arr) =>
+                arr.findIndex((member) => member?.id === r?.id) === i
+            )
+            .map((r) => ({
+              id: r?.id,
+              label: getDisplayValue.clienteID?.(r),
+            }))}
+          onSelect={({ id, label }) => {
+            setCurrentClienteIDValue(id);
+            setCurrentClienteIDDisplayValue(label);
+            runValidationTasks("clienteID", label);
+          }}
+          onClear={() => {
+            setCurrentClienteIDDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.clienteID?.hasError) {
+              runValidationTasks("clienteID", value);
+            }
+            setCurrentClienteIDDisplayValue(value);
+            setCurrentClienteIDValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("clienteID", currentClienteIDValue)}
+          errorMessage={errors.clienteID?.errorMessage}
+          hasError={errors.clienteID?.hasError}
+          ref={clienteIDRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "clienteID")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

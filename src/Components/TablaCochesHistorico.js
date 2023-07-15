@@ -11,35 +11,16 @@ GridToolbarDensitySelector,
 GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
-import Edit from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import InfoIcon from '@mui/icons-material/Info';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import IconButton from '@mui/material/IconButton';
 import clsx from 'clsx';
 
 
   
 
-export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDelete, setCocheDelete, setCocheInfo, setOpenInfo }) {
+export function TablaCochesHistorico({ coches, setOpenEditar, setCocheEditar, setOpenDelete, setCocheDelete, setCocheInfo, setOpenInfo }) {
 
 
-    const handleClickOpenEditar = (coche) => {
-        setCocheEditar(coche)
-        setOpenEditar(true);
-    };
-
-    const handleClickOpenInfo = (coche) => {
-        setCocheInfo(coche)
-        console.log(coche)
-        setOpenInfo(true);
-    };
-  
-    const  handleDeleteCocheClick = (coche) => {
-        setCocheDelete(coche)
-        setOpenDelete(true);
-    };
+   
 
     function CustomToolbar() {
         return (
@@ -112,21 +93,6 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
               sinvender: params.value === 'En Stock',
             });
           },
-        },
-        {
-          headerName: 'Acciones',
-          description: 'This column has a value getter and is not sortable.',
-          sortable: false,
-          flex: 1,
-          hideable: false,
-          renderCell: (cellValues) => {return (
-            <div>
-            <IconButton variant="outlined" onClick={() => handleClickOpenInfo(cellValues.row)} color='success' style={{ marginRight: 10 }}> <AttachMoneyIcon></AttachMoneyIcon></IconButton>
-            <IconButton variant="outlined" onClick={() => handleClickOpenInfo(cellValues.row)} style={{ marginRight: 10 }} color='primary'> <InfoIcon></InfoIcon></IconButton>
-            <IconButton variant="outlined" onClick={() => handleClickOpenEditar(cellValues.row)} startIcon={<Edit />} style={{ marginRight: 10 }}><Edit></Edit></IconButton>
-            <IconButton variant="contained" color='error' onClick={() => handleDeleteCocheClick(cellValues.row)}><DeleteIcon></DeleteIcon></IconButton>
-            </div>
-        )},
         }
       ];
   
@@ -135,7 +101,7 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
     return (
         <div>
         <Box sx={{
-                height: '75vh',
+                height: '50vh',
                 width: '95%',
                 margin: 'auto',
                 '& .super-app-theme--cell': {
@@ -164,7 +130,7 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 25,
+                  pageSize: 5,
                 },
               },
             }}
@@ -193,4 +159,4 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
     )
 }
 
-export default TablaCoches
+export default TablaCochesHistorico

@@ -184,9 +184,10 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function ClienteCreateForm(props) {
+export default function ClienteUpdate(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    cliente: clienteModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -213,17 +214,35 @@ export default function ClienteCreateForm(props) {
   const [Coches, setCoches] = React.useState(initialValues.Coches);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setNombre(initialValues.nombre);
-    setApellido1(initialValues.apellido1);
-    setApellido2(initialValues.apellido2);
-    setEmail(initialValues.email);
-    setTelefono(initialValues.telefono);
-    setDni(initialValues.dni);
-    setCoches(initialValues.Coches);
+    const cleanValues = clienteRecord
+      ? { ...initialValues, ...clienteRecord, Coches: linkedCoches }
+      : initialValues;
+    setNombre(cleanValues.nombre);
+    setApellido1(cleanValues.apellido1);
+    setApellido2(cleanValues.apellido2);
+    setEmail(cleanValues.email);
+    setTelefono(cleanValues.telefono);
+    setDni(cleanValues.dni);
+    setCoches(cleanValues.Coches ?? []);
     setCurrentCochesValue(undefined);
     setCurrentCochesDisplayValue("");
     setErrors({});
   };
+  const [clienteRecord, setClienteRecord] = React.useState(clienteModelProp);
+  const [linkedCoches, setLinkedCoches] = React.useState([]);
+  const canUnlinkCoches = true;
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? await DataStore.query(Cliente, idProp)
+        : clienteModelProp;
+      setClienteRecord(record);
+      const linkedCoches = record ? await record.Coches.toArray() : [];
+      setLinkedCoches(linkedCoches);
+    };
+    queryData();
+  }, [idProp, clienteModelProp]);
+  React.useEffect(resetStateValues, [clienteRecord, linkedCoches]);
   const [currentCochesDisplayValue, setCurrentCochesDisplayValue] =
     React.useState("");
   const [currentCochesValue, setCurrentCochesValue] = React.useState(undefined);
@@ -322,6 +341,48 @@ export default function ClienteCreateForm(props) {
               modelFields[key] = undefined;
             }
           });
+          const promises = [];
+          const cochesToLink = [];
+          const cochesToUnLink = [];
+          const cochesSet = new Set();
+          const linkedCochesSet = new Set();
+          Coches.forEach((r) => cochesSet.add(getIDValue.Coches?.(r)));
+          linkedCoches.forEach((r) =>
+            linkedCochesSet.add(getIDValue.Coches?.(r))
+          );
+          linkedCoches.forEach((r) => {
+            if (!cochesSet.has(getIDValue.Coches?.(r))) {
+              cochesToUnLink.push(r);
+            }
+          });
+          Coches.forEach((r) => {
+            if (!linkedCochesSet.has(getIDValue.Coches?.(r))) {
+              cochesToLink.push(r);
+            }
+          });
+          cochesToUnLink.forEach((original) => {
+            if (!canUnlinkCoches) {
+              throw Error(
+                `Coche ${original.id} cannot be unlinked from Cliente because clienteID is a required field.`
+              );
+            }
+            promises.push(
+              DataStore.save(
+                Coche.copyOf(original, (updated) => {
+                  updated.clienteID = null;
+                })
+              )
+            );
+          });
+          cochesToLink.forEach((original) => {
+            promises.push(
+              DataStore.save(
+                Coche.copyOf(original, (updated) => {
+                  updated.clienteID = clienteRecord.id;
+                })
+              )
+            );
+          });
           const modelFieldsToSave = {
             nombre: modelFields.nombre,
             apellido1: modelFields.apellido1,
@@ -330,26 +391,16 @@ export default function ClienteCreateForm(props) {
             telefono: modelFields.telefono,
             dni: modelFields.dni,
           };
-          const cliente = await DataStore.save(new Cliente(modelFieldsToSave));
-          const promises = [];
           promises.push(
-            ...Coches.reduce((promises, original) => {
-              promises.push(
-                DataStore.save(
-                  Coche.copyOf(original, (updated) => {
-                    updated.clienteID = cliente.id;
-                  })
-                )
-              );
-              return promises;
-            }, [])
+            DataStore.save(
+              Cliente.copyOf(clienteRecord, (updated) => {
+                Object.assign(updated, modelFieldsToSave);
+              })
+            )
           );
           await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -357,16 +408,11 @@ export default function ClienteCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "ClienteCreateForm")}
+      {...getOverrideProps(overrides, "ClienteUpdate")}
       {...rest}
     >
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Nombre</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Nombre"
         isRequired={true}
         isReadOnly={false}
         value={nombre}
@@ -396,12 +442,7 @@ export default function ClienteCreateForm(props) {
         {...getOverrideProps(overrides, "nombre")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Apellido1</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Apellido1"
         isRequired={true}
         isReadOnly={false}
         value={apellido1}
@@ -521,12 +562,7 @@ export default function ClienteCreateForm(props) {
         {...getOverrideProps(overrides, "telefono")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Dni</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Dni"
         isRequired={true}
         isReadOnly={false}
         value={dni}
@@ -637,13 +673,14 @@ export default function ClienteCreateForm(props) {
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || clienteModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -653,7 +690,10 @@ export default function ClienteCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || clienteModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

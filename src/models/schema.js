@@ -52,6 +52,22 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "Coches": {
+                    "name": "Coches",
+                    "isArray": true,
+                    "type": {
+                        "model": "Coche"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "clienteID"
+                        ]
+                    }
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -104,6 +120,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "matricula": {
+                    "name": "matricula",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "marca": {
                     "name": "marca",
                     "isArray": false,
@@ -113,13 +136,6 @@ export const schema = {
                 },
                 "modelo": {
                     "name": "modelo",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "matricula": {
-                    "name": "matricula",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -174,6 +190,97 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "localidadVendedor": {
+                    "name": "localidadVendedor",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "nifVendedor": {
+                    "name": "nifVendedor",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "numeroFactura": {
+                    "name": "numeroFactura",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "anio": {
+                    "name": "anio",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "combustible": {
+                    "name": "combustible",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cambio": {
+                    "name": "cambio",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "potencia": {
+                    "name": "potencia",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cc": {
+                    "name": "cc",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "nombreVendedor": {
+                    "name": "nombreVendedor",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "precioVentaPublico": {
+                    "name": "precioVentaPublico",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "precioReparaciones": {
+                    "name": "precioReparaciones",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "vendido": {
+                    "name": "vendido",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "clienteID": {
+                    "name": "clienteID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -199,6 +306,15 @@ export const schema = {
                     "properties": {}
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "byCliente",
+                        "fields": [
+                            "clienteID"
+                        ]
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -220,5 +336,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "e29dc222a1f9d9e53bd309f2d7d084ae"
+    "version": "b5ae3f110a0acaf01f17526d362b4c39"
 };

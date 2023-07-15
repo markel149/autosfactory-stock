@@ -185,7 +185,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function CocheUpdateForm(props) {
+export default function NewForm14(props) {
   const {
     id: idProp,
     coche: cocheModelProp,
@@ -439,7 +439,7 @@ export default function CocheUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "CocheUpdateForm")}
+      {...getOverrideProps(overrides, "NewForm14")}
       {...rest}
     >
       <TextField

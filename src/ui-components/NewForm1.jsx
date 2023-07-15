@@ -11,10 +11,9 @@ import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Cliente } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-export default function ClienteUpdateForm(props) {
+export default function NewForm1(props) {
   const {
-    id: idProp,
-    cliente: clienteModelProp,
+    clearOnSuccess = true,
     onSuccess,
     onError,
     onSubmit,
@@ -39,28 +38,14 @@ export default function ClienteUpdateForm(props) {
   const [dni, setDni] = React.useState(initialValues.dni);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = clienteRecord
-      ? { ...initialValues, ...clienteRecord }
-      : initialValues;
-    setNombre(cleanValues.nombre);
-    setApellido1(cleanValues.apellido1);
-    setApellido2(cleanValues.apellido2);
-    setEmail(cleanValues.email);
-    setTelefono(cleanValues.telefono);
-    setDni(cleanValues.dni);
+    setNombre(initialValues.nombre);
+    setApellido1(initialValues.apellido1);
+    setApellido2(initialValues.apellido2);
+    setEmail(initialValues.email);
+    setTelefono(initialValues.telefono);
+    setDni(initialValues.dni);
     setErrors({});
   };
-  const [clienteRecord, setClienteRecord] = React.useState(clienteModelProp);
-  React.useEffect(() => {
-    const queryData = async () => {
-      const record = idProp
-        ? await DataStore.query(Cliente, idProp)
-        : clienteModelProp;
-      setClienteRecord(record);
-    };
-    queryData();
-  }, [idProp, clienteModelProp]);
-  React.useEffect(resetStateValues, [clienteRecord]);
   const validations = {
     nombre: [{ type: "Required" }],
     apellido1: [{ type: "Required" }],
@@ -130,13 +115,12 @@ export default function ClienteUpdateForm(props) {
               modelFields[key] = undefined;
             }
           });
-          await DataStore.save(
-            Cliente.copyOf(clienteRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
-          );
+          await DataStore.save(new Cliente(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
+          }
+          if (clearOnSuccess) {
+            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -144,16 +128,11 @@ export default function ClienteUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "ClienteUpdateForm")}
+      {...getOverrideProps(overrides, "NewForm1")}
       {...rest}
     >
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Nombre</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Nombre"
         isRequired={true}
         isReadOnly={false}
         value={nombre}
@@ -182,12 +161,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "nombre")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Apellido1</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Apellido1"
         isRequired={true}
         isReadOnly={false}
         value={apellido1}
@@ -303,12 +277,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "telefono")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Dni</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Dni"
         isRequired={true}
         isReadOnly={false}
         value={dni}
@@ -341,14 +310,13 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Reset"
+          children="Clear"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || clienteModelProp)}
-          {...getOverrideProps(overrides, "ResetButton")}
+          {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -358,10 +326,7 @@ export default function ClienteUpdateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={
-              !(idProp || clienteModelProp) ||
-              Object.values(errors).some((e) => e?.hasError)
-            }
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

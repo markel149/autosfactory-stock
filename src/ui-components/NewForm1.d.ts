@@ -5,51 +5,47 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Coche } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type ClienteCreateFormInputValues = {
+export declare type NewForm1InputValues = {
     nombre?: string;
     apellido1?: string;
     apellido2?: string;
     email?: string;
     telefono?: string;
     dni?: string;
-    Coches?: Coche[];
 };
-export declare type ClienteCreateFormValidationValues = {
+export declare type NewForm1ValidationValues = {
     nombre?: ValidationFunction<string>;
     apellido1?: ValidationFunction<string>;
     apellido2?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     telefono?: ValidationFunction<string>;
     dni?: ValidationFunction<string>;
-    Coches?: ValidationFunction<Coche>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type ClienteCreateFormOverridesProps = {
-    ClienteCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type NewForm1OverridesProps = {
+    NewForm1Grid?: PrimitiveOverrideProps<GridProps>;
     nombre?: PrimitiveOverrideProps<TextFieldProps>;
     apellido1?: PrimitiveOverrideProps<TextFieldProps>;
     apellido2?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     telefono?: PrimitiveOverrideProps<TextFieldProps>;
     dni?: PrimitiveOverrideProps<TextFieldProps>;
-    Coches?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type ClienteCreateFormProps = React.PropsWithChildren<{
-    overrides?: ClienteCreateFormOverridesProps | undefined | null;
+export declare type NewForm1Props = React.PropsWithChildren<{
+    overrides?: NewForm1OverridesProps | undefined | null;
 } & {
     clearOnSuccess?: boolean;
-    onSubmit?: (fields: ClienteCreateFormInputValues) => ClienteCreateFormInputValues;
-    onSuccess?: (fields: ClienteCreateFormInputValues) => void;
-    onError?: (fields: ClienteCreateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: ClienteCreateFormInputValues) => ClienteCreateFormInputValues;
-    onValidate?: ClienteCreateFormValidationValues;
+    onSubmit?: (fields: NewForm1InputValues) => NewForm1InputValues;
+    onSuccess?: (fields: NewForm1InputValues) => void;
+    onError?: (fields: NewForm1InputValues, errorMessage: string) => void;
+    onChange?: (fields: NewForm1InputValues) => NewForm1InputValues;
+    onValidate?: NewForm1ValidationValues;
 } & React.CSSProperties>;
-export default function ClienteCreateForm(props: ClienteCreateFormProps): React.ReactElement;
+export default function NewForm1(props: NewForm1Props): React.ReactElement;

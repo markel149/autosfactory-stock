@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import  { Clientes }  from './Components/Clientes';
 import { Coches }  from './Components/Coches';
+import { Home }  from './Components/Home';
 import { Barra } from './Components/Barra';
 const components = {
   Header() {
@@ -31,6 +32,7 @@ export default function App() {
           <HashRouter>
             <Barra signOut={signOut}/> 
             <Switch>
+              <Route exact path="/" component={Home} />
               <Route exact path="/coches" component={Coches} />
               <Route exact path="/clientes" component={Clientes} />
             </Switch>

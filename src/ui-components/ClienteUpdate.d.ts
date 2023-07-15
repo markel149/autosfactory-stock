@@ -7,13 +7,13 @@
 import * as React from "react";
 import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Coche } from "../models";
+import { Cliente, Coche } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type ClienteCreateFormInputValues = {
+export declare type ClienteUpdateInputValues = {
     nombre?: string;
     apellido1?: string;
     apellido2?: string;
@@ -22,7 +22,7 @@ export declare type ClienteCreateFormInputValues = {
     dni?: string;
     Coches?: Coche[];
 };
-export declare type ClienteCreateFormValidationValues = {
+export declare type ClienteUpdateValidationValues = {
     nombre?: ValidationFunction<string>;
     apellido1?: ValidationFunction<string>;
     apellido2?: ValidationFunction<string>;
@@ -32,8 +32,8 @@ export declare type ClienteCreateFormValidationValues = {
     Coches?: ValidationFunction<Coche>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type ClienteCreateFormOverridesProps = {
-    ClienteCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type ClienteUpdateOverridesProps = {
+    ClienteUpdateGrid?: PrimitiveOverrideProps<GridProps>;
     nombre?: PrimitiveOverrideProps<TextFieldProps>;
     apellido1?: PrimitiveOverrideProps<TextFieldProps>;
     apellido2?: PrimitiveOverrideProps<TextFieldProps>;
@@ -42,14 +42,15 @@ export declare type ClienteCreateFormOverridesProps = {
     dni?: PrimitiveOverrideProps<TextFieldProps>;
     Coches?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type ClienteCreateFormProps = React.PropsWithChildren<{
-    overrides?: ClienteCreateFormOverridesProps | undefined | null;
+export declare type ClienteUpdateProps = React.PropsWithChildren<{
+    overrides?: ClienteUpdateOverridesProps | undefined | null;
 } & {
-    clearOnSuccess?: boolean;
-    onSubmit?: (fields: ClienteCreateFormInputValues) => ClienteCreateFormInputValues;
-    onSuccess?: (fields: ClienteCreateFormInputValues) => void;
-    onError?: (fields: ClienteCreateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: ClienteCreateFormInputValues) => ClienteCreateFormInputValues;
-    onValidate?: ClienteCreateFormValidationValues;
+    id?: string;
+    cliente?: Cliente;
+    onSubmit?: (fields: ClienteUpdateInputValues) => ClienteUpdateInputValues;
+    onSuccess?: (fields: ClienteUpdateInputValues) => void;
+    onError?: (fields: ClienteUpdateInputValues, errorMessage: string) => void;
+    onChange?: (fields: ClienteUpdateInputValues) => ClienteUpdateInputValues;
+    onValidate?: ClienteUpdateValidationValues;
 } & React.CSSProperties>;
-export default function ClienteCreateForm(props: ClienteCreateFormProps): React.ReactElement;
+export default function ClienteUpdate(props: ClienteUpdateProps): React.ReactElement;

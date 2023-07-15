@@ -13,31 +13,30 @@ GridToolbarQuickFilter,
 import Box from '@mui/material/Box';
 import Edit from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import InfoIcon from '@mui/icons-material/Info';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import IconButton from '@mui/material/IconButton';
-import clsx from 'clsx';
+import PersonIcon from '@mui/icons-material/Person';
+
 
 
   
 
-export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDelete, setCocheDelete, setCocheInfo, setOpenInfo }) {
+export function TablaClientes({ clientes, setOpenEditar, setClienteEditar, setOpenDelete, setClienteDelete, setClienteInfo, setOpenInfo }) {
 
 
-    const handleClickOpenEditar = (coche) => {
-        setCocheEditar(coche)
+    const handleClickOpenEditar = (cliente) => {
+        setClienteEditar(cliente)
         setOpenEditar(true);
     };
 
-    const handleClickOpenInfo = (coche) => {
-        setCocheInfo(coche)
-        console.log(coche)
+    const handleClickOpenInfo = (cliente) => {
+        setClienteInfo(cliente)
+        console.log(cliente)
         setOpenInfo(true);
     };
   
-    const  handleDeleteCocheClick = (coche) => {
-        setCocheDelete(coche)
+    const  handleDeleteClienteClick = (cliente) => {
+        setClienteDelete(cliente)
         setOpenDelete(true);
     };
 
@@ -54,9 +53,9 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
       }
 
   
-    function renderCarIcon() {
+    function renderClientIcon() {
         return (
-            <DirectionsCarIcon></DirectionsCarIcon>
+            <PersonIcon></PersonIcon>        
         )
     }
 
@@ -64,54 +63,45 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
         { 
           headerName: '',
           field: 'Icono',
-          renderCell: renderCarIcon,
+          renderCell: renderClientIcon,
           status: false,
           
         },
-        { 
-          field: 'id',
-          headerName: 'ID',
-          flex: 1,
-        },
         {
-          field: 'matricula',
-          headerName: 'Matricula',
+          field: 'nombre',
+          headerName: 'Nombre',
           flex: 1,
           editable: false,
         },
         {
-          field: 'marca',
-          headerName: 'Marca',
+          field: 'apellido1',
+          headerName: 'Apellido',
           flex: 1,
           editable: false,
         },
         {
-          field: 'modelo',
-          headerName: 'Modelo',
+          field: 'apellido2',
+          headerName: 'Segundo Apellido',
           flex: 1,
           editable: false,
         },
         {
-          field: 'vendido',
-          headerName: 'Estado',
-          flex: 1,
-          editable: false,
-          valueGetter: (params) => {
-            if (params.value) {
-              return 'Vendido';
-            }
-            return 'En Stock';
-          },
-          cellClassName: (params) => {
-            if (params.value == null) {
-              return '';
-            }
-      
-            return clsx('super-app', {
-              vendido: params.value === 'Vendido',
-              sinvender: params.value === 'En Stock',
-            });
-          },
+            field: 'email',
+            headerName: 'Email',
+            flex: 1,
+            editable: false,
+        },
+        {
+            field: 'telefono',
+            headerName: 'Telefono',
+            flex: 1,
+            editable: false,
+        },
+        {
+            field: 'dni',
+            headerName: 'DNI',
+            flex: 1,
+            editable: false,
         },
         {
           headerName: 'Acciones',
@@ -121,10 +111,9 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
           hideable: false,
           renderCell: (cellValues) => {return (
             <div>
-            <IconButton variant="outlined" onClick={() => handleClickOpenInfo(cellValues.row)} color='success' style={{ marginRight: 10 }}> <AttachMoneyIcon></AttachMoneyIcon></IconButton>
             <IconButton variant="outlined" onClick={() => handleClickOpenInfo(cellValues.row)} style={{ marginRight: 10 }} color='primary'> <InfoIcon></InfoIcon></IconButton>
             <IconButton variant="outlined" onClick={() => handleClickOpenEditar(cellValues.row)} startIcon={<Edit />} style={{ marginRight: 10 }}><Edit></Edit></IconButton>
-            <IconButton variant="contained" color='error' onClick={() => handleDeleteCocheClick(cellValues.row)}><DeleteIcon></DeleteIcon></IconButton>
+            <IconButton variant="contained" color='error' onClick={() => handleDeleteClienteClick(cellValues.row)}><DeleteIcon></DeleteIcon></IconButton>
             </div>
         )},
         }
@@ -159,7 +148,7 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
               toolbar: CustomToolbar,
             }}
             getRowId={(row) => row.id}
-            rows={coches}
+            rows={clientes}
             columns={columns}
             initialState={{
               pagination: {
@@ -193,4 +182,4 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
     )
 }
 
-export default TablaCoches
+export default TablaClientes
