@@ -9,6 +9,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Typography } from '@mui/material';
 import TablaCochesHistorico from './TablaCochesHistorico';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
+import { Collection, Image, Card, View, Divider, Button } from '@aws-amplify/ui-react';
+import { Storage } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
 import InformacionGeneralCliente from './InformacionGeneralCliente';
 import Box from '@mui/material/Box';
@@ -61,6 +63,7 @@ export function InfoClienteDialog(props) {
         }
     }
         pullData()
+        fetchImages()
     },[props.clienteInfo.Coches])
 
     const [value, setValue] = React.useState(0);
@@ -69,6 +72,25 @@ export function InfoClienteDialog(props) {
         setValue(newValue);
     };
     
+    const [imageKeys, setimageKeys] = useState([])
+    const [images, setImages] = useState([])
+    const fetchImages = async() => {
+        const { results } = await Storage.list( 'clientes/' + props.clienteInfo.id ,{level: "private"})
+        setimageKeys(results)
+        const s3images = await Promise.all(
+            results.map(
+                async image  => await Storage.get(image.key, {level: "private"})
+            )
+        )
+        setImages(s3images)
+
+    }
+
+    async function deleteImage (imageKey) {
+        console.log(imageKeys[imageKey])
+        await Storage.remove(imageKeys[imageKey].key, { level: 'private' });
+        fetchImages()
+    }
 
   
   
@@ -114,9 +136,42 @@ export function InfoClienteDialog(props) {
                 <StorageManager
                     acceptedFileTypes={['image/*']}
                     accessLevel="private"
-                    path={props.clienteInfo.id + '/' }
+                    path={'clientes/' + props.clienteInfo.id + '/' }
+                    onUploadSuccess={fetchImages}
+                    maxFileCount={1}
 
                 />
+                <Collection
+                items={images}
+                type="grid"
+                padding="2rem"
+                gap="small"
+                templateColumns="1fr 1fr 1fr"
+                >
+                {(item, index) => (
+                    <Card
+                    key={index}
+                    borderRadius="medium"
+                    maxWidth="50rem"
+                    variation="outlined"
+                    >
+                    <Image
+                        src={item}
+                        alt="Glittering stream with old log, snowy mountain peaks tower over a green field."
+                    />
+                    <View padding="xs">
+                        <Divider padding="xs" />
+                        <Button variation="primary">
+                           Download
+                        </Button>
+                        <Button variation="secondary" onClick={() => deleteImage(index)}>
+                           Delete
+                        </Button>
+                    </View>
+                    </Card>
+                )}
+                </Collection>
+
             </CustomTabPanel>
             
            
