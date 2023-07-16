@@ -303,7 +303,8 @@ export default function CocheCreateForm(props) {
     model: Cliente,
   }).items;
   const getDisplayValue = {
-    clienteID: (r) => `${r?.nombre ? r?.nombre + " - " : ""}${r?.id}`,
+    clienteID: (r) =>
+      `${r?.nombre}${" "}${r?.apellido1}${" "}${r?.apellido2}${" - "}${r?.dni}`,
   };
   const validations = {
     matricula: [{ type: "Required" }],

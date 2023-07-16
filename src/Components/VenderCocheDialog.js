@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
-export function EditCocheDialog({ cocheEditar, open, setOpen, setCoches }) {
+export function VenderCocheDialog({ cocheVender, open, setOpen, setCoches }) {
 
     const handleClose = () => {
       setOpen(false);
@@ -39,9 +39,9 @@ export function EditCocheDialog({ cocheEditar, open, setOpen, setCoches }) {
             onClose={handleClose}
             aria-describedby="alert-dialog-slide-description"
         >
-            <DialogTitle align='center'>{"Editar coche"}</DialogTitle>
+            <DialogTitle align='center'>Vender el coche {cocheVender.marca} {cocheVender.modelo} - {cocheVender.matricula}</DialogTitle>
             <DialogContent>
-                <CocheUpdateForm onSuccess={formSuccess} coche={cocheEditar}/>
+                <CocheUpdateForm onSuccess={formSuccess} coche={cocheVender}/>
             </DialogContent>
             <DialogActions>
             </DialogActions>
@@ -50,4 +50,4 @@ export function EditCocheDialog({ cocheEditar, open, setOpen, setCoches }) {
     )
 }
 
-export default EditCocheDialog
+export default VenderCocheDialog

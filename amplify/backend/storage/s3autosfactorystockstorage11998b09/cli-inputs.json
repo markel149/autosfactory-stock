@@ -1,0 +1,12 @@
+{
+  "resourceName": "s3autosfactorystockstorage11998b09",
+  "bucketName": "autosfactory-stock-storage-11998b09",
+  "policyUUID": "06b4575b",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

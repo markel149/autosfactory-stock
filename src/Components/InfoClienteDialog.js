@@ -2,17 +2,18 @@ import React, {useState, useEffect} from 'react';
 
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import Grid  from '@mui/material/Grid';
 import { Typography } from '@mui/material';
 import TablaCochesHistorico from './TablaCochesHistorico';
-
+import { StorageManager } from '@aws-amplify/ui-react-storage';
+import '@aws-amplify/ui-react/styles.css';
+import InformacionGeneralCliente from './InformacionGeneralCliente';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const initialState = []
 
@@ -20,7 +21,25 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
+function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
 export function InfoClienteDialog(props) {
 
     const [coches, setCoches] = useState(initialState)
@@ -43,8 +62,13 @@ export function InfoClienteDialog(props) {
     }
         pullData()
     },[props.clienteInfo.Coches])
+
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
     
-    console.log('coches',coches)
 
   
   
@@ -71,62 +95,32 @@ export function InfoClienteDialog(props) {
                 </Typography>
             </Toolbar>
             </AppBar>   
-            <Grid item xs={6} >
-                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                    <h5 style={{textAlign: 'center'}}>Informacion de cliente</h5>
-                </Typography>
-                <Grid container spacing={2}>
-                <Grid item xs={6}>
-                <List style={{marginLeft: 20}}> 
-                    <ListItem >
-                    <ListItemText
-                        primary="Nombre"
-                        secondary={props.clienteInfo.nombre}
-                    />
-                    </ListItem>
-                    <ListItem >
-                    <ListItemText
-                        primary="Primer Apellido"
-                        secondary={props.clienteInfo.apellido1}
-                    />
-                    </ListItem>
-                    <ListItem >
-                    <ListItemText
-                        primary="Segundo Apellido"
-                        secondary={props.clienteInfo.apellido2}
-                    />
-                    </ListItem>
-                    
-                </List>
-                </Grid>
-                <Grid item xs={6}>
-                <List style={{marginLeft: 20}}> 
-                    <ListItem >
-                    <ListItemText
-                        primary="Telefono"
-                        secondary={props.clienteInfo.telefono}
-                    />
-                    </ListItem>
-                    <ListItem >
-                    <ListItemText
-                        primary="Email"
-                        secondary={props.clienteInfo.email}
-                    />
-                    </ListItem>
-                    <ListItem >
-                    <ListItemText
-                    primary="DNI"
-                    secondary={props.clienteInfo.dni}
-                    />
-                    </ListItem>
-                </List>
-                </Grid>
-                </Grid>
-            </Grid>
-            <Typography sx={{ ml: 2 }} variant="h6" component="div">
-                    <h5 style={{textAlign: 'center'}}>Historico de compras</h5>
-            </Typography>
-            <TablaCochesHistorico coches={coches} heigh='30vh'></TablaCochesHistorico>
+
+            <Box>
+            <Tabs value={value} centered onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Informacion general"/>
+                <Tab label="Historico de compras" />
+                <Tab label="Archivos" />
+            </Tabs>
+            </Box>
+
+            <CustomTabPanel value={value} index={0}>
+                <InformacionGeneralCliente clienteInfo={props.clienteInfo}></InformacionGeneralCliente>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+                <TablaCochesHistorico coches={coches} heigh='30vh'></TablaCochesHistorico>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={2}>
+                <StorageManager
+                    acceptedFileTypes={['image/*']}
+                    accessLevel="private"
+                    path={props.clienteInfo.id + '/' }
+
+                />
+            </CustomTabPanel>
+            
+           
+            
             </Dialog>
         </div>
     )

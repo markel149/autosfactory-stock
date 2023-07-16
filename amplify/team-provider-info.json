@@ -26,6 +26,9 @@
           "unauthRoleArn": "arn:aws:iam::831885070168:role/Cognito_autosfactorystockidpoolUnauth_Role",
           "unauthRoleName": "Cognito_autosfactorystockidpoolUnauth_Role"
         }
+      },
+      "storage": {
+        "s3autosfactorystockstorage11998b09": {}
       }
     }
   }

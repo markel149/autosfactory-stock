@@ -120,5 +120,12 @@
         }
       ]
     }
+  },
+  "storage": {
+    "s3autosfactorystockstorage11998b09": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
   }
 }

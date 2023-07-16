@@ -7,6 +7,7 @@ import EditCocheDialog from './EditCocheDialog';
 import DeleteCocheDialog from './DeleteCocheDialog';
 import InfoCocheDialog from './InfoCocheDialog';
 import TablaCoches from './TablaCoches';
+import VenderCocheDialog from './VenderCocheDialog';
 
 const initialState = []
 
@@ -33,6 +34,9 @@ export function Coches({ signOut, user }) {
     const [cocheInfo, setCocheInfo] = useState(initialState)
     const [openInfo, setOpenInfo] = React.useState(false);
 
+    const [cocheVender, setCocheVender] = useState(initialState)
+    const [openVender, setOpenVender] = React.useState(false);
+
     
     return (
       <div>
@@ -42,13 +46,15 @@ export function Coches({ signOut, user }) {
         
         <CreateCocheDialog setCoches={setCoches}></CreateCocheDialog>
 
+        <VenderCocheDialog setCoches={setCoches} cocheVender={cocheVender} open={openVender} setOpen={setOpenVender}></VenderCocheDialog>
+
         <EditCocheDialog cocheEditar={cocheEditar} open={openEditar} setOpen={setOpenEditar} setCoches={setCoches}></EditCocheDialog>
 
         <DeleteCocheDialog cocheDelete={cocheDelete} open={openDelete} setOpen={setOpenDelete} setCoches={setCoches}></DeleteCocheDialog>
 
         <InfoCocheDialog cocheInfo={cocheInfo} open={openInfo} setOpen={setOpenInfo}></InfoCocheDialog>
         
-        <TablaCoches coches={coches} setCocheDelete={setCocheDelete} setCocheEditar={setCocheEditar} setCocheInfo={setCocheInfo} setOpenDelete={setOpenDelete} setOpenEditar={setOpenEditar} setOpenInfo={setOpenInfo}></TablaCoches>
+        <TablaCoches coches={coches} setCocheDelete={setCocheDelete} setCocheEditar={setCocheEditar} setCocheInfo={setCocheInfo} setOpenDelete={setOpenDelete} setOpenEditar={setOpenEditar} setOpenInfo={setOpenInfo} setOpenVender={setOpenVender} setCocheVender={setCocheVender}></TablaCoches>
 
         
         

@@ -22,7 +22,7 @@ import clsx from 'clsx';
 
   
 
-export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDelete, setCocheDelete, setCocheInfo, setOpenInfo }) {
+export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setCocheVender, setOpenDelete, setCocheDelete, setCocheInfo, setOpenInfo, setOpenVender }) {
 
 
     const handleClickOpenEditar = (coche) => {
@@ -34,6 +34,12 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
         setCocheInfo(coche)
         console.log(coche)
         setOpenInfo(true);
+    };
+
+    const handleClickOpenVender = (coche) => {
+        setCocheVender(coche)
+        console.log(coche)
+        setOpenVender(true);
     };
   
     const  handleDeleteCocheClick = (coche) => {
@@ -59,7 +65,7 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
             <DirectionsCarIcon></DirectionsCarIcon>
         )
     }
-
+// eslint-disable-next-line
     const columns = [
         { 
           headerName: '',
@@ -88,6 +94,115 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
         {
           field: 'modelo',
           headerName: 'Modelo',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'color',
+          headerName: 'Color',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'kilometros',
+          headerName: 'Kilometros',
+          flex: 1,
+          editable: false,
+        },
+        ,
+        {
+          field: 'precioCompra',
+          headerName: 'Importe Compra',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'precioVenta',
+          headerName: 'Importe Venta',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'notas',
+          headerName: 'Notas',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'fechaCompra',
+          headerName: 'Fecha Compra',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'fechaVenta',
+          headerName: 'Fecha Venta',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'localidadVendedor',
+          headerName: 'Localidad Vendedor',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'nifVendedor',
+          headerName: 'NIF/CIF Vendedor',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'numeroFactura',
+          headerName: 'Numero Factura',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'anio',
+          headerName: 'Año',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'combustible',
+          headerName: 'Combustible',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'cambio',
+          headerName: 'Cambio',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'potencia',
+          headerName: 'Potencia',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'cc',
+          headerName: 'CC',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'nombreVendedor',
+          headerName: 'Nombre Vendedor',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'precioVentaPublico',
+          headerName: 'PVP',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'precioReparaciones',
+          headerName: 'PrecioReparaciones',
           flex: 1,
           editable: false,
         },
@@ -121,7 +236,7 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
           hideable: false,
           renderCell: (cellValues) => {return (
             <div>
-            <IconButton variant="outlined" onClick={() => handleClickOpenInfo(cellValues.row)} color='success' style={{ marginRight: 10 }}> <AttachMoneyIcon></AttachMoneyIcon></IconButton>
+            <IconButton variant="outlined" onClick={() => handleClickOpenVender(cellValues.row)} color='success' style={{ marginRight: 10 }}> <AttachMoneyIcon></AttachMoneyIcon></IconButton>
             <IconButton variant="outlined" onClick={() => handleClickOpenInfo(cellValues.row)} style={{ marginRight: 10 }} color='primary'> <InfoIcon></InfoIcon></IconButton>
             <IconButton variant="outlined" onClick={() => handleClickOpenEditar(cellValues.row)} startIcon={<Edit />} style={{ marginRight: 10 }}><Edit></Edit></IconButton>
             <IconButton variant="contained" color='error' onClick={() => handleDeleteCocheClick(cellValues.row)}><DeleteIcon></DeleteIcon></IconButton>
@@ -167,7 +282,32 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setOpenDele
                   pageSize: 25,
                 },
               },
+              columns: {
+                columnVisibilityModel: {
+                  // Hide columns status and traderName, the other columns will remain visible
+                  color: false,
+                  kilometros: false,
+                  precioCompra: false,
+                  precioVenta: false,
+                  notas: false,
+                  fechaCompra: false,
+                  fechaVenta: false,
+                  localidadVendedor: false,
+                  nifVendedor: false,
+                  numeroFactura: false,
+                  anio: false,
+                  combustible: false,
+                  cambio: false,
+                  potencia: false,
+                  cc: false,
+                  nombreVendedor: false,
+                  precioVentaPublico: false,
+                  precioReparaciones: false,
+                  id: false
+                },
+              },
             }}
+   
             checkboxSelection={false}
             disableRowSelectionOnClick={true}
             pageSizeOptions={[5, 10, 25, 50, 100]}

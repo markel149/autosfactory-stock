@@ -12,7 +12,6 @@ GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import clsx from 'clsx';
 
 
   
@@ -49,11 +48,6 @@ export function TablaCochesHistorico({ coches, setOpenEditar, setCocheEditar, se
           status: false,
           
         },
-        { 
-          field: 'id',
-          headerName: 'ID',
-          flex: 1,
-        },
         {
           field: 'matricula',
           headerName: 'Matricula',
@@ -73,27 +67,60 @@ export function TablaCochesHistorico({ coches, setOpenEditar, setCocheEditar, se
           editable: false,
         },
         {
-          field: 'vendido',
-          headerName: 'Estado',
+          field: 'color',
+          headerName: 'Color',
           flex: 1,
           editable: false,
-          valueGetter: (params) => {
-            if (params.value) {
-              return 'Vendido';
-            }
-            return 'En Stock';
-          },
-          cellClassName: (params) => {
-            if (params.value == null) {
-              return '';
-            }
-      
-            return clsx('super-app', {
-              vendido: params.value === 'Vendido',
-              sinvender: params.value === 'En Stock',
-            });
-          },
+        },
+        {
+          field: 'kilometros',
+          headerName: 'Kilometros',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'precioVenta',
+          headerName: 'Importe',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'fechaVenta',
+          headerName: 'Fecha Compra',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'combustible',
+          headerName: 'Combustible',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'anio',
+          headerName: 'Año',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'cambio',
+          headerName: 'Cambio',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'potencia',
+          headerName: 'Potencia',
+          flex: 1,
+          editable: false,
+        },
+        {
+          field: 'cc',
+          headerName: 'CC',
+          flex: 1,
+          editable: false,
         }
+      
       ];
   
 
