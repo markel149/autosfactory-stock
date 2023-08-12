@@ -8,7 +8,6 @@ import Grid  from '@mui/material/Grid';
 
 export function InformacionGeneralCliente({ clienteInfo }) {
 
-
     return (
         <Grid item xs={6} >
                 <Grid container spacing={2}>
@@ -38,7 +37,7 @@ export function InformacionGeneralCliente({ clienteInfo }) {
                 <Grid item xs={6}>
                 <List style={{marginLeft: 20}}> 
                     <ListItem >
-                    <ListItemText
+                    <ListItemText 
                         primary="Telefono"
                         secondary={clienteInfo.telefono}
                     />

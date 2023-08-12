@@ -39,7 +39,9 @@ export function Barra(props) {
       <Container maxWidth="l" >
         <Toolbar disableGutters>
           <div style={{height: '10%'}}>
+            <Link to='/'>
             <img alt='hello' style={{maxHeight: '50px'}} src='https://www.autosfactoryalava.es/wp-content/uploads/2020/04/logo_a_factory.png'></img>
+            </Link>
             </div>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
