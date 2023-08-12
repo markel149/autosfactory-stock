@@ -122,7 +122,7 @@ export function InfoCocheDialog(props) {
             </AppBar>   
 
             <Box>
-            <Tabs value={value} centered onChange={handleChange} aria-label="basic tabs example">
+            <Tabs value={value} centered onChange={handleChange} aria-label="basic tabs example" scrollButtons allowScrollButtonsMobile>
                 <Tab label="Informacion general"/>
                 <Tab label="Especificaciones Tecnicas"/>
                 <Tab label="Detalles Compra"/>

@@ -17,7 +17,7 @@ export function InformacionGeneralCoche({ cocheInfo }) {
                 </Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
-                        <List style={{marginLeft: 20}}> 
+                        <List style={{marginLeft: 20, fontSize:'100%'}}> 
                             <ListItem >
                                 <ListItemText
                                     primary="Marca"

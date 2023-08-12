@@ -119,7 +119,7 @@ export function InfoClienteDialog(props) {
             </AppBar>   
 
             <Box>
-            <Tabs value={value} centered onChange={handleChange} aria-label="basic tabs example">
+            <Tabs value={value} centered onChange={handleChange} aria-label="basic tabs example" scrollButtons>
                 <Tab label="Informacion general"/>
                 <Tab label="Historico de compras" />
                 <Tab label="Archivos" />
