@@ -8,6 +8,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 import { DataStore } from '@aws-amplify/datastore';
 import { Cliente } from '../models';
 
@@ -20,6 +23,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export function ClienteCreateDialog({ setClientes }) {
 
     const [open, setOpen] = React.useState(false);
+    const handleClose2 = () => {
+        setOpen2(false);
+    };
+    const [open2, setOpen2] = React.useState(false);
+    const action = (
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleClose2}
+          >
+        <CloseIcon fontSize="small" />
+          </IconButton>
+      );
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -29,10 +46,13 @@ export function ClienteCreateDialog({ setClientes }) {
       setOpen(false);
     };
 
+    
+
     async function formSuccess(){
         const c = await DataStore.query(Cliente)
         setClientes(c)
         setOpen(false)
+        setOpen2(true)
         
     }
 
@@ -57,6 +77,13 @@ export function ClienteCreateDialog({ setClientes }) {
             <DialogActions>
             </DialogActions>
         </Dialog>
+        <Snackbar
+            open={open2}
+            autoHideDuration={6000}
+            onClose={handleClose2}
+            message="Cliente dado de alta"
+            action={action}
+        />
         </div>
     )
 }

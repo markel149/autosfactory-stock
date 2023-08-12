@@ -260,7 +260,7 @@ export default function ClienteUpdate(props) {
     model: Coche,
   }).items;
   const getDisplayValue = {
-    Coches: (r) => `${r?.matricula ? r?.matricula + " - " : ""}${r?.id}`,
+    Coches: (r) => `${r?.matricula}${" - "}${r?.marca}${" "}${r?.modelo}`,
   };
   const validations = {
     nombre: [{ type: "Required" }],

@@ -41,6 +41,7 @@ export { default as studioTheme } from "./studioTheme";
 export { default as ClienteCreateForm } from "./ClienteCreateForm";
 export { default as NewForm14 } from "./NewForm14";
 export { default as ClienteUpdateForm } from "./ClienteUpdateForm";
+export { default as CocheVenderForm } from "./CocheVenderForm";
 export { default as ClienteUpdate } from "./ClienteUpdate";
 export { default as CocheUpdateForm } from "./CocheUpdateForm";
 export { default as CocheCreateForm } from "./CocheCreateForm";

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CocheUpdateForm } from '../ui-components';
+import { CocheUpdateForm, CocheVenderForm } from '../ui-components';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -41,7 +41,7 @@ export function VenderCocheDialog({ cocheVender, open, setOpen, setCoches }) {
         >
             <DialogTitle align='center'>Vender el coche {cocheVender.marca} {cocheVender.modelo} - {cocheVender.matricula}</DialogTitle>
             <DialogContent>
-                <CocheUpdateForm onSuccess={formSuccess} coche={cocheVender}/>
+                <CocheVenderForm onSuccess={formSuccess} coche={cocheVender}/>
             </DialogContent>
             <DialogActions>
             </DialogActions>

@@ -50,6 +50,7 @@ export function InfoCocheDialog(props) {
 
     const handleClose = () => {
       props.setOpen(false);
+      setValue(0)
       
     };
     
