@@ -126,7 +126,7 @@ export function InfoCocheDialog(props) {
                 <Tab label="Especificaciones Tecnicas"/>
                 <Tab label="Detalles Compra"/>
                 <Tab label="Detalles Venta"/>
-                <Tab label="Fotos"/>
+                <Tab onClick={fetchImages} label="Fotos"/>
             </Tabs>
             </Box>
 
@@ -186,10 +186,7 @@ export function InfoCocheDialog(props) {
                 )}
                 </Collection>
 
-            </CustomTabPanel>
-            
-           
-            
+            </CustomTabPanel>            
             </Dialog>
         </div>
     )
