@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from '@aws-amplify/ui-react';
 
 export function Home({ signOut, user }) {
 
@@ -6,7 +7,9 @@ export function Home({ signOut, user }) {
 
     return (
       <div>
-            <h1>Autosfactory</h1>
+            <Card>
+              Hello
+            </Card>
       </div>
     );
   }

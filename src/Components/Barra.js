@@ -11,8 +11,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 import { Link } from "react-router-dom";
 
 const pages = ['coches', 'clientes'];
@@ -38,27 +36,11 @@ export function Barra(props) {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container maxWidth="l" >
         <Toolbar disableGutters>
-          <DirectionsCarFilledIcon/>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Autos Factory
-          </Typography>
-
+          <div style={{height: '10%'}}>
+            <img alt='hello' style={{maxHeight: '50px'}} src='https://www.autosfactoryalava.es/wp-content/uploads/2020/04/logo_a_factory.png'></img>
+            </div>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -90,13 +72,19 @@ export function Barra(props) {
             >
               {pages.map((page) => (
                 <MenuItem key={page}>
-                  <Typography textAlign="center">
-                  </Typography>
+                  <Link to={page} style={{ textDecoration: 'none' }} key={page}>
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'black', display: 'block' }}
+              >
+                {page}
+              </Button>
+              </Link>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -113,7 +101,6 @@ export function Barra(props) {
               textDecoration: 'none',
             }}
           >
-            Autos Factory
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
