@@ -19,7 +19,7 @@ export function Home({ signOut, user }) {
   return (
     <View
     >
-      <Card style={{align: 'center'}}>
+      <Card style={{align: 'center', marginLeft:'auto', marginRight:'auto'}}>
         <Flex direction="row" alignItems="flex-start">
           <Image
             alt="Road to milford sound"
@@ -50,7 +50,7 @@ export function Home({ signOut, user }) {
         </Flex>
       </Card>
 
-      <Card style={{align: 'right'}}>
+      <Card>
         <Flex direction="row" alignItems="flex-start">
           
           <Flex

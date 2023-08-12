@@ -16,6 +16,9 @@ import InformacionGeneralCliente from './InformacionGeneralCliente';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import InfoIcon from '@mui/icons-material/Info';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 
 const initialState = []
 
@@ -119,10 +122,10 @@ export function InfoClienteDialog(props) {
             </AppBar>   
 
             <Box>
-            <Tabs value={value} centered onChange={handleChange} aria-label="basic tabs example" scrollButtons>
-                <Tab label="Informacion general"/>
-                <Tab label="Historico de compras" />
-                <Tab label="Archivos" />
+            <Tabs value={value} centered onChange={handleChange} aria-label="basic tabs example" scrollButtons variant='scrollable' allowScrollButtonsMobile>
+                <Tab icon={<InfoIcon></InfoIcon>} iconPosition='start' label="Informacion general"/>
+                <Tab icon={<ShoppingCartIcon/>} iconPosition='start' label="Historico de compras" />
+                <Tab icon={<PhotoCameraIcon/>} iconPosition='start' label="Fotos" />
             </Tabs>
             </Box>
 

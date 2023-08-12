@@ -18,6 +18,11 @@ import DetallesVentaCoche from './DetallesVentaCoche';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import InfoIcon from '@mui/icons-material/Info';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import BuildIcon from '@mui/icons-material/Build';
 
 const initialState = []
 
@@ -123,11 +128,11 @@ export function InfoCocheDialog(props) {
 
             <Box sx={{alignContent: 'center'}}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant='scrollable' scrollButtons allowScrollButtonsMobile centered>
-                <Tab label="Informacion general"/>
-                <Tab label="Especificaciones Tecnicas"/>
-                <Tab label="Detalles Compra"/>
-                <Tab label="Detalles Venta"/>
-                <Tab onClick={fetchImages} label="Fotos"/>
+                <Tab icon={<InfoIcon/>} iconPosition='start' label="Informacion general"/>
+                <Tab icon={<BuildIcon/>} iconPosition='start' label="Especificaciones Tecnicas"/>
+                <Tab icon={<ShoppingCartIcon/>} iconPosition='start' label="Detalles Compra"/>
+                <Tab icon={<AttachMoneyIcon/>} iconPosition='start' label="Detalles Venta"/>
+                <Tab icon={<PhotoCameraIcon/>} iconPosition='start' onClick={fetchImages} label="Fotos"/>
             </Tabs>
             </Box>
 
