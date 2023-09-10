@@ -10,12 +10,12 @@ import {
   Autocomplete,
   Badge,
   Button,
+  CheckboxField,
   Divider,
   Flex,
   Grid,
   Icon,
   ScrollView,
-  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -317,7 +317,7 @@ export default function CocheUpdateForm(props) {
     model: Cliente,
   }).items;
   const getDisplayValue = {
-    clienteID: (r) => `${r?.nombre ? r?.nombre + " - " : ""}${r?.id}`,
+    clienteID: (r) => `${r?.dni}${" - "}${r?.nombre}${" "}${r?.apellido1}`,
   };
   const validations = {
     matricula: [{ type: "Required" }],
@@ -440,7 +440,12 @@ export default function CocheUpdateForm(props) {
       {...rest}
     >
       <TextField
-        label="Matricula"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Matricula</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={matricula}
@@ -486,7 +491,12 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "matricula")}
       ></TextField>
       <TextField
-        label="Marca"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Marca</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={marca}
@@ -532,7 +542,12 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "marca")}
       ></TextField>
       <TextField
-        label="Modelo"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Modelo</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={modelo}
@@ -578,15 +593,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "modelo")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Color</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Color"
         isRequired={false}
         isReadOnly={false}
         value={color}
@@ -632,15 +639,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "color")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Kilometros</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Kilometros"
         isRequired={false}
         isReadOnly={false}
         type="number"
@@ -690,7 +689,12 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "kilometros")}
       ></TextField>
       <TextField
-        label="Precio compra"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Precio compra</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         type="number"
@@ -740,15 +744,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "precioCompra")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Precio venta</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Precio venta"
         isRequired={false}
         isReadOnly={false}
         type="number"
@@ -798,15 +794,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "precioVenta")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Notas</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Notas"
         isRequired={false}
         isReadOnly={false}
         value={notas}
@@ -852,15 +840,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "notas")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Fecha compra</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Fecha compra"
         isRequired={false}
         isReadOnly={false}
         type="date"
@@ -907,15 +887,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "fechaCompra")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Fecha venta</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Fecha venta"
         isRequired={false}
         isReadOnly={false}
         type="date"
@@ -962,15 +934,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "fechaVenta")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Localidad vendedor</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Localidad vendedor"
         isRequired={false}
         isReadOnly={false}
         value={localidadVendedor}
@@ -1018,15 +982,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "localidadVendedor")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Nif vendedor</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Nif vendedor"
         isRequired={false}
         isReadOnly={false}
         value={nifVendedor}
@@ -1072,15 +1028,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "nifVendedor")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Numero factura</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Numero factura"
         isRequired={false}
         isReadOnly={false}
         value={numeroFactura}
@@ -1126,15 +1074,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "numeroFactura")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Anio</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Anio"
         isRequired={false}
         isReadOnly={false}
         type="number"
@@ -1184,15 +1124,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "anio")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Combustible</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Combustible"
         isRequired={false}
         isReadOnly={false}
         value={combustible}
@@ -1238,15 +1170,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "combustible")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Cambio</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Cambio"
         isRequired={false}
         isReadOnly={false}
         value={cambio}
@@ -1292,15 +1216,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "cambio")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Potencia</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Potencia"
         isRequired={false}
         isReadOnly={false}
         type="number"
@@ -1350,15 +1266,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "potencia")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Cc</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Cc"
         isRequired={false}
         isReadOnly={false}
         value={cc}
@@ -1404,15 +1312,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "cc")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Nombre vendedor</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Nombre vendedor"
         isRequired={false}
         isReadOnly={false}
         value={nombreVendedor}
@@ -1458,15 +1358,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "nombreVendedor")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Precio venta publico</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Precio venta publico"
         isRequired={false}
         isReadOnly={false}
         type="number"
@@ -1518,15 +1410,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "precioVentaPublico")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Precio reparaciones</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Precio reparaciones"
         isRequired={false}
         isReadOnly={false}
         type="number"
@@ -1577,19 +1461,13 @@ export default function CocheUpdateForm(props) {
         hasError={errors.precioReparaciones?.hasError}
         {...getOverrideProps(overrides, "precioReparaciones")}
       ></TextField>
-      <SwitchField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Vendido</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
-        defaultChecked={false}
+      <CheckboxField
+        label="Vendido"
+        name="vendido"
+        value="vendido"
         isDisabled={false}
-        isChecked={vendido}
+        checked={vendido}
+        defaultValue={vendido}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
@@ -1630,7 +1508,7 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.vendido?.errorMessage}
         hasError={errors.vendido?.hasError}
         {...getOverrideProps(overrides, "vendido")}
-      ></SwitchField>
+      ></CheckboxField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
@@ -1668,15 +1546,7 @@ export default function CocheUpdateForm(props) {
           setCurrentClienteIDValue(undefined);
         }}
         currentFieldValue={currentClienteIDValue}
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Cliente id</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label={"Cliente id"}
         items={clienteID ? [clienteID] : []}
         hasError={errors?.clienteID?.hasError}
         runValidationTasks={async () =>
@@ -1704,15 +1574,7 @@ export default function CocheUpdateForm(props) {
         defaultFieldValue={""}
       >
         <Autocomplete
-          label={
-            <span style={{ display: "inline-flex" }}>
-              <span>Cliente id</span>
-              <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-                {" "}
-                - optional
-              </span>
-            </span>
-          }
+          label="Cliente id"
           isRequired={false}
           isReadOnly={false}
           placeholder="Search Cliente"

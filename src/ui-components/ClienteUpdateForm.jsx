@@ -257,7 +257,7 @@ export default function ClienteUpdateForm(props) {
     model: Coche,
   }).items;
   const getDisplayValue = {
-    Coches: (r) => `${r?.matricula ? r?.matricula + " - " : ""}${r?.id}`,
+    Coches: (r) => `${r?.matricula}${" - "}${r?.marca}${'" "'}${r?.modelo}`,
   };
   const validations = {
     nombre: [{ type: "Required" }],
@@ -409,7 +409,12 @@ export default function ClienteUpdateForm(props) {
       {...rest}
     >
       <TextField
-        label="Nombre"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Nombre</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={nombre}
@@ -439,7 +444,12 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "nombre")}
       ></TextField>
       <TextField
-        label="Apellido1"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Apellido1</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={apellido1}
@@ -469,15 +479,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "apellido1")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Apellido2</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Apellido2"
         isRequired={false}
         isReadOnly={false}
         value={apellido2}
@@ -507,15 +509,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "apellido2")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Email</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Email"
         isRequired={false}
         isReadOnly={false}
         value={email}
@@ -545,15 +539,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "email")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Telefono</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label="Telefono"
         isRequired={false}
         isReadOnly={false}
         value={telefono}
@@ -583,7 +569,12 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "telefono")}
       ></TextField>
       <TextField
-        label="Dni"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Dni</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={dni}
@@ -633,15 +624,7 @@ export default function ClienteUpdateForm(props) {
           setCurrentCochesDisplayValue("");
         }}
         currentFieldValue={currentCochesValue}
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Coches</span>
-            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
-              {" "}
-              - optional
-            </span>
-          </span>
-        }
+        label={"Coches"}
         items={Coches}
         hasError={errors?.Coches?.hasError}
         runValidationTasks={async () =>
