@@ -31,6 +31,18 @@ export function InformacionGeneralCliente({ clienteInfo }) {
                         secondary={clienteInfo.apellido2}
                     />
                     </ListItem>
+                    <ListItem >
+                    <ListItemText
+                    primary="Ciudad"
+                    secondary={clienteInfo.ciudad}
+                    />
+                    </ListItem>
+                    <ListItem >
+                    <ListItemText
+                    primary="Codigo postal"
+                    secondary={clienteInfo.codigoPostal}
+                    />
+                    </ListItem>
                     
                 </List>
                 </Grid>
@@ -52,6 +64,12 @@ export function InformacionGeneralCliente({ clienteInfo }) {
                     <ListItemText
                     primary="DNI"
                     secondary={clienteInfo.dni}
+                    />
+                    </ListItem>
+                    <ListItem >
+                    <ListItemText
+                    primary="Calle"
+                    secondary={clienteInfo.calle}
                     />
                     </ListItem>
                 </List>

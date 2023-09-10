@@ -19,8 +19,10 @@ export declare type CocheVenderFormInputValues = {
     fechaVenta?: string;
     precioVentaPublico?: number;
     precioReparaciones?: number;
+    numeroFacturaVenta?: string;
     vendido?: boolean;
     clienteID?: string;
+    notasVenta?: string;
 };
 export declare type CocheVenderFormValidationValues = {
     precioVenta?: ValidationFunction<number>;
@@ -28,8 +30,10 @@ export declare type CocheVenderFormValidationValues = {
     fechaVenta?: ValidationFunction<string>;
     precioVentaPublico?: ValidationFunction<number>;
     precioReparaciones?: ValidationFunction<number>;
+    numeroFacturaVenta?: ValidationFunction<string>;
     vendido?: ValidationFunction<boolean>;
     clienteID?: ValidationFunction<string>;
+    notasVenta?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheVenderFormOverridesProps = {
@@ -39,8 +43,10 @@ export declare type CocheVenderFormOverridesProps = {
     fechaVenta?: PrimitiveOverrideProps<TextFieldProps>;
     precioVentaPublico?: PrimitiveOverrideProps<TextFieldProps>;
     precioReparaciones?: PrimitiveOverrideProps<TextFieldProps>;
+    numeroFacturaVenta?: PrimitiveOverrideProps<TextFieldProps>;
     vendido?: PrimitiveOverrideProps<CheckboxFieldProps>;
     clienteID?: PrimitiveOverrideProps<AutocompleteProps>;
+    notasVenta?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CocheVenderFormProps = React.PropsWithChildren<{
     overrides?: CocheVenderFormOverridesProps | undefined | null;

@@ -200,6 +200,9 @@ export default function ClienteCreateForm(props) {
     telefono: "",
     dni: "",
     Coches: [],
+    ciudad: "",
+    calle: "",
+    codigoPostal: "",
   };
   const [nombre, setNombre] = React.useState(initialValues.nombre);
   const [apellido1, setApellido1] = React.useState(initialValues.apellido1);
@@ -208,6 +211,11 @@ export default function ClienteCreateForm(props) {
   const [telefono, setTelefono] = React.useState(initialValues.telefono);
   const [dni, setDni] = React.useState(initialValues.dni);
   const [Coches, setCoches] = React.useState(initialValues.Coches);
+  const [ciudad, setCiudad] = React.useState(initialValues.ciudad);
+  const [calle, setCalle] = React.useState(initialValues.calle);
+  const [codigoPostal, setCodigoPostal] = React.useState(
+    initialValues.codigoPostal
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setNombre(initialValues.nombre);
@@ -219,6 +227,9 @@ export default function ClienteCreateForm(props) {
     setCoches(initialValues.Coches);
     setCurrentCochesValue(undefined);
     setCurrentCochesDisplayValue("");
+    setCiudad(initialValues.ciudad);
+    setCalle(initialValues.calle);
+    setCodigoPostal(initialValues.codigoPostal);
     setErrors({});
   };
   const [currentCochesDisplayValue, setCurrentCochesDisplayValue] =
@@ -248,6 +259,9 @@ export default function ClienteCreateForm(props) {
     telefono: [],
     dni: [{ type: "Required" }],
     Coches: [],
+    ciudad: [],
+    calle: [],
+    codigoPostal: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -282,6 +296,9 @@ export default function ClienteCreateForm(props) {
           telefono,
           dni,
           Coches,
+          ciudad,
+          calle,
+          codigoPostal,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -326,6 +343,9 @@ export default function ClienteCreateForm(props) {
             email: modelFields.email,
             telefono: modelFields.telefono,
             dni: modelFields.dni,
+            ciudad: modelFields.ciudad,
+            calle: modelFields.calle,
+            codigoPostal: modelFields.codigoPostal,
           };
           const cliente = await DataStore.save(new Cliente(modelFieldsToSave));
           const promises = [];
@@ -378,6 +398,9 @@ export default function ClienteCreateForm(props) {
               telefono,
               dni,
               Coches,
+              ciudad,
+              calle,
+              codigoPostal,
             };
             const result = onChange(modelFields);
             value = result?.nombre ?? value;
@@ -395,7 +418,7 @@ export default function ClienteCreateForm(props) {
       <TextField
         label={
           <span style={{ display: "inline-flex" }}>
-            <span>Apellido1</span>
+            <span>Primer Apellido</span>
             <span style={{ color: "red" }}>*</span>
           </span>
         }
@@ -413,6 +436,9 @@ export default function ClienteCreateForm(props) {
               telefono,
               dni,
               Coches,
+              ciudad,
+              calle,
+              codigoPostal,
             };
             const result = onChange(modelFields);
             value = result?.apellido1 ?? value;
@@ -428,7 +454,7 @@ export default function ClienteCreateForm(props) {
         {...getOverrideProps(overrides, "apellido1")}
       ></TextField>
       <TextField
-        label="Apellido2"
+        label="Segundo Apellido"
         isRequired={false}
         isReadOnly={false}
         value={apellido2}
@@ -443,6 +469,9 @@ export default function ClienteCreateForm(props) {
               telefono,
               dni,
               Coches,
+              ciudad,
+              calle,
+              codigoPostal,
             };
             const result = onChange(modelFields);
             value = result?.apellido2 ?? value;
@@ -473,6 +502,9 @@ export default function ClienteCreateForm(props) {
               telefono,
               dni,
               Coches,
+              ciudad,
+              calle,
+              codigoPostal,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -503,6 +535,9 @@ export default function ClienteCreateForm(props) {
               telefono: value,
               dni,
               Coches,
+              ciudad,
+              calle,
+              codigoPostal,
             };
             const result = onChange(modelFields);
             value = result?.telefono ?? value;
@@ -520,7 +555,7 @@ export default function ClienteCreateForm(props) {
       <TextField
         label={
           <span style={{ display: "inline-flex" }}>
-            <span>Dni</span>
+            <span>DNI</span>
             <span style={{ color: "red" }}>*</span>
           </span>
         }
@@ -538,6 +573,9 @@ export default function ClienteCreateForm(props) {
               telefono,
               dni: value,
               Coches,
+              ciudad,
+              calle,
+              codigoPostal,
             };
             const result = onChange(modelFields);
             value = result?.dni ?? value;
@@ -564,6 +602,9 @@ export default function ClienteCreateForm(props) {
               telefono,
               dni,
               Coches: values,
+              ciudad,
+              calle,
+              codigoPostal,
             };
             const result = onChange(modelFields);
             values = result?.Coches ?? values;
@@ -632,6 +673,105 @@ export default function ClienteCreateForm(props) {
           {...getOverrideProps(overrides, "Coches")}
         ></Autocomplete>
       </ArrayField>
+      <TextField
+        label="Ciudad"
+        isRequired={false}
+        isReadOnly={false}
+        value={ciudad}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad: value,
+              calle,
+              codigoPostal,
+            };
+            const result = onChange(modelFields);
+            value = result?.ciudad ?? value;
+          }
+          if (errors.ciudad?.hasError) {
+            runValidationTasks("ciudad", value);
+          }
+          setCiudad(value);
+        }}
+        onBlur={() => runValidationTasks("ciudad", ciudad)}
+        errorMessage={errors.ciudad?.errorMessage}
+        hasError={errors.ciudad?.hasError}
+        {...getOverrideProps(overrides, "ciudad")}
+      ></TextField>
+      <TextField
+        label="Calle"
+        isRequired={false}
+        isReadOnly={false}
+        value={calle}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle: value,
+              codigoPostal,
+            };
+            const result = onChange(modelFields);
+            value = result?.calle ?? value;
+          }
+          if (errors.calle?.hasError) {
+            runValidationTasks("calle", value);
+          }
+          setCalle(value);
+        }}
+        onBlur={() => runValidationTasks("calle", calle)}
+        errorMessage={errors.calle?.errorMessage}
+        hasError={errors.calle?.hasError}
+        {...getOverrideProps(overrides, "calle")}
+      ></TextField>
+      <TextField
+        label="Codigo postal"
+        isRequired={false}
+        isReadOnly={false}
+        value={codigoPostal}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.codigoPostal ?? value;
+          }
+          if (errors.codigoPostal?.hasError) {
+            runValidationTasks("codigoPostal", value);
+          }
+          setCodigoPostal(value);
+        }}
+        onBlur={() => runValidationTasks("codigoPostal", codigoPostal)}
+        errorMessage={errors.codigoPostal?.errorMessage}
+        hasError={errors.codigoPostal?.hasError}
+        {...getOverrideProps(overrides, "codigoPostal")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

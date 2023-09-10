@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, CheckboxFieldProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { Cliente, Coche } from "../models";
 export declare type ValidationResponse = {
@@ -21,6 +21,10 @@ export declare type ClienteUpdateFormInputValues = {
     telefono?: string;
     dni?: string;
     Coches?: Coche[];
+    ciudad?: string;
+    calle?: string;
+    codigoPostal?: string;
+    alerta?: boolean;
 };
 export declare type ClienteUpdateFormValidationValues = {
     nombre?: ValidationFunction<string>;
@@ -30,6 +34,10 @@ export declare type ClienteUpdateFormValidationValues = {
     telefono?: ValidationFunction<string>;
     dni?: ValidationFunction<string>;
     Coches?: ValidationFunction<Coche>;
+    ciudad?: ValidationFunction<string>;
+    calle?: ValidationFunction<string>;
+    codigoPostal?: ValidationFunction<string>;
+    alerta?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ClienteUpdateFormOverridesProps = {
@@ -41,6 +49,10 @@ export declare type ClienteUpdateFormOverridesProps = {
     telefono?: PrimitiveOverrideProps<TextFieldProps>;
     dni?: PrimitiveOverrideProps<TextFieldProps>;
     Coches?: PrimitiveOverrideProps<AutocompleteProps>;
+    ciudad?: PrimitiveOverrideProps<TextFieldProps>;
+    calle?: PrimitiveOverrideProps<TextFieldProps>;
+    codigoPostal?: PrimitiveOverrideProps<TextFieldProps>;
+    alerta?: PrimitiveOverrideProps<CheckboxFieldProps>;
 } & EscapeHatchProps;
 export declare type ClienteUpdateFormProps = React.PropsWithChildren<{
     overrides?: ClienteUpdateFormOverridesProps | undefined | null;

@@ -16,6 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import IconButton from '@mui/material/IconButton';
 import PersonIcon from '@mui/icons-material/Person';
+import clsx from 'clsx';
 
 
 
@@ -110,6 +111,50 @@ export function TablaClientes({ clientes, setOpenEditar, setClienteEditar, setOp
           editable: false,
         },
         {
+            field: 'ciudad',
+            headerName: 'Ciudad',
+            flex: 1,
+          minWidth: 150,
+          editable: false,
+        },
+        {
+            field: 'calle',
+            headerName: 'Calle',
+            flex: 1,
+          minWidth: 150,
+          editable: false,
+        },
+        {
+            field: 'codigoPostal',
+            headerName: 'CP',
+            flex: 1,
+          minWidth: 150,
+          editable: false,
+        },
+        {
+          field: 'alerta',
+          headerName: 'Alerta',
+          minWidth: 100,
+          flex: 1,
+          editable: false,
+          valueGetter: (params) => {
+            if (params.value) {
+              return 'Alerta';
+            }
+              return 'Sin alertas';
+          },
+          cellClassName: (params) => {
+            if (params.value == null) {
+              return '';
+            }
+      
+            return clsx('super-app', {
+              alerta: params.value === 'Alerta',
+              noalerta: params.value === 'Sin alertas',
+            });
+          },
+        },
+        {
           minWidth: 150,
           headerName: 'Acciones',
           description: 'This column has a value getter and is not sortable.',
@@ -147,6 +192,15 @@ export function TablaClientes({ clientes, setOpenEditar, setClienteEditar, setOp
                   color: '#9c1732',
                   fontWeight: '600',
                 },
+                '& .super-app.alerta': {
+                  backgroundColor: '#E7625F',
+                  fontWeight: '600',
+                },
+                '& .super-app.noalerta': {
+                  color: '#ffffff',
+                  backgroundColor: '#299c17',
+                  fontWeight: '600',
+                },
               }}
         >
           
@@ -177,7 +231,7 @@ export function TablaClientes({ clientes, setOpenEditar, setClienteEditar, setOp
               '& .super-app-theme--header': {
                 // backgroundColor: 'rgba(108, 247, 119, 0.8)',
                 // fontWeight: 'bold'
-              },
+              }
             }}
           >
           </DataGrid>

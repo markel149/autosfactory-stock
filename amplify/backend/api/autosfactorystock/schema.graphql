@@ -7,6 +7,10 @@ type Cliente @model @auth(rules: [{allow: public}]) {
   telefono: String
   dni: String!
   Coches: [Coche] @hasMany(indexName: "byCliente", fields: ["id"])
+  ciudad: String
+  calle: String
+  codigoPostal: String
+  alerta: Boolean
 }
 
 type Coche @model @auth(rules: [{allow: public}]) {
@@ -16,23 +20,28 @@ type Coche @model @auth(rules: [{allow: public}]) {
   id: ID!
   color: String
   kilometros: Int
-  precioCompra: Float!
-  precioVenta: Float
-  notas: String
-  fechaCompra: AWSDate
-  fechaVenta: AWSDate
+  combustible: String
+  cambio: String
+  anio: Int
+  potencia: Int
+  cc: String
   localidadVendedor: String
   nifVendedor: String
   numeroFactura: String
-  anio: Int
-  combustible: String
-  cambio: String
-  potencia: Int
-  cc: String
+  numeroFacturaVenta: String
+  precioCompra: Float!
+  fechaCompra: AWSDate
   nombreVendedor: String
+  direccionVendedor: String
+  telefonoVendedor: String
   precioVentaPublico: Float
   precioReparaciones: Float
   vendido: Boolean
+  precioVenta: Float
+  notasVenta: String
+  fechaVenta: AWSDate
   clienteID: ID @index(name: "byCliente")
+  alerta: Boolean
+  notas: String
 }
  

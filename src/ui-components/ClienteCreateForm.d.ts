@@ -21,6 +21,9 @@ export declare type ClienteCreateFormInputValues = {
     telefono?: string;
     dni?: string;
     Coches?: Coche[];
+    ciudad?: string;
+    calle?: string;
+    codigoPostal?: string;
 };
 export declare type ClienteCreateFormValidationValues = {
     nombre?: ValidationFunction<string>;
@@ -30,6 +33,9 @@ export declare type ClienteCreateFormValidationValues = {
     telefono?: ValidationFunction<string>;
     dni?: ValidationFunction<string>;
     Coches?: ValidationFunction<Coche>;
+    ciudad?: ValidationFunction<string>;
+    calle?: ValidationFunction<string>;
+    codigoPostal?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ClienteCreateFormOverridesProps = {
@@ -41,6 +47,9 @@ export declare type ClienteCreateFormOverridesProps = {
     telefono?: PrimitiveOverrideProps<TextFieldProps>;
     dni?: PrimitiveOverrideProps<TextFieldProps>;
     Coches?: PrimitiveOverrideProps<AutocompleteProps>;
+    ciudad?: PrimitiveOverrideProps<TextFieldProps>;
+    calle?: PrimitiveOverrideProps<TextFieldProps>;
+    codigoPostal?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type ClienteCreateFormProps = React.PropsWithChildren<{
     overrides?: ClienteCreateFormOverridesProps | undefined | null;

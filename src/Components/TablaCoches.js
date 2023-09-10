@@ -252,6 +252,29 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setCocheVen
           },
         },
         {
+          field: 'alerta',
+          headerName: 'Alerta',
+          minWidth: 100,
+          flex: 1,
+          editable: false,
+          valueGetter: (params) => {
+            if (params.value) {
+              return 'Alerta';
+            }
+              return 'Sin alertas';
+          },
+          cellClassName: (params) => {
+            if (params.value == null) {
+              return '';
+            }
+      
+            return clsx('super-app', {
+              alerta: params.value === 'Alerta',
+              noalerta: params.value === 'Sin alertas',
+            });
+          },
+        },
+        {
           minWidth: 250,
           headerName: 'Acciones',
           description: 'This column has a value getter and is not sortable.',
@@ -288,6 +311,15 @@ export function TablaCoches({ coches, setOpenEditar, setCocheEditar, setCocheVen
                 },
                 '& .super-app.sinvender': {
                   color: '#9c1732',
+                  fontWeight: '600',
+                },
+                '& .super-app.alerta': {
+                  backgroundColor: '#E7625F',
+                  fontWeight: '600',
+                },
+                '& .super-app.noalerta': {
+                  color: '#ffffff',
+                  backgroundColor: '#299c17',
                   fontWeight: '600',
                 },
               }}

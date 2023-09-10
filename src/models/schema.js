@@ -68,6 +68,34 @@ export const schema = {
                         ]
                     }
                 },
+                "ciudad": {
+                    "name": "ciudad",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "calle": {
+                    "name": "calle",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "codigoPostal": {
+                    "name": "codigoPostal",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "alerta": {
+                    "name": "alerta",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -155,38 +183,38 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "precioCompra": {
-                    "name": "precioCompra",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "precioVenta": {
-                    "name": "precioVenta",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "notas": {
-                    "name": "notas",
+                "combustible": {
+                    "name": "combustible",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "fechaCompra": {
-                    "name": "fechaCompra",
+                "cambio": {
+                    "name": "cambio",
                     "isArray": false,
-                    "type": "AWSDate",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "fechaVenta": {
-                    "name": "fechaVenta",
+                "anio": {
+                    "name": "anio",
                     "isArray": false,
-                    "type": "AWSDate",
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "potencia": {
+                    "name": "potencia",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cc": {
+                    "name": "cc",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -211,43 +239,43 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "anio": {
-                    "name": "anio",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "combustible": {
-                    "name": "combustible",
+                "numeroFacturaVenta": {
+                    "name": "numeroFacturaVenta",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "cambio": {
-                    "name": "cambio",
+                "precioCompra": {
+                    "name": "precioCompra",
                     "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
+                    "type": "Float",
+                    "isRequired": true,
                     "attributes": []
                 },
-                "potencia": {
-                    "name": "potencia",
+                "fechaCompra": {
+                    "name": "fechaCompra",
                     "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "cc": {
-                    "name": "cc",
-                    "isArray": false,
-                    "type": "String",
+                    "type": "AWSDate",
                     "isRequired": false,
                     "attributes": []
                 },
                 "nombreVendedor": {
                     "name": "nombreVendedor",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "direccionVendedor": {
+                    "name": "direccionVendedor",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "telefonoVendedor": {
+                    "name": "telefonoVendedor",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -274,10 +302,45 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "precioVenta": {
+                    "name": "precioVenta",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "notasVenta": {
+                    "name": "notasVenta",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaVenta": {
+                    "name": "fechaVenta",
+                    "isArray": false,
+                    "type": "AWSDate",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "clienteID": {
                     "name": "clienteID",
                     "isArray": false,
                     "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "alerta": {
+                    "name": "alerta",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "notas": {
+                    "name": "notas",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -336,5 +399,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "b5ae3f110a0acaf01f17526d362b4c39"
+    "version": "88301520668048c690e8a69521d85394"
 };

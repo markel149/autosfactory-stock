@@ -200,8 +200,10 @@ export default function CocheVenderForm(props) {
     fechaVenta: "",
     precioVentaPublico: "",
     precioReparaciones: "",
+    numeroFacturaVenta: "",
     vendido: false,
     clienteID: undefined,
+    notasVenta: "",
   };
   const [precioVenta, setPrecioVenta] = React.useState(
     initialValues.precioVenta
@@ -214,8 +216,12 @@ export default function CocheVenderForm(props) {
   const [precioReparaciones, setPrecioReparaciones] = React.useState(
     initialValues.precioReparaciones
   );
+  const [numeroFacturaVenta, setNumeroFacturaVenta] = React.useState(
+    initialValues.numeroFacturaVenta
+  );
   const [vendido, setVendido] = React.useState(initialValues.vendido);
   const [clienteID, setClienteID] = React.useState(initialValues.clienteID);
+  const [notasVenta, setNotasVenta] = React.useState(initialValues.notasVenta);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = cocheRecord
@@ -226,10 +232,12 @@ export default function CocheVenderForm(props) {
     setFechaVenta(cleanValues.fechaVenta);
     setPrecioVentaPublico(cleanValues.precioVentaPublico);
     setPrecioReparaciones(cleanValues.precioReparaciones);
+    setNumeroFacturaVenta(cleanValues.numeroFacturaVenta);
     setVendido(cleanValues.vendido);
     setClienteID(cleanValues.clienteID);
     setCurrentClienteIDValue(undefined);
     setCurrentClienteIDDisplayValue("");
+    setNotasVenta(cleanValues.notasVenta);
     setErrors({});
   };
   const [cocheRecord, setCocheRecord] = React.useState(cocheModelProp);
@@ -263,8 +271,10 @@ export default function CocheVenderForm(props) {
     fechaVenta: [],
     precioVentaPublico: [],
     precioReparaciones: [],
+    numeroFacturaVenta: [],
     vendido: [],
     clienteID: [],
+    notasVenta: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -297,8 +307,10 @@ export default function CocheVenderForm(props) {
           fechaVenta,
           precioVentaPublico,
           precioReparaciones,
+          numeroFacturaVenta,
           vendido,
           clienteID,
+          notasVenta,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -363,8 +375,10 @@ export default function CocheVenderForm(props) {
               fechaVenta,
               precioVentaPublico,
               precioReparaciones,
+              numeroFacturaVenta,
               vendido,
               clienteID,
+              notasVenta,
             };
             const result = onChange(modelFields);
             value = result?.precioVenta ?? value;
@@ -393,8 +407,10 @@ export default function CocheVenderForm(props) {
               fechaVenta,
               precioVentaPublico,
               precioReparaciones,
+              numeroFacturaVenta,
               vendido,
               clienteID,
+              notasVenta,
             };
             const result = onChange(modelFields);
             value = result?.notas ?? value;
@@ -424,8 +440,10 @@ export default function CocheVenderForm(props) {
               fechaVenta: value,
               precioVentaPublico,
               precioReparaciones,
+              numeroFacturaVenta,
               vendido,
               clienteID,
+              notasVenta,
             };
             const result = onChange(modelFields);
             value = result?.fechaVenta ?? value;
@@ -458,8 +476,10 @@ export default function CocheVenderForm(props) {
               fechaVenta,
               precioVentaPublico: value,
               precioReparaciones,
+              numeroFacturaVenta,
               vendido,
               clienteID,
+              notasVenta,
             };
             const result = onChange(modelFields);
             value = result?.precioVentaPublico ?? value;
@@ -494,8 +514,10 @@ export default function CocheVenderForm(props) {
               fechaVenta,
               precioVentaPublico,
               precioReparaciones: value,
+              numeroFacturaVenta,
               vendido,
               clienteID,
+              notasVenta,
             };
             const result = onChange(modelFields);
             value = result?.precioReparaciones ?? value;
@@ -511,6 +533,41 @@ export default function CocheVenderForm(props) {
         errorMessage={errors.precioReparaciones?.errorMessage}
         hasError={errors.precioReparaciones?.hasError}
         {...getOverrideProps(overrides, "precioReparaciones")}
+      ></TextField>
+      <TextField
+        label="Numero factura venta"
+        descriptiveText="Numero de factura emitido por Autos Alava Factory"
+        isRequired={false}
+        isReadOnly={false}
+        value={numeroFacturaVenta}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              precioVenta,
+              notas,
+              fechaVenta,
+              precioVentaPublico,
+              precioReparaciones,
+              numeroFacturaVenta: value,
+              vendido,
+              clienteID,
+              notasVenta,
+            };
+            const result = onChange(modelFields);
+            value = result?.numeroFacturaVenta ?? value;
+          }
+          if (errors.numeroFacturaVenta?.hasError) {
+            runValidationTasks("numeroFacturaVenta", value);
+          }
+          setNumeroFacturaVenta(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("numeroFacturaVenta", numeroFacturaVenta)
+        }
+        errorMessage={errors.numeroFacturaVenta?.errorMessage}
+        hasError={errors.numeroFacturaVenta?.hasError}
+        {...getOverrideProps(overrides, "numeroFacturaVenta")}
       ></TextField>
       <CheckboxField
         label="Vendido"
@@ -528,8 +585,10 @@ export default function CocheVenderForm(props) {
               fechaVenta,
               precioVentaPublico,
               precioReparaciones,
+              numeroFacturaVenta,
               vendido: value,
               clienteID,
+              notasVenta,
             };
             const result = onChange(modelFields);
             value = result?.vendido ?? value;
@@ -555,8 +614,10 @@ export default function CocheVenderForm(props) {
               fechaVenta,
               precioVentaPublico,
               precioReparaciones,
+              numeroFacturaVenta,
               vendido,
               clienteID: value,
+              notasVenta,
             };
             const result = onChange(modelFields);
             value = result?.clienteID ?? value;
@@ -632,6 +693,38 @@ export default function CocheVenderForm(props) {
           {...getOverrideProps(overrides, "clienteID")}
         ></Autocomplete>
       </ArrayField>
+      <TextField
+        label="Notas venta"
+        isRequired={false}
+        isReadOnly={false}
+        value={notasVenta}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              precioVenta,
+              notas,
+              fechaVenta,
+              precioVentaPublico,
+              precioReparaciones,
+              numeroFacturaVenta,
+              vendido,
+              clienteID,
+              notasVenta: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.notasVenta ?? value;
+          }
+          if (errors.notasVenta?.hasError) {
+            runValidationTasks("notasVenta", value);
+          }
+          setNotasVenta(value);
+        }}
+        onBlur={() => runValidationTasks("notasVenta", notasVenta)}
+        errorMessage={errors.notasVenta?.errorMessage}
+        hasError={errors.notasVenta?.hasError}
+        {...getOverrideProps(overrides, "notasVenta")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
