@@ -5,7 +5,8 @@
  **************************************************************************/
 
 export { default as studioTheme } from "./studioTheme";
-export { default as ClienteCreateForm } from "./ClienteCreateForm";
-export { default as ClienteUpdateForm } from "./ClienteUpdateForm";
-export { default as CocheCreateForm } from "./CocheCreateForm";
 export { default as CocheUpdateForm } from "./CocheUpdateForm";
+export { default as ClienteUpdateForm } from "./ClienteUpdateForm";
+export { default as CocheVenderForm } from "./CocheVenderForm";
+export { default as ClienteCreateForm } from "./ClienteCreateForm";
+export { default as CocheCreateForm } from "./CocheCreateForm";

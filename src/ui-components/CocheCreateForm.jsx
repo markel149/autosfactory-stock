@@ -7,16 +7,184 @@
 /* eslint-disable */
 import * as React from "react";
 import {
+  Autocomplete,
+  Badge,
   Button,
+  Divider,
   Flex,
   Grid,
+  Icon,
+  ScrollView,
   SwitchField,
+  Text,
   TextField,
+  useTheme,
 } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Coche } from "../models";
+import {
+  getOverrideProps,
+  useDataStoreBinding,
+} from "@aws-amplify/ui-react/internal";
+import { Coche, Cliente } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
+function ArrayField({
+  items = [],
+  onChange,
+  label,
+  inputFieldRef,
+  children,
+  hasError,
+  setFieldValue,
+  currentFieldValue,
+  defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
+  errorMessage,
+}) {
+  const labelElement = <Text>{label}</Text>;
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
+  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
+  const [isEditing, setIsEditing] = React.useState();
+  React.useEffect(() => {
+    if (isEditing) {
+      inputFieldRef?.current?.focus();
+    }
+  }, [isEditing]);
+  const removeItem = async (removeIndex) => {
+    const newItems = items.filter((value, index) => index !== removeIndex);
+    await onChange(newItems);
+    setSelectedBadgeIndex(undefined);
+  };
+  const addItem = async () => {
+    if (
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
+      !hasError
+    ) {
+      const newItems = [...items];
+      if (selectedBadgeIndex !== undefined) {
+        newItems[selectedBadgeIndex] = currentFieldValue;
+        setSelectedBadgeIndex(undefined);
+      } else {
+        newItems.push(currentFieldValue);
+      }
+      await onChange(newItems);
+      setIsEditing(false);
+    }
+  };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
+  return (
+    <React.Fragment>
+      {labelElement}
+      {isEditing && children}
+      {!isEditing ? (
+        <>
+          <Button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Add item
+          </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
+        </>
+      ) : (
+        <Flex justifyContent="flex-end">
+          {(currentFieldValue || isEditing) && (
+            <Button
+              children="Cancel"
+              type="button"
+              size="small"
+              onClick={() => {
+                setFieldValue(defaultFieldValue);
+                setIsEditing(false);
+                setSelectedBadgeIndex(undefined);
+              }}
+            ></Button>
+          )}
+          <Button
+            size="small"
+            variation="link"
+            isDisabled={hasError}
+            onClick={addItem}
+          >
+            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+          </Button>
+        </Flex>
+      )}
+      {arraySection}
+    </React.Fragment>
+  );
+}
 export default function CocheCreateForm(props) {
   const {
     clearOnSuccess = true,
@@ -51,6 +219,7 @@ export default function CocheCreateForm(props) {
     precioVentaPublico: "",
     precioReparaciones: "",
     vendido: false,
+    clienteID: undefined,
   };
   const [matricula, setMatricula] = React.useState(initialValues.matricula);
   const [marca, setMarca] = React.useState(initialValues.marca);
@@ -94,6 +263,7 @@ export default function CocheCreateForm(props) {
     initialValues.precioReparaciones
   );
   const [vendido, setVendido] = React.useState(initialValues.vendido);
+  const [clienteID, setClienteID] = React.useState(initialValues.clienteID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setMatricula(initialValues.matricula);
@@ -118,7 +288,22 @@ export default function CocheCreateForm(props) {
     setPrecioVentaPublico(initialValues.precioVentaPublico);
     setPrecioReparaciones(initialValues.precioReparaciones);
     setVendido(initialValues.vendido);
+    setClienteID(initialValues.clienteID);
+    setCurrentClienteIDValue(undefined);
+    setCurrentClienteIDDisplayValue("");
     setErrors({});
+  };
+  const [currentClienteIDDisplayValue, setCurrentClienteIDDisplayValue] =
+    React.useState("");
+  const [currentClienteIDValue, setCurrentClienteIDValue] =
+    React.useState(undefined);
+  const clienteIDRef = React.createRef();
+  const clienteRecords = useDataStoreBinding({
+    type: "collection",
+    model: Cliente,
+  }).items;
+  const getDisplayValue = {
+    clienteID: (r) => `${r?.nombre ? r?.nombre + " - " : ""}${r?.id}`,
   };
   const validations = {
     matricula: [{ type: "Required" }],
@@ -143,6 +328,7 @@ export default function CocheCreateForm(props) {
     precioVentaPublico: [],
     precioReparaciones: [],
     vendido: [],
+    clienteID: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -192,6 +378,7 @@ export default function CocheCreateForm(props) {
           precioVentaPublico,
           precioReparaciones,
           vendido,
+          clienteID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -268,6 +455,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.matricula ?? value;
@@ -313,6 +501,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.marca ?? value;
@@ -358,6 +547,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.modelo ?? value;
@@ -403,6 +593,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.color ?? value;
@@ -452,6 +643,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.kilometros ?? value;
@@ -501,6 +693,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioCompra ?? value;
@@ -550,6 +743,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioVenta ?? value;
@@ -595,6 +789,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.notas ?? value;
@@ -641,6 +836,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.fechaCompra ?? value;
@@ -687,6 +883,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.fechaVenta ?? value;
@@ -732,6 +929,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.localidadVendedor ?? value;
@@ -779,6 +977,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.nifVendedor ?? value;
@@ -824,6 +1023,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.numeroFactura ?? value;
@@ -873,6 +1073,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.anio ?? value;
@@ -918,6 +1119,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.combustible ?? value;
@@ -963,6 +1165,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.cambio ?? value;
@@ -1012,6 +1215,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.potencia ?? value;
@@ -1057,6 +1261,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.cc ?? value;
@@ -1102,6 +1307,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.nombreVendedor ?? value;
@@ -1151,6 +1357,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico: value,
               precioReparaciones,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioVentaPublico ?? value;
@@ -1202,6 +1409,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones: value,
               vendido,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioReparaciones ?? value;
@@ -1249,6 +1457,7 @@ export default function CocheCreateForm(props) {
               precioVentaPublico,
               precioReparaciones,
               vendido: value,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.vendido ?? value;
@@ -1263,6 +1472,106 @@ export default function CocheCreateForm(props) {
         hasError={errors.vendido?.hasError}
         {...getOverrideProps(overrides, "vendido")}
       ></SwitchField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              precioCompra,
+              precioVenta,
+              notas,
+              fechaCompra,
+              fechaVenta,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              anio,
+              combustible,
+              cambio,
+              potencia,
+              cc,
+              nombreVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              clienteID: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.clienteID ?? value;
+          }
+          setClienteID(value);
+          setCurrentClienteIDValue(undefined);
+        }}
+        currentFieldValue={currentClienteIDValue}
+        label={"Cliente id"}
+        items={clienteID ? [clienteID] : []}
+        hasError={errors?.clienteID?.hasError}
+        errorMessage={errors?.clienteID?.errorMessage}
+        getBadgeText={(value) =>
+          value
+            ? getDisplayValue.clienteID(
+                clienteRecords.find((r) => r.id === value)
+              )
+            : ""
+        }
+        setFieldValue={(value) => {
+          setCurrentClienteIDDisplayValue(
+            value
+              ? getDisplayValue.clienteID(
+                  clienteRecords.find((r) => r.id === value)
+                )
+              : ""
+          );
+          setCurrentClienteIDValue(value);
+        }}
+        inputFieldRef={clienteIDRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Cliente id"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Cliente"
+          value={currentClienteIDDisplayValue}
+          options={clienteRecords
+            .filter(
+              (r, i, arr) =>
+                arr.findIndex((member) => member?.id === r?.id) === i
+            )
+            .map((r) => ({
+              id: r?.id,
+              label: getDisplayValue.clienteID?.(r),
+            }))}
+          onSelect={({ id, label }) => {
+            setCurrentClienteIDValue(id);
+            setCurrentClienteIDDisplayValue(label);
+            runValidationTasks("clienteID", label);
+          }}
+          onClear={() => {
+            setCurrentClienteIDDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.clienteID?.hasError) {
+              runValidationTasks("clienteID", value);
+            }
+            setCurrentClienteIDDisplayValue(value);
+            setCurrentClienteIDValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("clienteID", currentClienteIDValue)}
+          errorMessage={errors.clienteID?.errorMessage}
+          hasError={errors.clienteID?.hasError}
+          ref={clienteIDRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "clienteID")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

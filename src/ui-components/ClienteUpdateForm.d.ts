@@ -5,9 +5,9 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Cliente } from "../models";
+import { Cliente, Coche } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -20,6 +20,7 @@ export declare type ClienteUpdateFormInputValues = {
     email?: string;
     telefono?: string;
     dni?: string;
+    Coches?: Coche[];
 };
 export declare type ClienteUpdateFormValidationValues = {
     nombre?: ValidationFunction<string>;
@@ -28,6 +29,7 @@ export declare type ClienteUpdateFormValidationValues = {
     email?: ValidationFunction<string>;
     telefono?: ValidationFunction<string>;
     dni?: ValidationFunction<string>;
+    Coches?: ValidationFunction<Coche>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ClienteUpdateFormOverridesProps = {
@@ -38,6 +40,7 @@ export declare type ClienteUpdateFormOverridesProps = {
     email?: PrimitiveOverrideProps<TextFieldProps>;
     telefono?: PrimitiveOverrideProps<TextFieldProps>;
     dni?: PrimitiveOverrideProps<TextFieldProps>;
+    Coches?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type ClienteUpdateFormProps = React.PropsWithChildren<{
     overrides?: ClienteUpdateFormOverridesProps | undefined | null;

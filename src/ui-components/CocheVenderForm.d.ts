@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, CheckboxFieldProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { Coche } from "../models";
 export declare type ValidationResponse = {
@@ -14,18 +14,50 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type CocheVenderFormInputValues = {
+    matricula?: string;
+    marca?: string;
+    modelo?: string;
+    color?: string;
+    kilometros?: number;
+    precioCompra?: number;
     precioVenta?: number;
     notas?: string;
+    fechaCompra?: string;
     fechaVenta?: string;
+    localidadVendedor?: string;
+    nifVendedor?: string;
+    numeroFactura?: string;
+    anio?: number;
+    combustible?: string;
+    cambio?: string;
+    potencia?: number;
+    cc?: string;
+    nombreVendedor?: string;
     precioVentaPublico?: number;
     precioReparaciones?: number;
     vendido?: boolean;
     clienteID?: string;
 };
 export declare type CocheVenderFormValidationValues = {
+    matricula?: ValidationFunction<string>;
+    marca?: ValidationFunction<string>;
+    modelo?: ValidationFunction<string>;
+    color?: ValidationFunction<string>;
+    kilometros?: ValidationFunction<number>;
+    precioCompra?: ValidationFunction<number>;
     precioVenta?: ValidationFunction<number>;
     notas?: ValidationFunction<string>;
+    fechaCompra?: ValidationFunction<string>;
     fechaVenta?: ValidationFunction<string>;
+    localidadVendedor?: ValidationFunction<string>;
+    nifVendedor?: ValidationFunction<string>;
+    numeroFactura?: ValidationFunction<string>;
+    anio?: ValidationFunction<number>;
+    combustible?: ValidationFunction<string>;
+    cambio?: ValidationFunction<string>;
+    potencia?: ValidationFunction<number>;
+    cc?: ValidationFunction<string>;
+    nombreVendedor?: ValidationFunction<string>;
     precioVentaPublico?: ValidationFunction<number>;
     precioReparaciones?: ValidationFunction<number>;
     vendido?: ValidationFunction<boolean>;
@@ -34,12 +66,28 @@ export declare type CocheVenderFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheVenderFormOverridesProps = {
     CocheVenderFormGrid?: PrimitiveOverrideProps<GridProps>;
+    matricula?: PrimitiveOverrideProps<TextFieldProps>;
+    marca?: PrimitiveOverrideProps<TextFieldProps>;
+    modelo?: PrimitiveOverrideProps<TextFieldProps>;
+    color?: PrimitiveOverrideProps<TextFieldProps>;
+    kilometros?: PrimitiveOverrideProps<TextFieldProps>;
+    precioCompra?: PrimitiveOverrideProps<TextFieldProps>;
     precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
     notas?: PrimitiveOverrideProps<TextFieldProps>;
+    fechaCompra?: PrimitiveOverrideProps<TextFieldProps>;
     fechaVenta?: PrimitiveOverrideProps<TextFieldProps>;
+    localidadVendedor?: PrimitiveOverrideProps<TextFieldProps>;
+    nifVendedor?: PrimitiveOverrideProps<TextFieldProps>;
+    numeroFactura?: PrimitiveOverrideProps<TextFieldProps>;
+    anio?: PrimitiveOverrideProps<TextFieldProps>;
+    combustible?: PrimitiveOverrideProps<TextFieldProps>;
+    cambio?: PrimitiveOverrideProps<TextFieldProps>;
+    potencia?: PrimitiveOverrideProps<TextFieldProps>;
+    cc?: PrimitiveOverrideProps<TextFieldProps>;
+    nombreVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     precioVentaPublico?: PrimitiveOverrideProps<TextFieldProps>;
     precioReparaciones?: PrimitiveOverrideProps<TextFieldProps>;
-    vendido?: PrimitiveOverrideProps<CheckboxFieldProps>;
+    vendido?: PrimitiveOverrideProps<SwitchFieldProps>;
     clienteID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type CocheVenderFormProps = React.PropsWithChildren<{

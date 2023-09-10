@@ -6,11 +6,184 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Cliente } from "../models";
+import {
+  Autocomplete,
+  Badge,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Icon,
+  ScrollView,
+  Text,
+  TextField,
+  useTheme,
+} from "@aws-amplify/ui-react";
+import {
+  getOverrideProps,
+  useDataStoreBinding,
+} from "@aws-amplify/ui-react/internal";
+import { Cliente, Coche } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
+function ArrayField({
+  items = [],
+  onChange,
+  label,
+  inputFieldRef,
+  children,
+  hasError,
+  setFieldValue,
+  currentFieldValue,
+  defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
+  errorMessage,
+}) {
+  const labelElement = <Text>{label}</Text>;
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
+  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
+  const [isEditing, setIsEditing] = React.useState();
+  React.useEffect(() => {
+    if (isEditing) {
+      inputFieldRef?.current?.focus();
+    }
+  }, [isEditing]);
+  const removeItem = async (removeIndex) => {
+    const newItems = items.filter((value, index) => index !== removeIndex);
+    await onChange(newItems);
+    setSelectedBadgeIndex(undefined);
+  };
+  const addItem = async () => {
+    if (
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
+      !hasError
+    ) {
+      const newItems = [...items];
+      if (selectedBadgeIndex !== undefined) {
+        newItems[selectedBadgeIndex] = currentFieldValue;
+        setSelectedBadgeIndex(undefined);
+      } else {
+        newItems.push(currentFieldValue);
+      }
+      await onChange(newItems);
+      setIsEditing(false);
+    }
+  };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
+  return (
+    <React.Fragment>
+      {labelElement}
+      {isEditing && children}
+      {!isEditing ? (
+        <>
+          <Button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Add item
+          </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
+        </>
+      ) : (
+        <Flex justifyContent="flex-end">
+          {(currentFieldValue || isEditing) && (
+            <Button
+              children="Cancel"
+              type="button"
+              size="small"
+              onClick={() => {
+                setFieldValue(defaultFieldValue);
+                setIsEditing(false);
+                setSelectedBadgeIndex(undefined);
+              }}
+            ></Button>
+          )}
+          <Button
+            size="small"
+            variation="link"
+            isDisabled={hasError}
+            onClick={addItem}
+          >
+            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+          </Button>
+        </Flex>
+      )}
+      {arraySection}
+    </React.Fragment>
+  );
+}
 export default function ClienteUpdateForm(props) {
   const {
     id: idProp,
@@ -30,6 +203,7 @@ export default function ClienteUpdateForm(props) {
     email: "",
     telefono: "",
     dni: "",
+    Coches: [],
   };
   const [nombre, setNombre] = React.useState(initialValues.nombre);
   const [apellido1, setApellido1] = React.useState(initialValues.apellido1);
@@ -37,10 +211,11 @@ export default function ClienteUpdateForm(props) {
   const [email, setEmail] = React.useState(initialValues.email);
   const [telefono, setTelefono] = React.useState(initialValues.telefono);
   const [dni, setDni] = React.useState(initialValues.dni);
+  const [Coches, setCoches] = React.useState(initialValues.Coches);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = clienteRecord
-      ? { ...initialValues, ...clienteRecord }
+      ? { ...initialValues, ...clienteRecord, Coches: linkedCoches }
       : initialValues;
     setNombre(cleanValues.nombre);
     setApellido1(cleanValues.apellido1);
@@ -48,19 +223,45 @@ export default function ClienteUpdateForm(props) {
     setEmail(cleanValues.email);
     setTelefono(cleanValues.telefono);
     setDni(cleanValues.dni);
+    setCoches(cleanValues.Coches ?? []);
+    setCurrentCochesValue(undefined);
+    setCurrentCochesDisplayValue("");
     setErrors({});
   };
   const [clienteRecord, setClienteRecord] = React.useState(clienteModelProp);
+  const [linkedCoches, setLinkedCoches] = React.useState([]);
+  const canUnlinkCoches = true;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
         ? await DataStore.query(Cliente, idProp)
         : clienteModelProp;
       setClienteRecord(record);
+      const linkedCoches = record ? await record.Coches.toArray() : [];
+      setLinkedCoches(linkedCoches);
     };
     queryData();
   }, [idProp, clienteModelProp]);
-  React.useEffect(resetStateValues, [clienteRecord]);
+  React.useEffect(resetStateValues, [clienteRecord, linkedCoches]);
+  const [currentCochesDisplayValue, setCurrentCochesDisplayValue] =
+    React.useState("");
+  const [currentCochesValue, setCurrentCochesValue] = React.useState(undefined);
+  const CochesRef = React.createRef();
+  const getIDValue = {
+    Coches: (r) => JSON.stringify({ id: r?.id }),
+  };
+  const CochesIdSet = new Set(
+    Array.isArray(Coches)
+      ? Coches.map((r) => getIDValue.Coches?.(r))
+      : getIDValue.Coches?.(Coches)
+  );
+  const cocheRecords = useDataStoreBinding({
+    type: "collection",
+    model: Coche,
+  }).items;
+  const getDisplayValue = {
+    Coches: (r) => `${r?.matricula ? r?.matricula + " - " : ""}${r?.id}`,
+  };
   const validations = {
     nombre: [{ type: "Required" }],
     apellido1: [{ type: "Required" }],
@@ -68,6 +269,7 @@ export default function ClienteUpdateForm(props) {
     email: [{ type: "Email" }],
     telefono: [],
     dni: [{ type: "Required" }],
+    Coches: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -101,19 +303,28 @@ export default function ClienteUpdateForm(props) {
           email,
           telefono,
           dni,
+          Coches,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(fieldName, item)
+                  runValidationTasks(
+                    fieldName,
+                    item,
+                    getDisplayValue[fieldName]
+                  )
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(fieldName, modelFields[fieldName])
+              runValidationTasks(
+                fieldName,
+                modelFields[fieldName],
+                getDisplayValue[fieldName]
+              )
             );
             return promises;
           }, [])
@@ -130,11 +341,64 @@ export default function ClienteUpdateForm(props) {
               modelFields[key] = undefined;
             }
           });
-          await DataStore.save(
-            Cliente.copyOf(clienteRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
+          const promises = [];
+          const cochesToLink = [];
+          const cochesToUnLink = [];
+          const cochesSet = new Set();
+          const linkedCochesSet = new Set();
+          Coches.forEach((r) => cochesSet.add(getIDValue.Coches?.(r)));
+          linkedCoches.forEach((r) =>
+            linkedCochesSet.add(getIDValue.Coches?.(r))
           );
+          linkedCoches.forEach((r) => {
+            if (!cochesSet.has(getIDValue.Coches?.(r))) {
+              cochesToUnLink.push(r);
+            }
+          });
+          Coches.forEach((r) => {
+            if (!linkedCochesSet.has(getIDValue.Coches?.(r))) {
+              cochesToLink.push(r);
+            }
+          });
+          cochesToUnLink.forEach((original) => {
+            if (!canUnlinkCoches) {
+              throw Error(
+                `Coche ${original.id} cannot be unlinked from Cliente because clienteID is a required field.`
+              );
+            }
+            promises.push(
+              DataStore.save(
+                Coche.copyOf(original, (updated) => {
+                  updated.clienteID = null;
+                })
+              )
+            );
+          });
+          cochesToLink.forEach((original) => {
+            promises.push(
+              DataStore.save(
+                Coche.copyOf(original, (updated) => {
+                  updated.clienteID = clienteRecord.id;
+                })
+              )
+            );
+          });
+          const modelFieldsToSave = {
+            nombre: modelFields.nombre,
+            apellido1: modelFields.apellido1,
+            apellido2: modelFields.apellido2,
+            email: modelFields.email,
+            telefono: modelFields.telefono,
+            dni: modelFields.dni,
+          };
+          promises.push(
+            DataStore.save(
+              Cliente.copyOf(clienteRecord, (updated) => {
+                Object.assign(updated, modelFieldsToSave);
+              })
+            )
+          );
+          await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -162,6 +426,7 @@ export default function ClienteUpdateForm(props) {
               email,
               telefono,
               dni,
+              Coches,
             };
             const result = onChange(modelFields);
             value = result?.nombre ?? value;
@@ -191,6 +456,7 @@ export default function ClienteUpdateForm(props) {
               email,
               telefono,
               dni,
+              Coches,
             };
             const result = onChange(modelFields);
             value = result?.apellido1 ?? value;
@@ -206,7 +472,15 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "apellido1")}
       ></TextField>
       <TextField
-        label="Apellido2"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Apellido2</span>
+            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
+              {" "}
+              - optional
+            </span>
+          </span>
+        }
         isRequired={false}
         isReadOnly={false}
         value={apellido2}
@@ -220,6 +494,7 @@ export default function ClienteUpdateForm(props) {
               email,
               telefono,
               dni,
+              Coches,
             };
             const result = onChange(modelFields);
             value = result?.apellido2 ?? value;
@@ -235,7 +510,15 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "apellido2")}
       ></TextField>
       <TextField
-        label="Email"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Email</span>
+            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
+              {" "}
+              - optional
+            </span>
+          </span>
+        }
         isRequired={false}
         isReadOnly={false}
         value={email}
@@ -249,6 +532,7 @@ export default function ClienteUpdateForm(props) {
               email: value,
               telefono,
               dni,
+              Coches,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -264,7 +548,15 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "email")}
       ></TextField>
       <TextField
-        label="Telefono"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Telefono</span>
+            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
+              {" "}
+              - optional
+            </span>
+          </span>
+        }
         isRequired={false}
         isReadOnly={false}
         value={telefono}
@@ -278,6 +570,7 @@ export default function ClienteUpdateForm(props) {
               email,
               telefono: value,
               dni,
+              Coches,
             };
             const result = onChange(modelFields);
             value = result?.telefono ?? value;
@@ -307,6 +600,7 @@ export default function ClienteUpdateForm(props) {
               email,
               telefono,
               dni: value,
+              Coches,
             };
             const result = onChange(modelFields);
             value = result?.dni ?? value;
@@ -321,6 +615,91 @@ export default function ClienteUpdateForm(props) {
         hasError={errors.dni?.hasError}
         {...getOverrideProps(overrides, "dni")}
       ></TextField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.Coches ?? values;
+          }
+          setCoches(values);
+          setCurrentCochesValue(undefined);
+          setCurrentCochesDisplayValue("");
+        }}
+        currentFieldValue={currentCochesValue}
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Coches</span>
+            <span style={{ whiteSpace: "pre", fontStyle: "italic" }}>
+              {" "}
+              - optional
+            </span>
+          </span>
+        }
+        items={Coches}
+        hasError={errors?.Coches?.hasError}
+        errorMessage={errors?.Coches?.errorMessage}
+        getBadgeText={getDisplayValue.Coches}
+        setFieldValue={(model) => {
+          setCurrentCochesDisplayValue(
+            model ? getDisplayValue.Coches(model) : ""
+          );
+          setCurrentCochesValue(model);
+        }}
+        inputFieldRef={CochesRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Coches"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Coche"
+          value={currentCochesDisplayValue}
+          options={cocheRecords
+            .filter((r) => !CochesIdSet.has(getIDValue.Coches?.(r)))
+            .map((r) => ({
+              id: getIDValue.Coches?.(r),
+              label: getDisplayValue.Coches?.(r),
+            }))}
+          onSelect={({ id, label }) => {
+            setCurrentCochesValue(
+              cocheRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentCochesDisplayValue(label);
+            runValidationTasks("Coches", label);
+          }}
+          onClear={() => {
+            setCurrentCochesDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.Coches?.hasError) {
+              runValidationTasks("Coches", value);
+            }
+            setCurrentCochesDisplayValue(value);
+            setCurrentCochesValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("Coches", currentCochesDisplayValue)}
+          errorMessage={errors.Coches?.errorMessage}
+          hasError={errors.Coches?.hasError}
+          ref={CochesRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Coches")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
