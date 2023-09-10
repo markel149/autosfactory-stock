@@ -49,7 +49,11 @@
         "autosfactorystock": {}
       },
       "storage": {
-        "s3autosfactorystockstorage11998b09": {}
+        "s3autosfactorystockstorage11998b09": {},
+        "autosfactorystockf828427d": {
+          "bucketName": "autosfactory-stock-storage-11998b09131912-dev",
+          "region": "eu-west-1"
+        }
       },
       "auth": {
         "autosfactorystockc6201b0b": {

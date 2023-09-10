@@ -119,7 +119,30 @@
           "resourceName": "autosfactorystockc6201b0b"
         }
       ]
+    },
+    "AMPLIFY_storage_autosfactorystockf828427d_bucketName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "autosfactorystockf828427d"
+        }
+      ]
+    },
+    "AMPLIFY_storage_autosfactorystockf828427d_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "autosfactorystockf828427d"
+        }
+      ]
     }
   },
-  "storage": {}
+  "storage": {
+    "autosfactorystockf828427d": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3",
+      "serviceType": "imported"
+    }
+  }
 }
