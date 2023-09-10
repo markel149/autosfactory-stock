@@ -31,5 +31,29 @@
         "s3autosfactorystockstorage11998b09": {}
       }
     }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-autosfactorystock-dev-131912-authRole",
+      "UnauthRoleArn": "arn:aws:iam::184518967526:role/amplify-autosfactorystock-dev-131912-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::184518967526:role/amplify-autosfactorystock-dev-131912-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-autosfactorystock-dev-131912-deployment",
+      "UnauthRoleName": "amplify-autosfactorystock-dev-131912-unauthRole",
+      "StackName": "amplify-autosfactorystock-dev-131912",
+      "StackId": "arn:aws:cloudformation:eu-west-1:184518967526:stack/amplify-autosfactorystock-dev-131912/df7164d0-4fcb-11ee-b09f-026649eb5e85",
+      "AmplifyAppId": "dd5wuqe0exood"
+    },
+    "categories": {
+      "auth": {
+        "autosfactorystock": {}
+      },
+      "api": {
+        "autosfactorystock": {}
+      },
+      "storage": {
+        "s3autosfactorystockstorage11998b09": {}
+      }
+    }
   }
 }

@@ -1,14 +1,206 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateCliente = /* GraphQL */ `
+  subscription OnCreateCliente($filter: ModelSubscriptionClienteFilterInput) {
+    onCreateCliente(filter: $filter) {
+      id
+      nombre
+      apellido1
+      apellido2
+      email
+      telefono
+      dni
+      Coches {
+        items {
+          matricula
+          marca
+          modelo
+          id
+          color
+          kilometros
+          precioCompra
+          precioVenta
+          notas
+          fechaCompra
+          fechaVenta
+          localidadVendedor
+          nifVendedor
+          numeroFactura
+          anio
+          combustible
+          cambio
+          potencia
+          cc
+          nombreVendedor
+          precioVentaPublico
+          precioReparaciones
+          vendido
+          clienteID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          __typename
+        }
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateCliente = /* GraphQL */ `
+  subscription OnUpdateCliente($filter: ModelSubscriptionClienteFilterInput) {
+    onUpdateCliente(filter: $filter) {
+      id
+      nombre
+      apellido1
+      apellido2
+      email
+      telefono
+      dni
+      Coches {
+        items {
+          matricula
+          marca
+          modelo
+          id
+          color
+          kilometros
+          precioCompra
+          precioVenta
+          notas
+          fechaCompra
+          fechaVenta
+          localidadVendedor
+          nifVendedor
+          numeroFactura
+          anio
+          combustible
+          cambio
+          potencia
+          cc
+          nombreVendedor
+          precioVentaPublico
+          precioReparaciones
+          vendido
+          clienteID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          __typename
+        }
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteCliente = /* GraphQL */ `
+  subscription OnDeleteCliente($filter: ModelSubscriptionClienteFilterInput) {
+    onDeleteCliente(filter: $filter) {
+      id
+      nombre
+      apellido1
+      apellido2
+      email
+      telefono
+      dni
+      Coches {
+        items {
+          matricula
+          marca
+          modelo
+          id
+          color
+          kilometros
+          precioCompra
+          precioVenta
+          notas
+          fechaCompra
+          fechaVenta
+          localidadVendedor
+          nifVendedor
+          numeroFactura
+          anio
+          combustible
+          cambio
+          potencia
+          cc
+          nombreVendedor
+          precioVentaPublico
+          precioReparaciones
+          vendido
+          clienteID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          __typename
+        }
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
 export const onCreateCoche = /* GraphQL */ `
   subscription OnCreateCoche($filter: ModelSubscriptionCocheFilterInput) {
     onCreateCoche(filter: $filter) {
-      id
-      marca
       matricula
+      marca
+      modelo
+      id
+      color
+      kilometros
+      precioCompra
+      precioVenta
+      notas
+      fechaCompra
+      fechaVenta
+      localidadVendedor
+      nifVendedor
+      numeroFactura
+      anio
+      combustible
+      cambio
+      potencia
+      cc
+      nombreVendedor
+      precioVentaPublico
+      precioReparaciones
+      vendido
+      clienteID
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -16,11 +208,35 @@ export const onCreateCoche = /* GraphQL */ `
 export const onUpdateCoche = /* GraphQL */ `
   subscription OnUpdateCoche($filter: ModelSubscriptionCocheFilterInput) {
     onUpdateCoche(filter: $filter) {
-      id
-      marca
       matricula
+      marca
+      modelo
+      id
+      color
+      kilometros
+      precioCompra
+      precioVenta
+      notas
+      fechaCompra
+      fechaVenta
+      localidadVendedor
+      nifVendedor
+      numeroFactura
+      anio
+      combustible
+      cambio
+      potencia
+      cc
+      nombreVendedor
+      precioVentaPublico
+      precioReparaciones
+      vendido
+      clienteID
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -28,11 +244,35 @@ export const onUpdateCoche = /* GraphQL */ `
 export const onDeleteCoche = /* GraphQL */ `
   subscription OnDeleteCoche($filter: ModelSubscriptionCocheFilterInput) {
     onDeleteCoche(filter: $filter) {
-      id
-      marca
       matricula
+      marca
+      modelo
+      id
+      color
+      kilometros
+      precioCompra
+      precioVenta
+      notas
+      fechaCompra
+      fechaVenta
+      localidadVendedor
+      nifVendedor
+      numeroFactura
+      anio
+      combustible
+      cambio
+      potencia
+      cc
+      nombreVendedor
+      precioVentaPublico
+      precioReparaciones
+      vendido
+      clienteID
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }

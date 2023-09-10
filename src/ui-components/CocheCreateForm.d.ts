@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, CheckboxFieldProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
@@ -35,7 +35,6 @@ export declare type CocheCreateFormInputValues = {
     precioVentaPublico?: number;
     precioReparaciones?: number;
     vendido?: boolean;
-    clienteID?: string;
 };
 export declare type CocheCreateFormValidationValues = {
     matricula?: ValidationFunction<string>;
@@ -60,7 +59,6 @@ export declare type CocheCreateFormValidationValues = {
     precioVentaPublico?: ValidationFunction<number>;
     precioReparaciones?: ValidationFunction<number>;
     vendido?: ValidationFunction<boolean>;
-    clienteID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheCreateFormOverridesProps = {
@@ -86,8 +84,7 @@ export declare type CocheCreateFormOverridesProps = {
     nombreVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     precioVentaPublico?: PrimitiveOverrideProps<TextFieldProps>;
     precioReparaciones?: PrimitiveOverrideProps<TextFieldProps>;
-    vendido?: PrimitiveOverrideProps<CheckboxFieldProps>;
-    clienteID?: PrimitiveOverrideProps<AutocompleteProps>;
+    vendido?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type CocheCreateFormProps = React.PropsWithChildren<{
     overrides?: CocheCreateFormOverridesProps | undefined | null;
