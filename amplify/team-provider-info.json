@@ -52,11 +52,18 @@
         "s3autosfactorystockstorage11998b09": {}
       },
       "auth": {
-        "autosfactorystock": {
-          "userPoolId": "eu-west-1_eFrjWTKeL",
-          "userPoolName": "autosfactory",
-          "webClientId": "5afv28o9glgaq4kugqvh6lcf66",
-          "nativeClientId": "5afv28o9glgaq4kugqvh6lcf66"
+        "autosfactorystockc6201b0b": {
+          "userPoolId": "eu-west-1_cGCcChsPI",
+          "userPoolName": "autos_userpool",
+          "webClientId": "2bql5unjd12hch50vnd38hpvju",
+          "nativeClientId": "2bql5unjd12hch50vnd38hpvju",
+          "identityPoolId": "eu-west-1:792be708-ed71-405f-b799-bec86661d725",
+          "identityPoolName": "id_pool_autos",
+          "allowUnauthenticatedIdentities": false,
+          "authRoleArn": "arn:aws:iam::184518967526:role/service-role/authenticatedRole_autosfactory",
+          "authRoleName": "service-role/authenticatedRole_autosfactory",
+          "unauthRoleArn": "arn:aws:iam::184518967526:role/service-role/unAuthRole_autosfactory",
+          "unauthRoleName": "service-role/unAuthRole_autosfactory"
         }
       }
     }

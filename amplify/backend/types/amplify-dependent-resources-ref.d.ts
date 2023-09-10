@@ -5,11 +5,5 @@ export type AmplifyDependentResourcesAttributes = {
       "GraphQLAPIIdOutput": "string",
       "GraphQLAPIKeyOutput": "string"
     }
-  },
-  "storage": {
-    "s3autosfactorystockstorage11998b09": {
-      "BucketName": "string",
-      "Region": "string"
-    }
   }
 }

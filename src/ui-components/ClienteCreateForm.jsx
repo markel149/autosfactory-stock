@@ -38,6 +38,7 @@ function ArrayField({
   defaultFieldValue,
   lengthLimit,
   getBadgeText,
+  runValidationTasks,
   errorMessage,
 }) {
   const labelElement = <Text>{label}</Text>;
@@ -61,6 +62,7 @@ function ArrayField({
     setSelectedBadgeIndex(undefined);
   };
   const addItem = async () => {
+    const { hasError } = runValidationTasks();
     if (
       currentFieldValue !== undefined &&
       currentFieldValue !== null &&
@@ -170,12 +172,7 @@ function ArrayField({
               }}
             ></Button>
           )}
-          <Button
-            size="small"
-            variation="link"
-            isDisabled={hasError}
-            onClick={addItem}
-          >
+          <Button size="small" variation="link" onClick={addItem}>
             {selectedBadgeIndex !== undefined ? "Save" : "Add"}
           </Button>
         </Flex>
@@ -318,8 +315,8 @@ export default function ClienteCreateForm(props) {
         }
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
-            if (typeof value === "string" && value.trim() === "") {
-              modelFields[key] = undefined;
+            if (typeof value === "string" && value === "") {
+              modelFields[key] = null;
             }
           });
           const modelFieldsToSave = {
@@ -564,6 +561,9 @@ export default function ClienteCreateForm(props) {
         label={"Coches"}
         items={Coches}
         hasError={errors?.Coches?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("Coches", currentCochesValue)
+        }
         errorMessage={errors?.Coches?.errorMessage}
         getBadgeText={getDisplayValue.Coches}
         setFieldValue={(model) => {
