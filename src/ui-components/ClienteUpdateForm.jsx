@@ -257,7 +257,7 @@ export default function ClienteUpdateForm(props) {
     model: Coche,
   }).items;
   const getDisplayValue = {
-    Coches: (r) => `${r?.matricula}${" - "}${r?.marca}${'" "'}${r?.modelo}`,
+    Coches: (r) => `${r?.matricula}${" - "}${r?.marca}${" "}${r?.modelo}`,
   };
   const validations = {
     nombre: [{ type: "Required" }],

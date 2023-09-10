@@ -10,12 +10,12 @@ import {
   Autocomplete,
   Badge,
   Button,
+  CheckboxField,
   Divider,
   Flex,
   Grid,
   Icon,
   ScrollView,
-  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -512,11 +512,13 @@ export default function CocheVenderForm(props) {
         hasError={errors.precioReparaciones?.hasError}
         {...getOverrideProps(overrides, "precioReparaciones")}
       ></TextField>
-      <SwitchField
+      <CheckboxField
         label="Vendido"
-        defaultChecked={false}
+        name="vendido"
+        value="vendido"
         isDisabled={false}
-        isChecked={vendido}
+        checked={vendido}
+        defaultValue={vendido}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
@@ -541,7 +543,7 @@ export default function CocheVenderForm(props) {
         errorMessage={errors.vendido?.errorMessage}
         hasError={errors.vendido?.hasError}
         {...getOverrideProps(overrides, "vendido")}
-      ></SwitchField>
+      ></CheckboxField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
