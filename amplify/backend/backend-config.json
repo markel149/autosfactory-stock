@@ -31,6 +31,40 @@
       "serviceType": "imported"
     }
   },
+  "parameters": {
+    "AMPLIFY_auth_autosfactorystock_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    },
+    "AMPLIFY_auth_autosfactorystock_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "autosfactorystock"
+        }
+      ]
+    }
+  },
   "storage": {
     "s3autosfactorystockstorage11998b09": {
       "dependsOn": [],

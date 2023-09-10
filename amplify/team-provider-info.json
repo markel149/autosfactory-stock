@@ -45,14 +45,19 @@
       "AmplifyAppId": "dd5wuqe0exood"
     },
     "categories": {
-      "auth": {
-        "autosfactorystock": {}
-      },
       "api": {
         "autosfactorystock": {}
       },
       "storage": {
         "s3autosfactorystockstorage11998b09": {}
+      },
+      "auth": {
+        "autosfactorystock": {
+          "userPoolId": "eu-west-1_eFrjWTKeL",
+          "userPoolName": "autosfactory",
+          "webClientId": "5afv28o9glgaq4kugqvh6lcf66",
+          "nativeClientId": "5afv28o9glgaq4kugqvh6lcf66"
+        }
       }
     }
   }

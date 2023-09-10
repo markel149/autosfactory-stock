@@ -1,16 +1,12 @@
 {
-  "authSelections": "identityPoolAndUserPool",
+  "authSelections": "userPoolOnly",
   "resourceName": "autosfactorystock",
   "serviceType": "imported",
-  "region": "eu-central-1",
+  "region": "eu-west-1",
   "usernameAttributes": [
     "email"
   ],
-  "authProvidersUserPool": [],
-  "requiredAttributes": [
-    "name",
-    "email"
-  ],
+  "requiredAttributes": [],
   "passwordPolicyMinLength": 8,
   "passwordPolicyCharacters": [
     "Requires Lowercase",

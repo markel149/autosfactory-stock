@@ -5,7 +5,7 @@
   "dependencies": {
     "@aws-amplify/datastore": "^4.6.3",
     "@aws-amplify/storage": "^5.7.0",
-    "@aws-amplify/ui-react": "^5.0.4",
+    "@aws-amplify/ui-react": "file:^4.6.0sudo ls -lasudo npm install @aws-amplify/ui-react@^4.6.0",
     "@aws-amplify/ui-react-storage": "^2.0.4",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
