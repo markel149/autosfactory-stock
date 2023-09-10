@@ -18,6 +18,7 @@ import {
   ScrollView,
   SwitchField,
   Text,
+  TextAreaField,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
@@ -1675,11 +1676,10 @@ export default function CocheCreateForm(props) {
         hasError={errors.numeroFacturaVenta?.hasError}
         {...getOverrideProps(overrides, "numeroFacturaVenta")}
       ></TextField>
-      <TextField
+      <TextAreaField
         label="Notas venta"
         isRequired={false}
         isReadOnly={false}
-        value={notasVenta}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1724,7 +1724,7 @@ export default function CocheCreateForm(props) {
         errorMessage={errors.notasVenta?.errorMessage}
         hasError={errors.notasVenta?.hasError}
         {...getOverrideProps(overrides, "notasVenta")}
-      ></TextField>
+      ></TextAreaField>
       <TextField
         label="Fecha venta"
         isRequired={false}
@@ -1887,11 +1887,10 @@ export default function CocheCreateForm(props) {
         children="Otros"
         {...getOverrideProps(overrides, "SectionalElement4")}
       ></Heading>
-      <TextField
+      <TextAreaField
         label="Notas"
         isRequired={false}
         isReadOnly={false}
-        value={notas}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1936,7 +1935,7 @@ export default function CocheCreateForm(props) {
         errorMessage={errors.notas?.errorMessage}
         hasError={errors.notas?.hasError}
         {...getOverrideProps(overrides, "notas")}
-      ></TextField>
+      ></TextAreaField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

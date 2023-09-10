@@ -19,6 +19,7 @@ import {
   ScrollView,
   SwitchField,
   Text,
+  TextAreaField,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
@@ -1720,7 +1721,7 @@ export default function CocheUpdateForm(props) {
         hasError={errors.precioVenta?.hasError}
         {...getOverrideProps(overrides, "precioVenta")}
       ></TextField>
-      <TextField
+      <TextAreaField
         label="Notas venta"
         isRequired={false}
         isReadOnly={false}
@@ -1770,7 +1771,7 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.notasVenta?.errorMessage}
         hasError={errors.notasVenta?.hasError}
         {...getOverrideProps(overrides, "notasVenta")}
-      ></TextField>
+      ></TextAreaField>
       <TextField
         label="Fecha venta"
         isRequired={false}
@@ -1989,7 +1990,7 @@ export default function CocheUpdateForm(props) {
         hasError={errors.alerta?.hasError}
         {...getOverrideProps(overrides, "alerta")}
       ></CheckboxField>
-      <TextField
+      <TextAreaField
         label="Notas"
         isRequired={false}
         isReadOnly={false}
@@ -2039,7 +2040,7 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.notas?.errorMessage}
         hasError={errors.notas?.hasError}
         {...getOverrideProps(overrides, "notas")}
-      ></TextField>
+      ></TextAreaField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
