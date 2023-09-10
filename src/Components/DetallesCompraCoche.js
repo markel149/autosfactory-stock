@@ -42,6 +42,12 @@ export function DetallesCompraCoche({ cocheInfo }) {
                                 secondary={cocheInfo.nifVendedor}
                             />
                         </ListItem>
+                        <ListItem >
+                            <ListItemText
+                                primary="Telefono Vendedor"
+                                secondary={cocheInfo.telefonoVendedor}
+                            />
+                        </ListItem>
                     </List>
                 </Grid>
                 <Grid item xs={6}>
@@ -62,6 +68,12 @@ export function DetallesCompraCoche({ cocheInfo }) {
                             <ListItemText
                                 primary="Precio reparaciones"
                                 secondary={cocheInfo.precioReparaciones}
+                            />
+                        </ListItem>
+                        <ListItem >
+                            <ListItemText
+                                primary="Direccion Vendedor"
+                                secondary={cocheInfo.direccionVendedor}
                             />
                         </ListItem>
                     </List>

@@ -30,6 +30,12 @@ export function DetallesVentaCoche({ cocheInfo }) {
                                 secondary={cocheInfo.fechaVenta}
                             />
                         </ListItem>
+                        <ListItem >
+                            <ListItemText
+                                primary="Numero de factura de venta"
+                                secondary={cocheInfo.numeroFacturaVenta}
+                            />
+                        </ListItem>
                     </List>
                 </Grid>
                 <Grid item xs={6}>
@@ -49,7 +55,19 @@ export function DetallesVentaCoche({ cocheInfo }) {
                     </List>
                 </Grid>
             </Grid>
+            <Grid>
+        <List style={{marginLeft: 20}}>
+            <ListItem >
+                <ListItemText
+                primary="Notas"
+                secondary={cocheInfo.notasVenta}
+                />
+            </ListItem>
+        </List>
         </Grid>
+        </Grid>
+        
+        
     )
 }
 
