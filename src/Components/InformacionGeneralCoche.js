@@ -33,14 +33,20 @@ export function InformacionGeneralCoche({ cocheInfo }) {
                         </List>
                 </Grid>
                 <Grid item xs={6}>
-                <   List style={{marginLeft: 20}}> 
+                    <List style={{marginLeft: 20}}> 
                         <ListItem >
                             <ListItemText
                                 primary="Matricula"
                                 secondary={cocheInfo.matricula}
                             />
-                            </ListItem>
-                        </List>
+                        </ListItem>
+                        <ListItem >
+                            <ListItemText
+                                primary="Precio Venta"
+                                secondary={cocheInfo.precioVenta}
+                            />
+                        </ListItem>
+                    </List>
                 </Grid>
                 </Grid>
                     <List style={{marginLeft: 20}}>
