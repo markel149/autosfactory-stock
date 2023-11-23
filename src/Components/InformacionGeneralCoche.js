@@ -45,7 +45,7 @@ export function InformacionGeneralCoche({ cocheInfo }) {
                                 primary="Precio Venta"
                                 secondary={cocheInfo.precioVenta}
                             />
-                        </ListItem>
+                            </ListItem>
                     </List>
                 </Grid>
                 </Grid>

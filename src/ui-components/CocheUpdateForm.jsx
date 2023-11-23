@@ -23,13 +23,14 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { Coche, Cliente } from "../models";
 import {
+  fetchByPath,
   getOverrideProps,
   useDataStoreBinding,
-} from "@aws-amplify/ui-react/internal";
-import { Coche, Cliente } from "../models";
-import { fetchByPath, validateField } from "./utils";
-import { DataStore } from "aws-amplify";
+  validateField,
+} from "./utils";
+import { DataStore } from "aws-amplify/datastore";
 function ArrayField({
   items = [],
   onChange,
@@ -341,7 +342,8 @@ export default function CocheUpdateForm(props) {
     model: Cliente,
   }).items;
   const getDisplayValue = {
-    clienteID: (r) => `${r?.nombre ? r?.nombre + " - " : ""}${r?.id}`,
+    clienteID: (r) =>
+      `${r?.nombre}${" "}${r?.apellido1}${" "}${r?.apellido2}${" - "}${r?.dni}`,
   };
   const validations = {
     matricula: [{ type: "Required" }],

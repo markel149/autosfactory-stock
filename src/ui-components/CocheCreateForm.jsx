@@ -22,13 +22,14 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { Coche, Cliente } from "../models";
 import {
+  fetchByPath,
   getOverrideProps,
   useDataStoreBinding,
-} from "@aws-amplify/ui-react/internal";
-import { Coche, Cliente } from "../models";
-import { fetchByPath, validateField } from "./utils";
-import { DataStore } from "aws-amplify";
+  validateField,
+} from "./utils";
+import { DataStore } from "aws-amplify/datastore";
 function ArrayField({
   items = [],
   onChange,
