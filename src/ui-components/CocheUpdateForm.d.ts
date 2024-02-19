@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, CheckboxFieldProps, GridProps, HeadingProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, CheckboxFieldProps, GridProps, HeadingProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps, TextProps } from "@aws-amplify/ui-react";
 import { Coche } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -85,6 +85,7 @@ export declare type CocheUpdateFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheUpdateFormOverridesProps = {
     CocheUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    SectionalElement5?: PrimitiveOverrideProps<TextProps>;
     SectionalElement0?: PrimitiveOverrideProps<HeadingProps>;
     matricula?: PrimitiveOverrideProps<TextFieldProps>;
     marca?: PrimitiveOverrideProps<TextFieldProps>;

@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { getOverrideProps } from "./utils";
 import {
   Badge,
   Divider,
@@ -293,8 +293,8 @@ export default function ProductCard(props) {
                 viewBox={{
                   minX: 0,
                   minY: 0,
-                  width: 17.58984375,
-                  height: 13.40997314453125,
+                  width: 17.59000015258789,
+                  height: 13.40999984741211,
                 }}
                 paths={[
                   {
@@ -369,8 +369,8 @@ export default function ProductCard(props) {
                 viewBox={{
                   minX: 0,
                   minY: 0,
-                  width: 17.58984375,
-                  height: 13.40997314453125,
+                  width: 17.59000015258789,
+                  height: 13.40999984741211,
                 }}
                 paths={[
                   {
@@ -445,8 +445,8 @@ export default function ProductCard(props) {
                 viewBox={{
                   minX: 0,
                   minY: 0,
-                  width: 17.58984375,
-                  height: 13.40997314453125,
+                  width: 17.59000015258789,
+                  height: 13.40999984741211,
                 }}
                 paths={[
                   {

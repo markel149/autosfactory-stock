@@ -30,7 +30,7 @@ import {
   useDataStoreBinding,
   validateField,
 } from "./utils";
-import { DataStore } from "aws-amplify/datastore";
+import { DataStore } from "aws-amplify";
 function ArrayField({
   items = [],
   onChange,
@@ -343,7 +343,9 @@ export default function CocheUpdateForm(props) {
   }).items;
   const getDisplayValue = {
     clienteID: (r) =>
-      `${r?.nombre}${" "}${r?.apellido1}${" "}${r?.apellido2}${" - "}${r?.dni}`,
+      `${r?.nombre}${" "}${r?.apellido1}${" "}${r?.apellido2}${" - "}${
+        r?.dni
+      }${""}`,
   };
   const validations = {
     matricula: [{ type: "Required" }],
@@ -475,6 +477,10 @@ export default function CocheUpdateForm(props) {
       {...getOverrideProps(overrides, "CocheUpdateForm")}
       {...rest}
     >
+      <Text
+        children="Coche"
+        {...getOverrideProps(overrides, "SectionalElement5")}
+      ></Text>
       <Heading
         children="Información general"
         {...getOverrideProps(overrides, "SectionalElement0")}

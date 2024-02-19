@@ -10,14 +10,13 @@ import {
   getOverrideProps,
   getOverridesFromVariants,
   mergeVariantsAndOverrides,
-} from "@aws-amplify/ui-react/internal";
+} from "./utils";
 import { Flex, Icon } from "@aws-amplify/ui-react";
 export default function Logo(props) {
   const { overrides: overridesProp, ...rest } = props;
   const variants = [
-    { variantValues: { color: "neutral" }, overrides: { Union: {}, Logo: {} } },
+    { overrides: { Union: {}, Logo: {} }, variantValues: { color: "neutral" } },
     {
-      variantValues: { color: "brand" },
       overrides: {
         Union: {
           paths: [
@@ -35,6 +34,7 @@ export default function Logo(props) {
         },
         Logo: {},
       },
+      variantValues: { color: "brand" },
     },
   ];
   const overrides = mergeVariantsAndOverrides(
@@ -61,8 +61,8 @@ export default function Logo(props) {
         viewBox={{
           minX: 0,
           minY: 0,
-          width: 21.778564453125,
-          height: 18.909515380859375,
+          width: 21.77855110168457,
+          height: 18.909521102905273,
         }}
         paths={[
           {

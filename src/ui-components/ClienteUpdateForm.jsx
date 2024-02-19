@@ -15,7 +15,7 @@ import {
 } from "@aws-amplify/ui-react";
 import { Cliente } from "../models";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { DataStore } from "aws-amplify/datastore";
+import { DataStore } from "aws-amplify";
 export default function ClienteUpdateForm(props) {
   const {
     id: idProp,
