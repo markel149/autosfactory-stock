@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, HeadingProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -35,6 +35,7 @@ export declare type CocheCreateFormInputValues = {
     localidadVendedor?: string;
     nifVendedor?: string;
     numeroFactura?: string;
+    numeroFacturaVenta?: string;
     precioCompra?: number;
     fechaCompra?: string;
     nombreVendedor?: string;
@@ -44,10 +45,9 @@ export declare type CocheCreateFormInputValues = {
     precioReparaciones?: number;
     vendido?: boolean;
     precioVenta?: number;
-    numeroFacturaVenta?: string;
     notasVenta?: string;
     fechaVenta?: string;
-    clienteID?: string;
+    alerta?: boolean;
     notas?: string;
 };
 export declare type CocheCreateFormValidationValues = {
@@ -64,6 +64,7 @@ export declare type CocheCreateFormValidationValues = {
     localidadVendedor?: ValidationFunction<string>;
     nifVendedor?: ValidationFunction<string>;
     numeroFactura?: ValidationFunction<string>;
+    numeroFacturaVenta?: ValidationFunction<string>;
     precioCompra?: ValidationFunction<number>;
     fechaCompra?: ValidationFunction<string>;
     nombreVendedor?: ValidationFunction<string>;
@@ -73,20 +74,17 @@ export declare type CocheCreateFormValidationValues = {
     precioReparaciones?: ValidationFunction<number>;
     vendido?: ValidationFunction<boolean>;
     precioVenta?: ValidationFunction<number>;
-    numeroFacturaVenta?: ValidationFunction<string>;
     notasVenta?: ValidationFunction<string>;
     fechaVenta?: ValidationFunction<string>;
-    clienteID?: ValidationFunction<string>;
+    alerta?: ValidationFunction<boolean>;
     notas?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheCreateFormOverridesProps = {
     CocheCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    SectionalElement0?: PrimitiveOverrideProps<HeadingProps>;
     matricula?: PrimitiveOverrideProps<TextFieldProps>;
     marca?: PrimitiveOverrideProps<TextFieldProps>;
     modelo?: PrimitiveOverrideProps<TextFieldProps>;
-    SectionalElement1?: PrimitiveOverrideProps<HeadingProps>;
     color?: PrimitiveOverrideProps<TextFieldProps>;
     kilometros?: PrimitiveOverrideProps<TextFieldProps>;
     combustible?: PrimitiveOverrideProps<TextFieldProps>;
@@ -94,26 +92,23 @@ export declare type CocheCreateFormOverridesProps = {
     anio?: PrimitiveOverrideProps<TextFieldProps>;
     potencia?: PrimitiveOverrideProps<TextFieldProps>;
     cc?: PrimitiveOverrideProps<TextFieldProps>;
-    SectionalElement2?: PrimitiveOverrideProps<HeadingProps>;
     localidadVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     nifVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     numeroFactura?: PrimitiveOverrideProps<TextFieldProps>;
+    numeroFacturaVenta?: PrimitiveOverrideProps<TextFieldProps>;
     precioCompra?: PrimitiveOverrideProps<TextFieldProps>;
     fechaCompra?: PrimitiveOverrideProps<TextFieldProps>;
     nombreVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     direccionVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     telefonoVendedor?: PrimitiveOverrideProps<TextFieldProps>;
-    SectionalElement3?: PrimitiveOverrideProps<HeadingProps>;
     precioVentaPublico?: PrimitiveOverrideProps<TextFieldProps>;
     precioReparaciones?: PrimitiveOverrideProps<TextFieldProps>;
     vendido?: PrimitiveOverrideProps<SwitchFieldProps>;
     precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
-    numeroFacturaVenta?: PrimitiveOverrideProps<TextFieldProps>;
-    notasVenta?: PrimitiveOverrideProps<TextAreaFieldProps>;
+    notasVenta?: PrimitiveOverrideProps<TextFieldProps>;
     fechaVenta?: PrimitiveOverrideProps<TextFieldProps>;
-    clienteID?: PrimitiveOverrideProps<AutocompleteProps>;
-    SectionalElement4?: PrimitiveOverrideProps<HeadingProps>;
-    notas?: PrimitiveOverrideProps<TextAreaFieldProps>;
+    alerta?: PrimitiveOverrideProps<SwitchFieldProps>;
+    notas?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CocheCreateFormProps = React.PropsWithChildren<{
     overrides?: CocheCreateFormOverridesProps | undefined | null;

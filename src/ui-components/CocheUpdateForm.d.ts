@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, CheckboxFieldProps, GridProps, HeadingProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps, TextProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { Coche } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -36,19 +36,18 @@ export declare type CocheUpdateFormInputValues = {
     localidadVendedor?: string;
     nifVendedor?: string;
     numeroFactura?: string;
+    numeroFacturaVenta?: string;
     precioCompra?: number;
     fechaCompra?: string;
     nombreVendedor?: string;
     direccionVendedor?: string;
     telefonoVendedor?: string;
     precioVentaPublico?: number;
-    numeroFacturaVenta?: string;
     precioReparaciones?: number;
     vendido?: boolean;
     precioVenta?: number;
     notasVenta?: string;
     fechaVenta?: string;
-    clienteID?: string;
     alerta?: boolean;
     notas?: string;
 };
@@ -66,31 +65,27 @@ export declare type CocheUpdateFormValidationValues = {
     localidadVendedor?: ValidationFunction<string>;
     nifVendedor?: ValidationFunction<string>;
     numeroFactura?: ValidationFunction<string>;
+    numeroFacturaVenta?: ValidationFunction<string>;
     precioCompra?: ValidationFunction<number>;
     fechaCompra?: ValidationFunction<string>;
     nombreVendedor?: ValidationFunction<string>;
     direccionVendedor?: ValidationFunction<string>;
     telefonoVendedor?: ValidationFunction<string>;
     precioVentaPublico?: ValidationFunction<number>;
-    numeroFacturaVenta?: ValidationFunction<string>;
     precioReparaciones?: ValidationFunction<number>;
     vendido?: ValidationFunction<boolean>;
     precioVenta?: ValidationFunction<number>;
     notasVenta?: ValidationFunction<string>;
     fechaVenta?: ValidationFunction<string>;
-    clienteID?: ValidationFunction<string>;
     alerta?: ValidationFunction<boolean>;
     notas?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CocheUpdateFormOverridesProps = {
     CocheUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    SectionalElement5?: PrimitiveOverrideProps<TextProps>;
-    SectionalElement0?: PrimitiveOverrideProps<HeadingProps>;
     matricula?: PrimitiveOverrideProps<TextFieldProps>;
     marca?: PrimitiveOverrideProps<TextFieldProps>;
     modelo?: PrimitiveOverrideProps<TextFieldProps>;
-    SectionalElement1?: PrimitiveOverrideProps<HeadingProps>;
     color?: PrimitiveOverrideProps<TextFieldProps>;
     kilometros?: PrimitiveOverrideProps<TextFieldProps>;
     combustible?: PrimitiveOverrideProps<TextFieldProps>;
@@ -98,27 +93,23 @@ export declare type CocheUpdateFormOverridesProps = {
     anio?: PrimitiveOverrideProps<TextFieldProps>;
     potencia?: PrimitiveOverrideProps<TextFieldProps>;
     cc?: PrimitiveOverrideProps<TextFieldProps>;
-    SectionalElement2?: PrimitiveOverrideProps<HeadingProps>;
     localidadVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     nifVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     numeroFactura?: PrimitiveOverrideProps<TextFieldProps>;
+    numeroFacturaVenta?: PrimitiveOverrideProps<TextFieldProps>;
     precioCompra?: PrimitiveOverrideProps<TextFieldProps>;
     fechaCompra?: PrimitiveOverrideProps<TextFieldProps>;
     nombreVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     direccionVendedor?: PrimitiveOverrideProps<TextFieldProps>;
     telefonoVendedor?: PrimitiveOverrideProps<TextFieldProps>;
-    SectionalElement3?: PrimitiveOverrideProps<HeadingProps>;
     precioVentaPublico?: PrimitiveOverrideProps<TextFieldProps>;
-    numeroFacturaVenta?: PrimitiveOverrideProps<TextFieldProps>;
     precioReparaciones?: PrimitiveOverrideProps<TextFieldProps>;
     vendido?: PrimitiveOverrideProps<SwitchFieldProps>;
     precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
-    notasVenta?: PrimitiveOverrideProps<TextAreaFieldProps>;
+    notasVenta?: PrimitiveOverrideProps<TextFieldProps>;
     fechaVenta?: PrimitiveOverrideProps<TextFieldProps>;
-    clienteID?: PrimitiveOverrideProps<AutocompleteProps>;
-    SectionalElement4?: PrimitiveOverrideProps<HeadingProps>;
-    alerta?: PrimitiveOverrideProps<CheckboxFieldProps>;
-    notas?: PrimitiveOverrideProps<TextAreaFieldProps>;
+    alerta?: PrimitiveOverrideProps<SwitchFieldProps>;
+    notas?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CocheUpdateFormProps = React.PropsWithChildren<{
     overrides?: CocheUpdateFormOverridesProps | undefined | null;

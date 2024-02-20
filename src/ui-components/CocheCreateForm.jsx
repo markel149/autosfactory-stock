@@ -7,184 +7,15 @@
 /* eslint-disable */
 import * as React from "react";
 import {
-  Autocomplete,
-  Badge,
   Button,
-  Divider,
   Flex,
   Grid,
-  Heading,
-  Icon,
-  ScrollView,
   SwitchField,
-  Text,
-  TextAreaField,
   TextField,
-  useTheme,
 } from "@aws-amplify/ui-react";
-import { Coche, Cliente } from "../models";
-import {
-  fetchByPath,
-  getOverrideProps,
-  useDataStoreBinding,
-  validateField,
-} from "./utils";
+import { Coche } from "../models";
+import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-function ArrayField({
-  items = [],
-  onChange,
-  label,
-  inputFieldRef,
-  children,
-  hasError,
-  setFieldValue,
-  currentFieldValue,
-  defaultFieldValue,
-  lengthLimit,
-  getBadgeText,
-  runValidationTasks,
-  errorMessage,
-}) {
-  const labelElement = <Text>{label}</Text>;
-  const {
-    tokens: {
-      components: {
-        fieldmessages: { error: errorStyles },
-      },
-    },
-  } = useTheme();
-  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
-  const [isEditing, setIsEditing] = React.useState();
-  React.useEffect(() => {
-    if (isEditing) {
-      inputFieldRef?.current?.focus();
-    }
-  }, [isEditing]);
-  const removeItem = async (removeIndex) => {
-    const newItems = items.filter((value, index) => index !== removeIndex);
-    await onChange(newItems);
-    setSelectedBadgeIndex(undefined);
-  };
-  const addItem = async () => {
-    const { hasError } = runValidationTasks();
-    if (
-      currentFieldValue !== undefined &&
-      currentFieldValue !== null &&
-      currentFieldValue !== "" &&
-      !hasError
-    ) {
-      const newItems = [...items];
-      if (selectedBadgeIndex !== undefined) {
-        newItems[selectedBadgeIndex] = currentFieldValue;
-        setSelectedBadgeIndex(undefined);
-      } else {
-        newItems.push(currentFieldValue);
-      }
-      await onChange(newItems);
-      setIsEditing(false);
-    }
-  };
-  const arraySection = (
-    <React.Fragment>
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {getBadgeText ? getBadgeText(value) : value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
-    </React.Fragment>
-  );
-  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
-    return (
-      <React.Fragment>
-        {labelElement}
-        {arraySection}
-      </React.Fragment>
-    );
-  }
-  return (
-    <React.Fragment>
-      {labelElement}
-      {isEditing && children}
-      {!isEditing ? (
-        <>
-          <Button
-            onClick={() => {
-              setIsEditing(true);
-            }}
-          >
-            Add item
-          </Button>
-          {errorMessage && hasError && (
-            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
-              {errorMessage}
-            </Text>
-          )}
-        </>
-      ) : (
-        <Flex justifyContent="flex-end">
-          {(currentFieldValue || isEditing) && (
-            <Button
-              children="Cancel"
-              type="button"
-              size="small"
-              onClick={() => {
-                setFieldValue(defaultFieldValue);
-                setIsEditing(false);
-                setSelectedBadgeIndex(undefined);
-              }}
-            ></Button>
-          )}
-          <Button size="small" variation="link" onClick={addItem}>
-            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
-          </Button>
-        </Flex>
-      )}
-      {arraySection}
-    </React.Fragment>
-  );
-}
 export default function CocheCreateForm(props) {
   const {
     clearOnSuccess = true,
@@ -210,6 +41,7 @@ export default function CocheCreateForm(props) {
     localidadVendedor: "",
     nifVendedor: "",
     numeroFactura: "",
+    numeroFacturaVenta: "",
     precioCompra: "",
     fechaCompra: "",
     nombreVendedor: "",
@@ -219,10 +51,9 @@ export default function CocheCreateForm(props) {
     precioReparaciones: "",
     vendido: false,
     precioVenta: "",
-    numeroFacturaVenta: "",
     notasVenta: "",
     fechaVenta: "",
-    clienteID: undefined,
+    alerta: false,
     notas: "",
   };
   const [matricula, setMatricula] = React.useState(initialValues.matricula);
@@ -245,6 +76,9 @@ export default function CocheCreateForm(props) {
   );
   const [numeroFactura, setNumeroFactura] = React.useState(
     initialValues.numeroFactura
+  );
+  const [numeroFacturaVenta, setNumeroFacturaVenta] = React.useState(
+    initialValues.numeroFacturaVenta
   );
   const [precioCompra, setPrecioCompra] = React.useState(
     initialValues.precioCompra
@@ -271,12 +105,9 @@ export default function CocheCreateForm(props) {
   const [precioVenta, setPrecioVenta] = React.useState(
     initialValues.precioVenta
   );
-  const [numeroFacturaVenta, setNumeroFacturaVenta] = React.useState(
-    initialValues.numeroFacturaVenta
-  );
   const [notasVenta, setNotasVenta] = React.useState(initialValues.notasVenta);
   const [fechaVenta, setFechaVenta] = React.useState(initialValues.fechaVenta);
-  const [clienteID, setClienteID] = React.useState(initialValues.clienteID);
+  const [alerta, setAlerta] = React.useState(initialValues.alerta);
   const [notas, setNotas] = React.useState(initialValues.notas);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -293,6 +124,7 @@ export default function CocheCreateForm(props) {
     setLocalidadVendedor(initialValues.localidadVendedor);
     setNifVendedor(initialValues.nifVendedor);
     setNumeroFactura(initialValues.numeroFactura);
+    setNumeroFacturaVenta(initialValues.numeroFacturaVenta);
     setPrecioCompra(initialValues.precioCompra);
     setFechaCompra(initialValues.fechaCompra);
     setNombreVendedor(initialValues.nombreVendedor);
@@ -302,29 +134,11 @@ export default function CocheCreateForm(props) {
     setPrecioReparaciones(initialValues.precioReparaciones);
     setVendido(initialValues.vendido);
     setPrecioVenta(initialValues.precioVenta);
-    setNumeroFacturaVenta(initialValues.numeroFacturaVenta);
     setNotasVenta(initialValues.notasVenta);
     setFechaVenta(initialValues.fechaVenta);
-    setClienteID(initialValues.clienteID);
-    setCurrentClienteIDValue(undefined);
-    setCurrentClienteIDDisplayValue("");
+    setAlerta(initialValues.alerta);
     setNotas(initialValues.notas);
     setErrors({});
-  };
-  const [currentClienteIDDisplayValue, setCurrentClienteIDDisplayValue] =
-    React.useState("");
-  const [currentClienteIDValue, setCurrentClienteIDValue] =
-    React.useState(undefined);
-  const clienteIDRef = React.createRef();
-  const clienteRecords = useDataStoreBinding({
-    type: "collection",
-    model: Cliente,
-  }).items;
-  const getDisplayValue = {
-    clienteID: (r) =>
-      `${r?.nombre}${"  "}${r?.apellido1}${" "}${r?.apellido2}${" - "}${
-        r?.dni
-      }`,
   };
   const validations = {
     matricula: [{ type: "Required" }],
@@ -340,6 +154,7 @@ export default function CocheCreateForm(props) {
     localidadVendedor: [],
     nifVendedor: [],
     numeroFactura: [],
+    numeroFacturaVenta: [],
     precioCompra: [{ type: "Required" }],
     fechaCompra: [],
     nombreVendedor: [],
@@ -349,10 +164,9 @@ export default function CocheCreateForm(props) {
     precioReparaciones: [],
     vendido: [],
     precioVenta: [],
-    numeroFacturaVenta: [],
     notasVenta: [],
     fechaVenta: [],
-    clienteID: [],
+    alerta: [],
     notas: [],
   };
   const runValidationTasks = async (
@@ -394,6 +208,7 @@ export default function CocheCreateForm(props) {
           localidadVendedor,
           nifVendedor,
           numeroFactura,
+          numeroFacturaVenta,
           precioCompra,
           fechaCompra,
           nombreVendedor,
@@ -403,10 +218,9 @@ export default function CocheCreateForm(props) {
           precioReparaciones,
           vendido,
           precioVenta,
-          numeroFacturaVenta,
           notasVenta,
           fechaVenta,
-          clienteID,
+          alerta,
           notas,
         };
         const validationResponses = await Promise.all(
@@ -453,17 +267,8 @@ export default function CocheCreateForm(props) {
       {...getOverrideProps(overrides, "CocheCreateForm")}
       {...rest}
     >
-      <Heading
-        children="Información general"
-        {...getOverrideProps(overrides, "SectionalElement0")}
-      ></Heading>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Matricula</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Matricula"
         isRequired={true}
         isReadOnly={false}
         value={matricula}
@@ -484,6 +289,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -493,10 +299,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -513,12 +318,7 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "matricula")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Marca</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Marca"
         isRequired={true}
         isReadOnly={false}
         value={marca}
@@ -539,6 +339,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -548,10 +349,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -568,12 +368,7 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "marca")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Modelo</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Modelo"
         isRequired={true}
         isReadOnly={false}
         value={modelo}
@@ -594,6 +389,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -603,10 +399,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -622,10 +417,6 @@ export default function CocheCreateForm(props) {
         hasError={errors.modelo?.hasError}
         {...getOverrideProps(overrides, "modelo")}
       ></TextField>
-      <Heading
-        children="Especificaciones tecnicas"
-        {...getOverrideProps(overrides, "SectionalElement1")}
-      ></Heading>
       <TextField
         label="Color"
         isRequired={false}
@@ -648,6 +439,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -657,10 +449,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -702,6 +493,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -711,10 +503,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -752,6 +543,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -761,10 +553,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -802,6 +593,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -811,10 +603,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -831,7 +622,7 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "cambio")}
       ></TextField>
       <TextField
-        label="Año"
+        label="Anio"
         isRequired={false}
         isReadOnly={false}
         type="number"
@@ -856,6 +647,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -865,10 +657,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -910,6 +701,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -919,10 +711,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -939,7 +730,7 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "potencia")}
       ></TextField>
       <TextField
-        label="CC"
+        label="Cc"
         isRequired={false}
         isReadOnly={false}
         value={cc}
@@ -960,6 +751,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -969,10 +761,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -988,10 +779,6 @@ export default function CocheCreateForm(props) {
         hasError={errors.cc?.hasError}
         {...getOverrideProps(overrides, "cc")}
       ></TextField>
-      <Heading
-        children="Detalles de la compra"
-        {...getOverrideProps(overrides, "SectionalElement2")}
-      ></Heading>
       <TextField
         label="Localidad vendedor"
         isRequired={false}
@@ -1014,6 +801,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor: value,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1023,10 +811,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1045,7 +832,7 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "localidadVendedor")}
       ></TextField>
       <TextField
-        label="NIF vendedor"
+        label="Nif vendedor"
         isRequired={false}
         isReadOnly={false}
         value={nifVendedor}
@@ -1066,6 +853,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor: value,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1075,10 +863,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1096,7 +883,6 @@ export default function CocheCreateForm(props) {
       ></TextField>
       <TextField
         label="Numero factura"
-        descriptiveText="Numero de factura por vendedor del coche"
         isRequired={false}
         isReadOnly={false}
         value={numeroFactura}
@@ -1117,6 +903,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura: value,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1126,10 +913,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1146,12 +932,59 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "numeroFactura")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Precio compra</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
+        label="Numero factura venta"
+        isRequired={false}
+        isReadOnly={false}
+        value={numeroFacturaVenta}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta: value,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              alerta,
+              notas,
+            };
+            const result = onChange(modelFields);
+            value = result?.numeroFacturaVenta ?? value;
+          }
+          if (errors.numeroFacturaVenta?.hasError) {
+            runValidationTasks("numeroFacturaVenta", value);
+          }
+          setNumeroFacturaVenta(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("numeroFacturaVenta", numeroFacturaVenta)
         }
+        errorMessage={errors.numeroFacturaVenta?.errorMessage}
+        hasError={errors.numeroFacturaVenta?.hasError}
+        {...getOverrideProps(overrides, "numeroFacturaVenta")}
+      ></TextField>
+      <TextField
+        label="Precio compra"
         isRequired={true}
         isReadOnly={false}
         type="number"
@@ -1176,6 +1009,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra: value,
               fechaCompra,
               nombreVendedor,
@@ -1185,10 +1019,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1227,6 +1060,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra: value,
               nombreVendedor,
@@ -1236,10 +1070,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1277,6 +1110,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor: value,
@@ -1286,10 +1120,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1327,6 +1160,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1336,10 +1170,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1379,6 +1212,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1388,10 +1222,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1407,10 +1240,6 @@ export default function CocheCreateForm(props) {
         hasError={errors.telefonoVendedor?.hasError}
         {...getOverrideProps(overrides, "telefonoVendedor")}
       ></TextField>
-      <Heading
-        children="Detalles de la venta"
-        {...getOverrideProps(overrides, "SectionalElement3")}
-      ></Heading>
       <TextField
         label="Precio venta publico"
         isRequired={false}
@@ -1437,6 +1266,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1446,10 +1276,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1493,6 +1322,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1502,10 +1332,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones: value,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1545,6 +1374,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1554,10 +1384,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido: value,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1599,6 +1428,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1608,10 +1438,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta: value,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1628,62 +1457,10 @@ export default function CocheCreateForm(props) {
         {...getOverrideProps(overrides, "precioVenta")}
       ></TextField>
       <TextField
-        label="Numero factura venta"
-        descriptiveText="Numero de factura emitido por Autos Alava Factory"
-        isRequired={false}
-        isReadOnly={false}
-        value={numeroFacturaVenta}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              numeroFacturaVenta: value,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              notas,
-            };
-            const result = onChange(modelFields);
-            value = result?.numeroFacturaVenta ?? value;
-          }
-          if (errors.numeroFacturaVenta?.hasError) {
-            runValidationTasks("numeroFacturaVenta", value);
-          }
-          setNumeroFacturaVenta(value);
-        }}
-        onBlur={() =>
-          runValidationTasks("numeroFacturaVenta", numeroFacturaVenta)
-        }
-        errorMessage={errors.numeroFacturaVenta?.errorMessage}
-        hasError={errors.numeroFacturaVenta?.hasError}
-        {...getOverrideProps(overrides, "numeroFacturaVenta")}
-      ></TextField>
-      <TextAreaField
         label="Notas venta"
         isRequired={false}
         isReadOnly={false}
+        value={notasVenta}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1701,6 +1478,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1710,10 +1488,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta: value,
               fechaVenta,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1728,7 +1505,7 @@ export default function CocheCreateForm(props) {
         errorMessage={errors.notasVenta?.errorMessage}
         hasError={errors.notasVenta?.hasError}
         {...getOverrideProps(overrides, "notasVenta")}
-      ></TextAreaField>
+      ></TextField>
       <TextField
         label="Fecha venta"
         isRequired={false}
@@ -1752,6 +1529,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1761,10 +1539,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta: value,
-              clienteID,
+              alerta,
               notas,
             };
             const result = onChange(modelFields);
@@ -1780,10 +1557,13 @@ export default function CocheCreateForm(props) {
         hasError={errors.fechaVenta?.hasError}
         {...getOverrideProps(overrides, "fechaVenta")}
       ></TextField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
+      <SwitchField
+        label="Alerta"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={alerta}
+        onChange={(e) => {
+          let value = e.target.checked;
           if (onChange) {
             const modelFields = {
               matricula,
@@ -1799,6 +1579,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1808,93 +1589,29 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID: value,
+              alerta: value,
               notas,
             };
             const result = onChange(modelFields);
-            value = result?.clienteID ?? value;
+            value = result?.alerta ?? value;
           }
-          setClienteID(value);
-          setCurrentClienteIDValue(undefined);
+          if (errors.alerta?.hasError) {
+            runValidationTasks("alerta", value);
+          }
+          setAlerta(value);
         }}
-        currentFieldValue={currentClienteIDValue}
-        label={"Cliente id"}
-        items={clienteID ? [clienteID] : []}
-        hasError={errors?.clienteID?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("clienteID", currentClienteIDValue)
-        }
-        errorMessage={errors?.clienteID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.clienteID(
-                clienteRecords.find((r) => r.id === value)
-              )
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentClienteIDDisplayValue(
-            value
-              ? getDisplayValue.clienteID(
-                  clienteRecords.find((r) => r.id === value)
-                )
-              : ""
-          );
-          setCurrentClienteIDValue(value);
-        }}
-        inputFieldRef={clienteIDRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Cliente id"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Cliente"
-          value={currentClienteIDDisplayValue}
-          options={clienteRecords
-            .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
-            )
-            .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.clienteID?.(r),
-            }))}
-          onSelect={({ id, label }) => {
-            setCurrentClienteIDValue(id);
-            setCurrentClienteIDDisplayValue(label);
-            runValidationTasks("clienteID", label);
-          }}
-          onClear={() => {
-            setCurrentClienteIDDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.clienteID?.hasError) {
-              runValidationTasks("clienteID", value);
-            }
-            setCurrentClienteIDDisplayValue(value);
-            setCurrentClienteIDValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("clienteID", currentClienteIDValue)}
-          errorMessage={errors.clienteID?.errorMessage}
-          hasError={errors.clienteID?.hasError}
-          ref={clienteIDRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "clienteID")}
-        ></Autocomplete>
-      </ArrayField>
-      <Heading
-        children="Otros"
-        {...getOverrideProps(overrides, "SectionalElement4")}
-      ></Heading>
-      <TextAreaField
+        onBlur={() => runValidationTasks("alerta", alerta)}
+        errorMessage={errors.alerta?.errorMessage}
+        hasError={errors.alerta?.hasError}
+        {...getOverrideProps(overrides, "alerta")}
+      ></SwitchField>
+      <TextField
         label="Notas"
         isRequired={false}
         isReadOnly={false}
+        value={notas}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1912,6 +1629,7 @@ export default function CocheCreateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
@@ -1921,10 +1639,9 @@ export default function CocheCreateForm(props) {
               precioReparaciones,
               vendido,
               precioVenta,
-              numeroFacturaVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
+              alerta,
               notas: value,
             };
             const result = onChange(modelFields);
@@ -1939,7 +1656,7 @@ export default function CocheCreateForm(props) {
         errorMessage={errors.notas?.errorMessage}
         hasError={errors.notas?.hasError}
         {...getOverrideProps(overrides, "notas")}
-      ></TextAreaField>
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

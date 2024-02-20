@@ -7,185 +7,15 @@
 /* eslint-disable */
 import * as React from "react";
 import {
-  Autocomplete,
-  Badge,
   Button,
-  CheckboxField,
-  Divider,
   Flex,
   Grid,
-  Heading,
-  Icon,
-  ScrollView,
   SwitchField,
-  Text,
-  TextAreaField,
   TextField,
-  useTheme,
 } from "@aws-amplify/ui-react";
-import { Coche, Cliente } from "../models";
-import {
-  fetchByPath,
-  getOverrideProps,
-  useDataStoreBinding,
-  validateField,
-} from "./utils";
+import { Coche } from "../models";
+import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-function ArrayField({
-  items = [],
-  onChange,
-  label,
-  inputFieldRef,
-  children,
-  hasError,
-  setFieldValue,
-  currentFieldValue,
-  defaultFieldValue,
-  lengthLimit,
-  getBadgeText,
-  runValidationTasks,
-  errorMessage,
-}) {
-  const labelElement = <Text>{label}</Text>;
-  const {
-    tokens: {
-      components: {
-        fieldmessages: { error: errorStyles },
-      },
-    },
-  } = useTheme();
-  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
-  const [isEditing, setIsEditing] = React.useState();
-  React.useEffect(() => {
-    if (isEditing) {
-      inputFieldRef?.current?.focus();
-    }
-  }, [isEditing]);
-  const removeItem = async (removeIndex) => {
-    const newItems = items.filter((value, index) => index !== removeIndex);
-    await onChange(newItems);
-    setSelectedBadgeIndex(undefined);
-  };
-  const addItem = async () => {
-    const { hasError } = runValidationTasks();
-    if (
-      currentFieldValue !== undefined &&
-      currentFieldValue !== null &&
-      currentFieldValue !== "" &&
-      !hasError
-    ) {
-      const newItems = [...items];
-      if (selectedBadgeIndex !== undefined) {
-        newItems[selectedBadgeIndex] = currentFieldValue;
-        setSelectedBadgeIndex(undefined);
-      } else {
-        newItems.push(currentFieldValue);
-      }
-      await onChange(newItems);
-      setIsEditing(false);
-    }
-  };
-  const arraySection = (
-    <React.Fragment>
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {getBadgeText ? getBadgeText(value) : value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
-    </React.Fragment>
-  );
-  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
-    return (
-      <React.Fragment>
-        {labelElement}
-        {arraySection}
-      </React.Fragment>
-    );
-  }
-  return (
-    <React.Fragment>
-      {labelElement}
-      {isEditing && children}
-      {!isEditing ? (
-        <>
-          <Button
-            onClick={() => {
-              setIsEditing(true);
-            }}
-          >
-            Add item
-          </Button>
-          {errorMessage && hasError && (
-            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
-              {errorMessage}
-            </Text>
-          )}
-        </>
-      ) : (
-        <Flex justifyContent="flex-end">
-          {(currentFieldValue || isEditing) && (
-            <Button
-              children="Cancel"
-              type="button"
-              size="small"
-              onClick={() => {
-                setFieldValue(defaultFieldValue);
-                setIsEditing(false);
-                setSelectedBadgeIndex(undefined);
-              }}
-            ></Button>
-          )}
-          <Button size="small" variation="link" onClick={addItem}>
-            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
-          </Button>
-        </Flex>
-      )}
-      {arraySection}
-    </React.Fragment>
-  );
-}
 export default function CocheUpdateForm(props) {
   const {
     id: idProp,
@@ -212,19 +42,18 @@ export default function CocheUpdateForm(props) {
     localidadVendedor: "",
     nifVendedor: "",
     numeroFactura: "",
+    numeroFacturaVenta: "",
     precioCompra: "",
     fechaCompra: "",
     nombreVendedor: "",
     direccionVendedor: "",
     telefonoVendedor: "",
     precioVentaPublico: "",
-    numeroFacturaVenta: "",
     precioReparaciones: "",
     vendido: false,
     precioVenta: "",
     notasVenta: "",
     fechaVenta: "",
-    clienteID: undefined,
     alerta: false,
     notas: "",
   };
@@ -249,6 +78,9 @@ export default function CocheUpdateForm(props) {
   const [numeroFactura, setNumeroFactura] = React.useState(
     initialValues.numeroFactura
   );
+  const [numeroFacturaVenta, setNumeroFacturaVenta] = React.useState(
+    initialValues.numeroFacturaVenta
+  );
   const [precioCompra, setPrecioCompra] = React.useState(
     initialValues.precioCompra
   );
@@ -267,9 +99,6 @@ export default function CocheUpdateForm(props) {
   const [precioVentaPublico, setPrecioVentaPublico] = React.useState(
     initialValues.precioVentaPublico
   );
-  const [numeroFacturaVenta, setNumeroFacturaVenta] = React.useState(
-    initialValues.numeroFacturaVenta
-  );
   const [precioReparaciones, setPrecioReparaciones] = React.useState(
     initialValues.precioReparaciones
   );
@@ -279,13 +108,12 @@ export default function CocheUpdateForm(props) {
   );
   const [notasVenta, setNotasVenta] = React.useState(initialValues.notasVenta);
   const [fechaVenta, setFechaVenta] = React.useState(initialValues.fechaVenta);
-  const [clienteID, setClienteID] = React.useState(initialValues.clienteID);
   const [alerta, setAlerta] = React.useState(initialValues.alerta);
   const [notas, setNotas] = React.useState(initialValues.notas);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = cocheRecord
-      ? { ...initialValues, ...cocheRecord, clienteID }
+      ? { ...initialValues, ...cocheRecord }
       : initialValues;
     setMatricula(cleanValues.matricula);
     setMarca(cleanValues.marca);
@@ -300,21 +128,18 @@ export default function CocheUpdateForm(props) {
     setLocalidadVendedor(cleanValues.localidadVendedor);
     setNifVendedor(cleanValues.nifVendedor);
     setNumeroFactura(cleanValues.numeroFactura);
+    setNumeroFacturaVenta(cleanValues.numeroFacturaVenta);
     setPrecioCompra(cleanValues.precioCompra);
     setFechaCompra(cleanValues.fechaCompra);
     setNombreVendedor(cleanValues.nombreVendedor);
     setDireccionVendedor(cleanValues.direccionVendedor);
     setTelefonoVendedor(cleanValues.telefonoVendedor);
     setPrecioVentaPublico(cleanValues.precioVentaPublico);
-    setNumeroFacturaVenta(cleanValues.numeroFacturaVenta);
     setPrecioReparaciones(cleanValues.precioReparaciones);
     setVendido(cleanValues.vendido);
     setPrecioVenta(cleanValues.precioVenta);
     setNotasVenta(cleanValues.notasVenta);
     setFechaVenta(cleanValues.fechaVenta);
-    setClienteID(cleanValues.clienteID);
-    setCurrentClienteIDValue(undefined);
-    setCurrentClienteIDDisplayValue("");
     setAlerta(cleanValues.alerta);
     setNotas(cleanValues.notas);
     setErrors({});
@@ -326,27 +151,10 @@ export default function CocheUpdateForm(props) {
         ? await DataStore.query(Coche, idProp)
         : cocheModelProp;
       setCocheRecord(record);
-      const clienteIDRecord = record ? await record.clienteID : undefined;
-      setClienteID(clienteIDRecord);
     };
     queryData();
   }, [idProp, cocheModelProp]);
-  React.useEffect(resetStateValues, [cocheRecord, clienteID]);
-  const [currentClienteIDDisplayValue, setCurrentClienteIDDisplayValue] =
-    React.useState("");
-  const [currentClienteIDValue, setCurrentClienteIDValue] =
-    React.useState(undefined);
-  const clienteIDRef = React.createRef();
-  const clienteRecords = useDataStoreBinding({
-    type: "collection",
-    model: Cliente,
-  }).items;
-  const getDisplayValue = {
-    clienteID: (r) =>
-      `${r?.nombre}${" "}${r?.apellido1}${" "}${r?.apellido2}${" - "}${
-        r?.dni
-      }${""}`,
-  };
+  React.useEffect(resetStateValues, [cocheRecord]);
   const validations = {
     matricula: [{ type: "Required" }],
     marca: [{ type: "Required" }],
@@ -361,19 +169,18 @@ export default function CocheUpdateForm(props) {
     localidadVendedor: [],
     nifVendedor: [],
     numeroFactura: [],
+    numeroFacturaVenta: [],
     precioCompra: [{ type: "Required" }],
     fechaCompra: [],
     nombreVendedor: [],
     direccionVendedor: [],
     telefonoVendedor: [],
     precioVentaPublico: [],
-    numeroFacturaVenta: [],
     precioReparaciones: [],
     vendido: [],
     precioVenta: [],
     notasVenta: [],
     fechaVenta: [],
-    clienteID: [],
     alerta: [],
     notas: [],
   };
@@ -416,19 +223,18 @@ export default function CocheUpdateForm(props) {
           localidadVendedor,
           nifVendedor,
           numeroFactura,
+          numeroFacturaVenta,
           precioCompra,
           fechaCompra,
           nombreVendedor,
           direccionVendedor,
           telefonoVendedor,
           precioVentaPublico,
-          numeroFacturaVenta,
           precioReparaciones,
           vendido,
           precioVenta,
           notasVenta,
           fechaVenta,
-          clienteID,
           alerta,
           notas,
         };
@@ -477,21 +283,8 @@ export default function CocheUpdateForm(props) {
       {...getOverrideProps(overrides, "CocheUpdateForm")}
       {...rest}
     >
-      <Text
-        children="Coche"
-        {...getOverrideProps(overrides, "SectionalElement5")}
-      ></Text>
-      <Heading
-        children="Información general"
-        {...getOverrideProps(overrides, "SectionalElement0")}
-      ></Heading>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Matricula</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Matricula"
         isRequired={true}
         isReadOnly={false}
         value={matricula}
@@ -512,19 +305,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -542,12 +334,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "matricula")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Marca</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Marca"
         isRequired={true}
         isReadOnly={false}
         value={marca}
@@ -568,19 +355,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -598,12 +384,7 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "marca")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Modelo</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Modelo"
         isRequired={true}
         isReadOnly={false}
         value={modelo}
@@ -624,19 +405,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -653,10 +433,6 @@ export default function CocheUpdateForm(props) {
         hasError={errors.modelo?.hasError}
         {...getOverrideProps(overrides, "modelo")}
       ></TextField>
-      <Heading
-        children="Especificaciones tecnicas"
-        {...getOverrideProps(overrides, "SectionalElement1")}
-      ></Heading>
       <TextField
         label="Color"
         isRequired={false}
@@ -679,19 +455,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -734,19 +509,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -785,19 +559,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -836,19 +609,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -891,19 +663,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -946,19 +717,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -997,19 +767,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1026,10 +795,6 @@ export default function CocheUpdateForm(props) {
         hasError={errors.cc?.hasError}
         {...getOverrideProps(overrides, "cc")}
       ></TextField>
-      <Heading
-        children="Detalles de la compra"
-        {...getOverrideProps(overrides, "SectionalElement2")}
-      ></Heading>
       <TextField
         label="Localidad vendedor"
         isRequired={false}
@@ -1052,19 +817,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor: value,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1105,19 +869,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor: value,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1156,19 +919,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura: value,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1186,12 +948,59 @@ export default function CocheUpdateForm(props) {
         {...getOverrideProps(overrides, "numeroFactura")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Precio compra</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
+        label="Numero factura venta"
+        isRequired={false}
+        isReadOnly={false}
+        value={numeroFacturaVenta}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta: value,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              alerta,
+              notas,
+            };
+            const result = onChange(modelFields);
+            value = result?.numeroFacturaVenta ?? value;
+          }
+          if (errors.numeroFacturaVenta?.hasError) {
+            runValidationTasks("numeroFacturaVenta", value);
+          }
+          setNumeroFacturaVenta(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("numeroFacturaVenta", numeroFacturaVenta)
         }
+        errorMessage={errors.numeroFacturaVenta?.errorMessage}
+        hasError={errors.numeroFacturaVenta?.hasError}
+        {...getOverrideProps(overrides, "numeroFacturaVenta")}
+      ></TextField>
+      <TextField
+        label="Precio compra"
         isRequired={true}
         isReadOnly={false}
         type="number"
@@ -1216,19 +1025,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra: value,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1268,19 +1076,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra: value,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1319,19 +1126,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor: value,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1370,19 +1176,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor: value,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1423,19 +1228,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor: value,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1452,10 +1256,6 @@ export default function CocheUpdateForm(props) {
         hasError={errors.telefonoVendedor?.hasError}
         {...getOverrideProps(overrides, "telefonoVendedor")}
       ></TextField>
-      <Heading
-        children="Detalles de la venta"
-        {...getOverrideProps(overrides, "SectionalElement3")}
-      ></Heading>
       <TextField
         label="Precio venta publico"
         isRequired={false}
@@ -1482,19 +1282,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico: value,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1512,59 +1311,6 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.precioVentaPublico?.errorMessage}
         hasError={errors.precioVentaPublico?.hasError}
         {...getOverrideProps(overrides, "precioVentaPublico")}
-      ></TextField>
-      <TextField
-        label="Numero factura venta"
-        isRequired={false}
-        isReadOnly={false}
-        value={numeroFacturaVenta}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              numeroFacturaVenta: value,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-            };
-            const result = onChange(modelFields);
-            value = result?.numeroFacturaVenta ?? value;
-          }
-          if (errors.numeroFacturaVenta?.hasError) {
-            runValidationTasks("numeroFacturaVenta", value);
-          }
-          setNumeroFacturaVenta(value);
-        }}
-        onBlur={() =>
-          runValidationTasks("numeroFacturaVenta", numeroFacturaVenta)
-        }
-        errorMessage={errors.numeroFacturaVenta?.errorMessage}
-        hasError={errors.numeroFacturaVenta?.hasError}
-        {...getOverrideProps(overrides, "numeroFacturaVenta")}
       ></TextField>
       <TextField
         label="Precio reparaciones"
@@ -1592,19 +1338,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones: value,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1645,19 +1390,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido: value,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1700,19 +1444,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta: value,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1729,7 +1472,7 @@ export default function CocheUpdateForm(props) {
         hasError={errors.precioVenta?.hasError}
         {...getOverrideProps(overrides, "precioVenta")}
       ></TextField>
-      <TextAreaField
+      <TextField
         label="Notas venta"
         isRequired={false}
         isReadOnly={false}
@@ -1751,19 +1494,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta: value,
               fechaVenta,
-              clienteID,
               alerta,
               notas,
             };
@@ -1779,7 +1521,7 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.notasVenta?.errorMessage}
         hasError={errors.notasVenta?.hasError}
         {...getOverrideProps(overrides, "notasVenta")}
-      ></TextAreaField>
+      ></TextField>
       <TextField
         label="Fecha venta"
         isRequired={false}
@@ -1803,19 +1545,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta: value,
-              clienteID,
               alerta,
               notas,
             };
@@ -1832,126 +1573,11 @@ export default function CocheUpdateForm(props) {
         hasError={errors.fechaVenta?.hasError}
         {...getOverrideProps(overrides, "fechaVenta")}
       ></TextField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              numeroFacturaVenta,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID: value,
-              alerta,
-              notas,
-            };
-            const result = onChange(modelFields);
-            value = result?.clienteID ?? value;
-          }
-          setClienteID(value);
-          setCurrentClienteIDValue(undefined);
-        }}
-        currentFieldValue={currentClienteIDValue}
-        label={"Cliente id"}
-        items={clienteID ? [clienteID] : []}
-        hasError={errors?.clienteID?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("clienteID", currentClienteIDValue)
-        }
-        errorMessage={errors?.clienteID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.clienteID(
-                clienteRecords.find((r) => r.id === value)
-              )
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentClienteIDDisplayValue(
-            value
-              ? getDisplayValue.clienteID(
-                  clienteRecords.find((r) => r.id === value)
-                )
-              : ""
-          );
-          setCurrentClienteIDValue(value);
-        }}
-        inputFieldRef={clienteIDRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Cliente id"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Cliente"
-          value={currentClienteIDDisplayValue}
-          options={clienteRecords
-            .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
-            )
-            .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.clienteID?.(r),
-            }))}
-          onSelect={({ id, label }) => {
-            setCurrentClienteIDValue(id);
-            setCurrentClienteIDDisplayValue(label);
-            runValidationTasks("clienteID", label);
-          }}
-          onClear={() => {
-            setCurrentClienteIDDisplayValue("");
-          }}
-          defaultValue={clienteID}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.clienteID?.hasError) {
-              runValidationTasks("clienteID", value);
-            }
-            setCurrentClienteIDDisplayValue(value);
-            setCurrentClienteIDValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("clienteID", currentClienteIDValue)}
-          errorMessage={errors.clienteID?.errorMessage}
-          hasError={errors.clienteID?.hasError}
-          ref={clienteIDRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "clienteID")}
-        ></Autocomplete>
-      </ArrayField>
-      <Heading
-        children="Otros"
-        {...getOverrideProps(overrides, "SectionalElement4")}
-      ></Heading>
-      <CheckboxField
-        label="Marcar que tiene una tarea pendiente"
-        name="alerta"
-        value="alerta"
+      <SwitchField
+        label="Alerta"
+        defaultChecked={false}
         isDisabled={false}
-        checked={alerta}
-        defaultValue={alerta}
+        isChecked={alerta}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
@@ -1969,19 +1595,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta: value,
               notas,
             };
@@ -1997,8 +1622,8 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.alerta?.errorMessage}
         hasError={errors.alerta?.hasError}
         {...getOverrideProps(overrides, "alerta")}
-      ></CheckboxField>
-      <TextAreaField
+      ></SwitchField>
+      <TextField
         label="Notas"
         isRequired={false}
         isReadOnly={false}
@@ -2020,19 +1645,18 @@ export default function CocheUpdateForm(props) {
               localidadVendedor,
               nifVendedor,
               numeroFactura,
+              numeroFacturaVenta,
               precioCompra,
               fechaCompra,
               nombreVendedor,
               direccionVendedor,
               telefonoVendedor,
               precioVentaPublico,
-              numeroFacturaVenta,
               precioReparaciones,
               vendido,
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
               alerta,
               notas: value,
             };
@@ -2048,7 +1672,7 @@ export default function CocheUpdateForm(props) {
         errorMessage={errors.notas?.errorMessage}
         hasError={errors.notas?.hasError}
         {...getOverrideProps(overrides, "notas")}
-      ></TextAreaField>
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

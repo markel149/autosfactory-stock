@@ -8,9 +8,9 @@
 import * as React from "react";
 import {
   Button,
-  CheckboxField,
   Flex,
   Grid,
+  SwitchField,
   TextField,
 } from "@aws-amplify/ui-react";
 import { Cliente } from "../models";
@@ -175,12 +175,7 @@ export default function ClienteUpdateForm(props) {
       {...rest}
     >
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Nombre</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Nombre"
         isRequired={true}
         isReadOnly={false}
         value={nombre}
@@ -213,12 +208,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "nombre")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>Primer Apellido</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Apellido1"
         isRequired={true}
         isReadOnly={false}
         value={apellido1}
@@ -251,7 +241,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "apellido1")}
       ></TextField>
       <TextField
-        label="Segundo Apellido"
+        label="Apellido2"
         isRequired={false}
         isReadOnly={false}
         value={apellido2}
@@ -350,12 +340,7 @@ export default function ClienteUpdateForm(props) {
         {...getOverrideProps(overrides, "telefono")}
       ></TextField>
       <TextField
-        label={
-          <span style={{ display: "inline-flex" }}>
-            <span>DNI</span>
-            <span style={{ color: "red" }}>*</span>
-          </span>
-        }
+        label="Dni"
         isRequired={true}
         isReadOnly={false}
         value={dni}
@@ -486,13 +471,11 @@ export default function ClienteUpdateForm(props) {
         hasError={errors.codigoPostal?.hasError}
         {...getOverrideProps(overrides, "codigoPostal")}
       ></TextField>
-      <CheckboxField
-        label="Marcar que tiene una tarea pendiente"
-        name="alerta"
-        value="alerta"
+      <SwitchField
+        label="Alerta"
+        defaultChecked={false}
         isDisabled={false}
-        checked={alerta}
-        defaultValue={alerta}
+        isChecked={alerta}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
@@ -520,7 +503,7 @@ export default function ClienteUpdateForm(props) {
         errorMessage={errors.alerta?.errorMessage}
         hasError={errors.alerta?.hasError}
         {...getOverrideProps(overrides, "alerta")}
-      ></CheckboxField>
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { CheckboxFieldProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { Cliente } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -58,7 +58,7 @@ export declare type ClienteUpdateFormOverridesProps = {
     ciudad?: PrimitiveOverrideProps<TextFieldProps>;
     calle?: PrimitiveOverrideProps<TextFieldProps>;
     codigoPostal?: PrimitiveOverrideProps<TextFieldProps>;
-    alerta?: PrimitiveOverrideProps<CheckboxFieldProps>;
+    alerta?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type ClienteUpdateFormProps = React.PropsWithChildren<{
     overrides?: ClienteUpdateFormOverridesProps | undefined | null;
