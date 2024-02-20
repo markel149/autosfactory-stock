@@ -2,5 +2,5 @@
   "AppSyncApiName": "autosfactorystock",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2024-02-19T22:15:34.586Z"
+  "AuthModeLastUpdated": "2024-02-20T21:54:19.673Z"
 }
