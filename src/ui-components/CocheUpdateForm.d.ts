@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { Coche } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -48,6 +48,7 @@ export declare type CocheUpdateFormInputValues = {
     precioVenta?: number;
     notasVenta?: string;
     fechaVenta?: string;
+    clienteID?: string;
     alerta?: boolean;
     notas?: string;
 };
@@ -77,6 +78,7 @@ export declare type CocheUpdateFormValidationValues = {
     precioVenta?: ValidationFunction<number>;
     notasVenta?: ValidationFunction<string>;
     fechaVenta?: ValidationFunction<string>;
+    clienteID?: ValidationFunction<string>;
     alerta?: ValidationFunction<boolean>;
     notas?: ValidationFunction<string>;
 };
@@ -108,6 +110,7 @@ export declare type CocheUpdateFormOverridesProps = {
     precioVenta?: PrimitiveOverrideProps<TextFieldProps>;
     notasVenta?: PrimitiveOverrideProps<TextFieldProps>;
     fechaVenta?: PrimitiveOverrideProps<TextFieldProps>;
+    clienteID?: PrimitiveOverrideProps<AutocompleteProps>;
     alerta?: PrimitiveOverrideProps<SwitchFieldProps>;
     notas?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;

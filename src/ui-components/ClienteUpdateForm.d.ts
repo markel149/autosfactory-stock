@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
-import { Cliente } from "../models";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { Cliente, Coche } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -29,6 +29,7 @@ export declare type ClienteUpdateFormInputValues = {
     email?: string;
     telefono?: string;
     dni?: string;
+    Coches?: Coche[];
     ciudad?: string;
     calle?: string;
     codigoPostal?: string;
@@ -41,6 +42,7 @@ export declare type ClienteUpdateFormValidationValues = {
     email?: ValidationFunction<string>;
     telefono?: ValidationFunction<string>;
     dni?: ValidationFunction<string>;
+    Coches?: ValidationFunction<Coche>;
     ciudad?: ValidationFunction<string>;
     calle?: ValidationFunction<string>;
     codigoPostal?: ValidationFunction<string>;
@@ -55,6 +57,7 @@ export declare type ClienteUpdateFormOverridesProps = {
     email?: PrimitiveOverrideProps<TextFieldProps>;
     telefono?: PrimitiveOverrideProps<TextFieldProps>;
     dni?: PrimitiveOverrideProps<TextFieldProps>;
+    Coches?: PrimitiveOverrideProps<AutocompleteProps>;
     ciudad?: PrimitiveOverrideProps<TextFieldProps>;
     calle?: PrimitiveOverrideProps<TextFieldProps>;
     codigoPostal?: PrimitiveOverrideProps<TextFieldProps>;
