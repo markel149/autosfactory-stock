@@ -15,42 +15,14 @@ export const createCliente = /* GraphQL */ `
       telefono
       dni
       Coches {
-        items {
-          matricula
-          marca
-          modelo
-          id
-          color
-          kilometros
-          precioCompra
-          precioVenta
-          notas
-          fechaCompra
-          fechaVenta
-          localidadVendedor
-          nifVendedor
-          numeroFactura
-          anio
-          combustible
-          cambio
-          potencia
-          cc
-          nombreVendedor
-          precioVentaPublico
-          precioReparaciones
-          vendido
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          __typename
-        }
         nextToken
         startedAt
         __typename
       }
+      ciudad
+      calle
+      codigoPostal
+      alerta
       createdAt
       updatedAt
       _version
@@ -74,42 +46,14 @@ export const updateCliente = /* GraphQL */ `
       telefono
       dni
       Coches {
-        items {
-          matricula
-          marca
-          modelo
-          id
-          color
-          kilometros
-          precioCompra
-          precioVenta
-          notas
-          fechaCompra
-          fechaVenta
-          localidadVendedor
-          nifVendedor
-          numeroFactura
-          anio
-          combustible
-          cambio
-          potencia
-          cc
-          nombreVendedor
-          precioVentaPublico
-          precioReparaciones
-          vendido
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          __typename
-        }
         nextToken
         startedAt
         __typename
       }
+      ciudad
+      calle
+      codigoPostal
+      alerta
       createdAt
       updatedAt
       _version
@@ -133,42 +77,14 @@ export const deleteCliente = /* GraphQL */ `
       telefono
       dni
       Coches {
-        items {
-          matricula
-          marca
-          modelo
-          id
-          color
-          kilometros
-          precioCompra
-          precioVenta
-          notas
-          fechaCompra
-          fechaVenta
-          localidadVendedor
-          nifVendedor
-          numeroFactura
-          anio
-          combustible
-          cambio
-          potencia
-          cc
-          nombreVendedor
-          precioVentaPublico
-          precioReparaciones
-          vendido
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          __typename
-        }
         nextToken
         startedAt
         __typename
       }
+      ciudad
+      calle
+      codigoPostal
+      alerta
       createdAt
       updatedAt
       _version
@@ -190,24 +106,29 @@ export const createCoche = /* GraphQL */ `
       id
       color
       kilometros
-      precioCompra
-      precioVenta
-      notas
-      fechaCompra
-      fechaVenta
+      combustible
+      cambio
+      anio
+      potencia
+      cc
       localidadVendedor
       nifVendedor
       numeroFactura
-      anio
-      combustible
-      cambio
-      potencia
-      cc
+      numeroFacturaVenta
+      precioCompra
+      fechaCompra
       nombreVendedor
+      direccionVendedor
+      telefonoVendedor
       precioVentaPublico
       precioReparaciones
       vendido
+      precioVenta
+      notasVenta
+      fechaVenta
       clienteID
+      alerta
+      notas
       createdAt
       updatedAt
       _version
@@ -229,24 +150,29 @@ export const updateCoche = /* GraphQL */ `
       id
       color
       kilometros
-      precioCompra
-      precioVenta
-      notas
-      fechaCompra
-      fechaVenta
+      combustible
+      cambio
+      anio
+      potencia
+      cc
       localidadVendedor
       nifVendedor
       numeroFactura
-      anio
-      combustible
-      cambio
-      potencia
-      cc
+      numeroFacturaVenta
+      precioCompra
+      fechaCompra
       nombreVendedor
+      direccionVendedor
+      telefonoVendedor
       precioVentaPublico
       precioReparaciones
       vendido
+      precioVenta
+      notasVenta
+      fechaVenta
       clienteID
+      alerta
+      notas
       createdAt
       updatedAt
       _version
@@ -268,24 +194,29 @@ export const deleteCoche = /* GraphQL */ `
       id
       color
       kilometros
-      precioCompra
-      precioVenta
-      notas
-      fechaCompra
-      fechaVenta
+      combustible
+      cambio
+      anio
+      potencia
+      cc
       localidadVendedor
       nifVendedor
       numeroFactura
-      anio
-      combustible
-      cambio
-      potencia
-      cc
+      numeroFacturaVenta
+      precioCompra
+      fechaCompra
       nombreVendedor
+      direccionVendedor
+      telefonoVendedor
       precioVentaPublico
       precioReparaciones
       vendido
+      precioVenta
+      notasVenta
+      fechaVenta
       clienteID
+      alerta
+      notas
       createdAt
       updatedAt
       _version
