@@ -41,7 +41,7 @@ export function VenderCocheDialog({ cocheVender, open, setOpen, setCoches }) {
         >
             <DialogTitle align='center'>Vender el coche {cocheVender.marca} {cocheVender.modelo} - {cocheVender.matricula}</DialogTitle>
             <DialogContent>
-                <CocheVenderForm onSuccess={formSuccess} coche={cocheVender}/>
+                {/* <CocheVenderForm onSuccess={formSuccess} coche={cocheVender}/> */}
             </DialogContent>
             <DialogActions>
             </DialogActions>
