@@ -20,7 +20,7 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
-import { Coche, Cliente } from "../models";
+import { Cliente, Coche } from "../models";
 import {
   fetchByPath,
   getOverrideProps,
@@ -195,6 +195,17 @@ export default function ClienteCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    nombre: "",
+    apellido1: "",
+    apellido2: "",
+    email: "",
+    telefono: "",
+    dni: "",
+    Coches: [],
+    ciudad: "",
+    calle: "",
+    codigoPostal: "",
+    alerta: false,
     matricula: "",
     marca: "",
     modelo: "",
@@ -220,19 +231,22 @@ export default function ClienteCreateForm(props) {
     precioVenta: "",
     notasVenta: "",
     fechaVenta: "",
-    clienteID: undefined,
-    alerta: false,
     notas: "",
-    nombre: "",
-    apellido1: "",
-    apellido2: "",
-    email: "",
-    telefono: "",
-    dni: "",
-    ciudad: "",
-    calle: "",
-    codigoPostal: "",
+    clienteID: undefined,
   };
+  const [nombre, setNombre] = React.useState(initialValues.nombre);
+  const [apellido1, setApellido1] = React.useState(initialValues.apellido1);
+  const [apellido2, setApellido2] = React.useState(initialValues.apellido2);
+  const [email, setEmail] = React.useState(initialValues.email);
+  const [telefono, setTelefono] = React.useState(initialValues.telefono);
+  const [dni, setDni] = React.useState(initialValues.dni);
+  const [Coches, setCoches] = React.useState(initialValues.Coches);
+  const [ciudad, setCiudad] = React.useState(initialValues.ciudad);
+  const [calle, setCalle] = React.useState(initialValues.calle);
+  const [codigoPostal, setCodigoPostal] = React.useState(
+    initialValues.codigoPostal
+  );
+  const [alerta, setAlerta] = React.useState(initialValues.alerta);
   const [matricula, setMatricula] = React.useState(initialValues.matricula);
   const [marca, setMarca] = React.useState(initialValues.marca);
   const [modelo, setModelo] = React.useState(initialValues.modelo);
@@ -284,22 +298,23 @@ export default function ClienteCreateForm(props) {
   );
   const [notasVenta, setNotasVenta] = React.useState(initialValues.notasVenta);
   const [fechaVenta, setFechaVenta] = React.useState(initialValues.fechaVenta);
-  const [clienteID, setClienteID] = React.useState(initialValues.clienteID);
-  const [alerta, setAlerta] = React.useState(initialValues.alerta);
   const [notas, setNotas] = React.useState(initialValues.notas);
-  const [nombre, setNombre] = React.useState(initialValues.nombre);
-  const [apellido1, setApellido1] = React.useState(initialValues.apellido1);
-  const [apellido2, setApellido2] = React.useState(initialValues.apellido2);
-  const [email, setEmail] = React.useState(initialValues.email);
-  const [telefono, setTelefono] = React.useState(initialValues.telefono);
-  const [dni, setDni] = React.useState(initialValues.dni);
-  const [ciudad, setCiudad] = React.useState(initialValues.ciudad);
-  const [calle, setCalle] = React.useState(initialValues.calle);
-  const [codigoPostal, setCodigoPostal] = React.useState(
-    initialValues.codigoPostal
-  );
+  const [clienteID, setClienteID] = React.useState(initialValues.clienteID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
+    setNombre(initialValues.nombre);
+    setApellido1(initialValues.apellido1);
+    setApellido2(initialValues.apellido2);
+    setEmail(initialValues.email);
+    setTelefono(initialValues.telefono);
+    setDni(initialValues.dni);
+    setCoches(initialValues.Coches);
+    setCurrentCochesValue(undefined);
+    setCurrentCochesDisplayValue("");
+    setCiudad(initialValues.ciudad);
+    setCalle(initialValues.calle);
+    setCodigoPostal(initialValues.codigoPostal);
+    setAlerta(initialValues.alerta);
     setMatricula(initialValues.matricula);
     setMarca(initialValues.marca);
     setModelo(initialValues.modelo);
@@ -325,41 +340,44 @@ export default function ClienteCreateForm(props) {
     setPrecioVenta(initialValues.precioVenta);
     setNotasVenta(initialValues.notasVenta);
     setFechaVenta(initialValues.fechaVenta);
-    setClienteID(initialValues.clienteID);
-    setCurrentClienteIDValue(undefined);
-    setCurrentClienteIDDisplayValue("");
-    setAlerta(initialValues.alerta);
     setNotas(initialValues.notas);
-    setNombre(initialValues.nombre);
-    setApellido1(initialValues.apellido1);
-    setApellido2(initialValues.apellido2);
-    setEmail(initialValues.email);
-    setTelefono(initialValues.telefono);
-    setDni(initialValues.dni);
-    setCiudad(initialValues.ciudad);
-    setCalle(initialValues.calle);
-    setCodigoPostal(initialValues.codigoPostal);
+    setClienteID(initialValues.clienteID);
     setErrors({});
   };
-  const [currentClienteIDDisplayValue, setCurrentClienteIDDisplayValue] =
+  const [currentCochesDisplayValue, setCurrentCochesDisplayValue] =
     React.useState("");
-  const [currentClienteIDValue, setCurrentClienteIDValue] =
-    React.useState(undefined);
-  const clienteIDRef = React.createRef();
-  const clienteRecords = useDataStoreBinding({
+  const [currentCochesValue, setCurrentCochesValue] = React.useState(undefined);
+  const CochesRef = React.createRef();
+  const getIDValue = {
+    Coches: (r) => JSON.stringify({ id: r?.id }),
+  };
+  const CochesIdSet = new Set(
+    Array.isArray(Coches)
+      ? Coches.map((r) => getIDValue.Coches?.(r))
+      : getIDValue.Coches?.(Coches)
+  );
+  const cocheRecords = useDataStoreBinding({
     type: "collection",
-    model: Cliente,
+    model: Coche,
   }).items;
   const getDisplayValue = {
-    clienteID: (r) =>
-      `${r?.nombre}${"  "}${r?.apellido1}${" "}${r?.apellido2}${" - "}${
-        r?.dni
-      }`,
+    Coches: (r) => `${r?.matricula}${" - "}${r?.marca}${" "}${r?.modelo}`,
   };
   const validations = {
-    matricula: [{ type: "Required" }],
-    marca: [{ type: "Required" }],
-    modelo: [{ type: "Required" }],
+    nombre: [{ type: "Required" }],
+    apellido1: [{ type: "Required" }],
+    apellido2: [],
+    email: [{ type: "Email" }],
+    telefono: [],
+    dni: [{ type: "Required" }],
+    Coches: [],
+    ciudad: [],
+    calle: [],
+    codigoPostal: [],
+    alerta: [],
+    matricula: [],
+    marca: [],
+    modelo: [],
     color: [],
     kilometros: [],
     combustible: [],
@@ -371,7 +389,7 @@ export default function ClienteCreateForm(props) {
     nifVendedor: [],
     numeroFactura: [],
     numeroFacturaVenta: [],
-    precioCompra: [{ type: "Required" }],
+    precioCompra: [],
     fechaCompra: [],
     nombreVendedor: [],
     direccionVendedor: [],
@@ -382,18 +400,8 @@ export default function ClienteCreateForm(props) {
     precioVenta: [],
     notasVenta: [],
     fechaVenta: [],
-    clienteID: [],
-    alerta: [],
     notas: [],
-    nombre: [],
-    apellido1: [],
-    apellido2: [],
-    email: [{ type: "Email" }],
-    telefono: [],
-    dni: [],
-    ciudad: [],
-    calle: [],
-    codigoPostal: [],
+    clienteID: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -421,6 +429,17 @@ export default function ClienteCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          nombre,
+          apellido1,
+          apellido2,
+          email,
+          telefono,
+          dni,
+          Coches,
+          ciudad,
+          calle,
+          codigoPostal,
+          alerta,
           matricula,
           marca,
           modelo,
@@ -446,31 +465,29 @@ export default function ClienteCreateForm(props) {
           precioVenta,
           notasVenta,
           fechaVenta,
-          clienteID,
-          alerta,
           notas,
-          nombre,
-          apellido1,
-          apellido2,
-          email,
-          telefono,
-          dni,
-          ciudad,
-          calle,
-          codigoPostal,
+          clienteID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(fieldName, item)
+                  runValidationTasks(
+                    fieldName,
+                    item,
+                    getDisplayValue[fieldName]
+                  )
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(fieldName, modelFields[fieldName])
+              runValidationTasks(
+                fieldName,
+                modelFields[fieldName],
+                getDisplayValue[fieldName]
+              )
             );
             return promises;
           }, [])
@@ -488,36 +505,32 @@ export default function ClienteCreateForm(props) {
             }
           });
           const modelFieldsToSave = {
-            matricula: modelFields.matricula,
-            marca: modelFields.marca,
-            modelo: modelFields.modelo,
-            color: modelFields.color,
-            kilometros: modelFields.kilometros,
-            combustible: modelFields.combustible,
-            cambio: modelFields.cambio,
-            anio: modelFields.anio,
-            potencia: modelFields.potencia,
-            cc: modelFields.cc,
-            localidadVendedor: modelFields.localidadVendedor,
-            nifVendedor: modelFields.nifVendedor,
-            numeroFactura: modelFields.numeroFactura,
-            numeroFacturaVenta: modelFields.numeroFacturaVenta,
-            precioCompra: modelFields.precioCompra,
-            fechaCompra: modelFields.fechaCompra,
-            nombreVendedor: modelFields.nombreVendedor,
-            direccionVendedor: modelFields.direccionVendedor,
-            telefonoVendedor: modelFields.telefonoVendedor,
-            precioVentaPublico: modelFields.precioVentaPublico,
-            precioReparaciones: modelFields.precioReparaciones,
-            vendido: modelFields.vendido,
-            precioVenta: modelFields.precioVenta,
-            notasVenta: modelFields.notasVenta,
-            fechaVenta: modelFields.fechaVenta,
-            clienteID: modelFields.clienteID,
+            nombre: modelFields.nombre,
+            apellido1: modelFields.apellido1,
+            apellido2: modelFields.apellido2,
+            email: modelFields.email,
+            telefono: modelFields.telefono,
+            dni: modelFields.dni,
+            ciudad: modelFields.ciudad,
+            calle: modelFields.calle,
+            codigoPostal: modelFields.codigoPostal,
             alerta: modelFields.alerta,
-            notas: modelFields.notas,
           };
-          await DataStore.save(new Coche(modelFieldsToSave));
+          const cliente = await DataStore.save(new Cliente(modelFieldsToSave));
+          const promises = [];
+          promises.push(
+            ...Coches.reduce((promises, original) => {
+              promises.push(
+                DataStore.save(
+                  Coche.copyOf(original, (updated) => {
+                    updated.clienteID = cliente.id;
+                  })
+                )
+              );
+              return promises;
+            }, [])
+          );
+          await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -534,14 +547,759 @@ export default function ClienteCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Matricula"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Nombre</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
+        value={nombre}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre: value,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.nombre ?? value;
+          }
+          if (errors.nombre?.hasError) {
+            runValidationTasks("nombre", value);
+          }
+          setNombre(value);
+        }}
+        onBlur={() => runValidationTasks("nombre", nombre)}
+        errorMessage={errors.nombre?.errorMessage}
+        hasError={errors.nombre?.hasError}
+        {...getOverrideProps(overrides, "nombre")}
+      ></TextField>
+      <TextField
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Apellido1</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
+        isRequired={true}
+        isReadOnly={false}
+        value={apellido1}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1: value,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.apellido1 ?? value;
+          }
+          if (errors.apellido1?.hasError) {
+            runValidationTasks("apellido1", value);
+          }
+          setApellido1(value);
+        }}
+        onBlur={() => runValidationTasks("apellido1", apellido1)}
+        errorMessage={errors.apellido1?.errorMessage}
+        hasError={errors.apellido1?.hasError}
+        {...getOverrideProps(overrides, "apellido1")}
+      ></TextField>
+      <TextField
+        label="Apellido2"
+        isRequired={false}
+        isReadOnly={false}
+        value={apellido2}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2: value,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.apellido2 ?? value;
+          }
+          if (errors.apellido2?.hasError) {
+            runValidationTasks("apellido2", value);
+          }
+          setApellido2(value);
+        }}
+        onBlur={() => runValidationTasks("apellido2", apellido2)}
+        errorMessage={errors.apellido2?.errorMessage}
+        hasError={errors.apellido2?.hasError}
+        {...getOverrideProps(overrides, "apellido2")}
+      ></TextField>
+      <TextField
+        label="Email"
+        isRequired={false}
+        isReadOnly={false}
+        value={email}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email: value,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.email ?? value;
+          }
+          if (errors.email?.hasError) {
+            runValidationTasks("email", value);
+          }
+          setEmail(value);
+        }}
+        onBlur={() => runValidationTasks("email", email)}
+        errorMessage={errors.email?.errorMessage}
+        hasError={errors.email?.hasError}
+        {...getOverrideProps(overrides, "email")}
+      ></TextField>
+      <TextField
+        label="Telefono"
+        isRequired={false}
+        isReadOnly={false}
+        value={telefono}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono: value,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.telefono ?? value;
+          }
+          if (errors.telefono?.hasError) {
+            runValidationTasks("telefono", value);
+          }
+          setTelefono(value);
+        }}
+        onBlur={() => runValidationTasks("telefono", telefono)}
+        errorMessage={errors.telefono?.errorMessage}
+        hasError={errors.telefono?.hasError}
+        {...getOverrideProps(overrides, "telefono")}
+      ></TextField>
+      <TextField
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Dni</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
+        isRequired={true}
+        isReadOnly={false}
+        value={dni}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni: value,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.dni ?? value;
+          }
+          if (errors.dni?.hasError) {
+            runValidationTasks("dni", value);
+          }
+          setDni(value);
+        }}
+        onBlur={() => runValidationTasks("dni", dni)}
+        errorMessage={errors.dni?.errorMessage}
+        hasError={errors.dni?.hasError}
+        {...getOverrideProps(overrides, "dni")}
+      ></TextField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches: values,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            values = result?.Coches ?? values;
+          }
+          setCoches(values);
+          setCurrentCochesValue(undefined);
+          setCurrentCochesDisplayValue("");
+        }}
+        currentFieldValue={currentCochesValue}
+        label={"Coches"}
+        items={Coches}
+        hasError={errors?.Coches?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("Coches", currentCochesValue)
+        }
+        errorMessage={errors?.Coches?.errorMessage}
+        getBadgeText={getDisplayValue.Coches}
+        setFieldValue={(model) => {
+          setCurrentCochesDisplayValue(
+            model ? getDisplayValue.Coches(model) : ""
+          );
+          setCurrentCochesValue(model);
+        }}
+        inputFieldRef={CochesRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Coches"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Coche"
+          value={currentCochesDisplayValue}
+          options={cocheRecords
+            .filter((r) => !CochesIdSet.has(getIDValue.Coches?.(r)))
+            .map((r) => ({
+              id: getIDValue.Coches?.(r),
+              label: getDisplayValue.Coches?.(r),
+            }))}
+          onSelect={({ id, label }) => {
+            setCurrentCochesValue(
+              cocheRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentCochesDisplayValue(label);
+            runValidationTasks("Coches", label);
+          }}
+          onClear={() => {
+            setCurrentCochesDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.Coches?.hasError) {
+              runValidationTasks("Coches", value);
+            }
+            setCurrentCochesDisplayValue(value);
+            setCurrentCochesValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("Coches", currentCochesDisplayValue)}
+          errorMessage={errors.Coches?.errorMessage}
+          hasError={errors.Coches?.hasError}
+          ref={CochesRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Coches")}
+        ></Autocomplete>
+      </ArrayField>
+      <TextField
+        label="Ciudad"
+        isRequired={false}
+        isReadOnly={false}
+        value={ciudad}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad: value,
+              calle,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.ciudad ?? value;
+          }
+          if (errors.ciudad?.hasError) {
+            runValidationTasks("ciudad", value);
+          }
+          setCiudad(value);
+        }}
+        onBlur={() => runValidationTasks("ciudad", ciudad)}
+        errorMessage={errors.ciudad?.errorMessage}
+        hasError={errors.ciudad?.hasError}
+        {...getOverrideProps(overrides, "ciudad")}
+      ></TextField>
+      <TextField
+        label="Calle"
+        isRequired={false}
+        isReadOnly={false}
+        value={calle}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle: value,
+              codigoPostal,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.calle ?? value;
+          }
+          if (errors.calle?.hasError) {
+            runValidationTasks("calle", value);
+          }
+          setCalle(value);
+        }}
+        onBlur={() => runValidationTasks("calle", calle)}
+        errorMessage={errors.calle?.errorMessage}
+        hasError={errors.calle?.hasError}
+        {...getOverrideProps(overrides, "calle")}
+      ></TextField>
+      <TextField
+        label="Codigo postal"
+        isRequired={false}
+        isReadOnly={false}
+        value={codigoPostal}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal: value,
+              alerta,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.codigoPostal ?? value;
+          }
+          if (errors.codigoPostal?.hasError) {
+            runValidationTasks("codigoPostal", value);
+          }
+          setCodigoPostal(value);
+        }}
+        onBlur={() => runValidationTasks("codigoPostal", codigoPostal)}
+        errorMessage={errors.codigoPostal?.errorMessage}
+        hasError={errors.codigoPostal?.hasError}
+        {...getOverrideProps(overrides, "codigoPostal")}
+      ></TextField>
+      <SwitchField
+        label="Alerta"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={alerta}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta: value,
+              matricula,
+              marca,
+              modelo,
+              color,
+              kilometros,
+              combustible,
+              cambio,
+              anio,
+              potencia,
+              cc,
+              localidadVendedor,
+              nifVendedor,
+              numeroFactura,
+              numeroFacturaVenta,
+              precioCompra,
+              fechaCompra,
+              nombreVendedor,
+              direccionVendedor,
+              telefonoVendedor,
+              precioVentaPublico,
+              precioReparaciones,
+              vendido,
+              precioVenta,
+              notasVenta,
+              fechaVenta,
+              notas,
+              clienteID,
+            };
+            const result = onChange(modelFields);
+            value = result?.alerta ?? value;
+          }
+          if (errors.alerta?.hasError) {
+            runValidationTasks("alerta", value);
+          }
+          setAlerta(value);
+        }}
+        onBlur={() => runValidationTasks("alerta", alerta)}
+        errorMessage={errors.alerta?.errorMessage}
+        hasError={errors.alerta?.hasError}
+        {...getOverrideProps(overrides, "alerta")}
+      ></SwitchField>
+      <TextField
+        label="Matricula"
         value={matricula}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula: value,
               marca,
               modelo,
@@ -567,18 +1325,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.matricula ?? value;
@@ -595,13 +1343,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Marca"
-        isRequired={true}
-        isReadOnly={false}
         value={marca}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca: value,
               modelo,
@@ -627,18 +1384,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.marca ?? value;
@@ -655,13 +1402,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Modelo"
-        isRequired={true}
-        isReadOnly={false}
         value={modelo}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo: value,
@@ -687,18 +1443,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.modelo ?? value;
@@ -715,13 +1461,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Color"
-        isRequired={false}
-        isReadOnly={false}
         value={color}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -747,18 +1502,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.color ?? value;
@@ -775,17 +1520,24 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Kilometros"
-        isRequired={false}
-        isReadOnly={false}
         type="number"
         step="any"
         value={kilometros}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -811,18 +1563,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.kilometros ?? value;
@@ -839,13 +1581,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Combustible"
-        isRequired={false}
-        isReadOnly={false}
         value={combustible}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -871,18 +1622,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.combustible ?? value;
@@ -899,13 +1640,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Cambio"
-        isRequired={false}
-        isReadOnly={false}
         value={cambio}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -931,18 +1681,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.cambio ?? value;
@@ -959,17 +1699,24 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Anio"
-        isRequired={false}
-        isReadOnly={false}
         type="number"
         step="any"
         value={anio}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -995,18 +1742,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.anio ?? value;
@@ -1023,17 +1760,24 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Potencia"
-        isRequired={false}
-        isReadOnly={false}
         type="number"
         step="any"
         value={potencia}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1059,18 +1803,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.potencia ?? value;
@@ -1087,13 +1821,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Cc"
-        isRequired={false}
-        isReadOnly={false}
         value={cc}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1119,18 +1862,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.cc ?? value;
@@ -1147,13 +1880,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Localidad vendedor"
-        isRequired={false}
-        isReadOnly={false}
         value={localidadVendedor}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1179,18 +1921,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.localidadVendedor ?? value;
@@ -1209,13 +1941,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Nif vendedor"
-        isRequired={false}
-        isReadOnly={false}
         value={nifVendedor}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1241,18 +1982,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.nifVendedor ?? value;
@@ -1269,13 +2000,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Numero factura"
-        isRequired={false}
-        isReadOnly={false}
         value={numeroFactura}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1301,18 +2041,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.numeroFactura ?? value;
@@ -1329,13 +2059,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Numero factura venta"
-        isRequired={false}
-        isReadOnly={false}
         value={numeroFacturaVenta}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1361,18 +2100,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.numeroFacturaVenta ?? value;
@@ -1391,17 +2120,24 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Precio compra"
-        isRequired={true}
-        isReadOnly={false}
         type="number"
         step="any"
         value={precioCompra}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1427,18 +2163,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioCompra ?? value;
@@ -1455,14 +2181,23 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Fecha compra"
-        isRequired={false}
-        isReadOnly={false}
         type="date"
         value={fechaCompra}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1488,18 +2223,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.fechaCompra ?? value;
@@ -1516,13 +2241,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Nombre vendedor"
-        isRequired={false}
-        isReadOnly={false}
         value={nombreVendedor}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1548,18 +2282,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.nombreVendedor ?? value;
@@ -1576,13 +2300,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Direccion vendedor"
-        isRequired={false}
-        isReadOnly={false}
         value={direccionVendedor}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1608,18 +2341,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.direccionVendedor ?? value;
@@ -1638,13 +2361,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Telefono vendedor"
-        isRequired={false}
-        isReadOnly={false}
         value={telefonoVendedor}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1670,18 +2402,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.telefonoVendedor ?? value;
@@ -1698,17 +2420,24 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Precio venta publico"
-        isRequired={false}
-        isReadOnly={false}
         type="number"
         step="any"
         value={precioVentaPublico}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1734,18 +2463,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioVentaPublico ?? value;
@@ -1764,17 +2483,24 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Precio reparaciones"
-        isRequired={false}
-        isReadOnly={false}
         type="number"
         step="any"
         value={precioReparaciones}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1800,18 +2526,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioReparaciones ?? value;
@@ -1831,12 +2547,22 @@ export default function ClienteCreateForm(props) {
       <SwitchField
         label="Vendido"
         defaultChecked={false}
-        isDisabled={false}
         isChecked={vendido}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1862,18 +2588,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.vendido ?? value;
@@ -1890,17 +2606,24 @@ export default function ClienteCreateForm(props) {
       ></SwitchField>
       <TextField
         label="Precio venta"
-        isRequired={false}
-        isReadOnly={false}
         type="number"
         step="any"
         value={precioVenta}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1926,18 +2649,8 @@ export default function ClienteCreateForm(props) {
               precioVenta: value,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.precioVenta ?? value;
@@ -1954,13 +2667,22 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Notas venta"
-        isRequired={false}
-        isReadOnly={false}
         value={notasVenta}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -1986,18 +2708,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta: value,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.notasVenta ?? value;
@@ -2014,14 +2726,23 @@ export default function ClienteCreateForm(props) {
       ></TextField>
       <TextField
         label="Fecha venta"
-        isRequired={false}
-        isReadOnly={false}
         type="date"
         value={fechaVenta}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -2047,18 +2768,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta: value,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.fechaVenta ?? value;
@@ -2073,192 +2784,24 @@ export default function ClienteCreateForm(props) {
         hasError={errors.fechaVenta?.hasError}
         {...getOverrideProps(overrides, "fechaVenta")}
       ></TextField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID: value,
-              alerta,
-              notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.clienteID ?? value;
-          }
-          setClienteID(value);
-          setCurrentClienteIDValue(undefined);
-        }}
-        currentFieldValue={currentClienteIDValue}
-        label={"Cliente id"}
-        items={clienteID ? [clienteID] : []}
-        hasError={errors?.clienteID?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("clienteID", currentClienteIDValue)
-        }
-        errorMessage={errors?.clienteID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.clienteID(
-                clienteRecords.find((r) => r.id === value)
-              )
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentClienteIDDisplayValue(
-            value
-              ? getDisplayValue.clienteID(
-                  clienteRecords.find((r) => r.id === value)
-                )
-              : ""
-          );
-          setCurrentClienteIDValue(value);
-        }}
-        inputFieldRef={clienteIDRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Cliente id"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Cliente"
-          value={currentClienteIDDisplayValue}
-          options={clienteRecords
-            .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
-            )
-            .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.clienteID?.(r),
-            }))}
-          onSelect={({ id, label }) => {
-            setCurrentClienteIDValue(id);
-            setCurrentClienteIDDisplayValue(label);
-            runValidationTasks("clienteID", label);
-          }}
-          onClear={() => {
-            setCurrentClienteIDDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.clienteID?.hasError) {
-              runValidationTasks("clienteID", value);
-            }
-            setCurrentClienteIDDisplayValue(value);
-            setCurrentClienteIDValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("clienteID", currentClienteIDValue)}
-          errorMessage={errors.clienteID?.errorMessage}
-          hasError={errors.clienteID?.hasError}
-          ref={clienteIDRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "clienteID")}
-        ></Autocomplete>
-      </ArrayField>
-      <SwitchField
-        label="Alerta"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={alerta}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta: value,
-              notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.alerta ?? value;
-          }
-          if (errors.alerta?.hasError) {
-            runValidationTasks("alerta", value);
-          }
-          setAlerta(value);
-        }}
-        onBlur={() => runValidationTasks("alerta", alerta)}
-        errorMessage={errors.alerta?.errorMessage}
-        hasError={errors.alerta?.hasError}
-        {...getOverrideProps(overrides, "alerta")}
-      ></SwitchField>
       <TextField
         label="Notas"
-        isRequired={false}
-        isReadOnly={false}
         value={notas}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              nombre,
+              apellido1,
+              apellido2,
+              email,
+              telefono,
+              dni,
+              Coches,
+              ciudad,
+              calle,
+              codigoPostal,
+              alerta,
               matricula,
               marca,
               modelo,
@@ -2284,18 +2827,8 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas: value,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
+              clienteID,
             };
             const result = onChange(modelFields);
             value = result?.notas ?? value;
@@ -2310,419 +2843,38 @@ export default function ClienteCreateForm(props) {
         hasError={errors.notas?.hasError}
         {...getOverrideProps(overrides, "notas")}
       ></TextField>
-      <TextField
-        label="Nombre"
-        value={nombre}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-              nombre: value,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.nombre ?? value;
-          }
-          if (errors.nombre?.hasError) {
-            runValidationTasks("nombre", value);
-          }
-          setNombre(value);
+      <Autocomplete
+        label="Label"
+        options={clienteRecords
+          .filter(
+            (r, i, arr) => arr.findIndex((member) => member?.id === r?.id) === i
+          )
+          .map((r) => ({
+            id: r?.id,
+            label: getDisplayValue.clienteID?.(r),
+          }))}
+        onSelect={({ id, label }) => {
+          setClienteID(id);
+          runValidationTasks("clienteID", id);
         }}
-        onBlur={() => runValidationTasks("nombre", nombre)}
-        errorMessage={errors.nombre?.errorMessage}
-        hasError={errors.nombre?.hasError}
-        {...getOverrideProps(overrides, "nombre")}
-      ></TextField>
-      <TextField
-        label="Apellido1"
-        value={apellido1}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-              nombre,
-              apellido1: value,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.apellido1 ?? value;
-          }
-          if (errors.apellido1?.hasError) {
-            runValidationTasks("apellido1", value);
-          }
-          setApellido1(value);
+        onClear={() => {
+          setClienteID("");
         }}
-        onBlur={() => runValidationTasks("apellido1", apellido1)}
-        errorMessage={errors.apellido1?.errorMessage}
-        hasError={errors.apellido1?.hasError}
-        {...getOverrideProps(overrides, "apellido1")}
-      ></TextField>
-      <TextField
-        label="Apellido2"
-        value={apellido2}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-              nombre,
-              apellido1,
-              apellido2: value,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.apellido2 ?? value;
-          }
-          if (errors.apellido2?.hasError) {
-            runValidationTasks("apellido2", value);
-          }
-          setApellido2(value);
-        }}
-        onBlur={() => runValidationTasks("apellido2", apellido2)}
-        errorMessage={errors.apellido2?.errorMessage}
-        hasError={errors.apellido2?.hasError}
-        {...getOverrideProps(overrides, "apellido2")}
-      ></TextField>
-      <TextField
-        label="Email"
-        value={email}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email: value,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.email ?? value;
-          }
-          if (errors.email?.hasError) {
-            runValidationTasks("email", value);
-          }
-          setEmail(value);
-        }}
-        onBlur={() => runValidationTasks("email", email)}
-        errorMessage={errors.email?.errorMessage}
-        hasError={errors.email?.hasError}
-        {...getOverrideProps(overrides, "email")}
-      ></TextField>
-      <TextField
-        label="Telefono"
-        value={telefono}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono: value,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.telefono ?? value;
-          }
-          if (errors.telefono?.hasError) {
-            runValidationTasks("telefono", value);
-          }
-          setTelefono(value);
-        }}
-        onBlur={() => runValidationTasks("telefono", telefono)}
-        errorMessage={errors.telefono?.errorMessage}
-        hasError={errors.telefono?.hasError}
-        {...getOverrideProps(overrides, "telefono")}
-      ></TextField>
-      <TextField
-        label="Dni"
-        value={dni}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni: value,
-              ciudad,
-              calle,
-              codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.dni ?? value;
-          }
-          if (errors.dni?.hasError) {
-            runValidationTasks("dni", value);
-          }
-          setDni(value);
-        }}
-        onBlur={() => runValidationTasks("dni", dni)}
-        errorMessage={errors.dni?.errorMessage}
-        hasError={errors.dni?.hasError}
-        {...getOverrideProps(overrides, "dni")}
-      ></TextField>
-      <TextField
-        label="Ciudad"
-        value={ciudad}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
               nombre,
               apellido1,
               apellido2,
               email,
               telefono,
               dni,
-              ciudad: value,
+              Coches,
+              ciudad,
               calle,
               codigoPostal,
-            };
-            const result = onChange(modelFields);
-            value = result?.ciudad ?? value;
-          }
-          if (errors.ciudad?.hasError) {
-            runValidationTasks("ciudad", value);
-          }
-          setCiudad(value);
-        }}
-        onBlur={() => runValidationTasks("ciudad", ciudad)}
-        errorMessage={errors.ciudad?.errorMessage}
-        hasError={errors.ciudad?.hasError}
-        {...getOverrideProps(overrides, "ciudad")}
-      ></TextField>
-      <TextField
-        label="Calle"
-        value={calle}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
+              alerta,
               matricula,
               marca,
               modelo,
@@ -2748,90 +2900,23 @@ export default function ClienteCreateForm(props) {
               precioVenta,
               notasVenta,
               fechaVenta,
-              clienteID,
-              alerta,
               notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle: value,
-              codigoPostal,
+              clienteID: value,
             };
             const result = onChange(modelFields);
-            value = result?.calle ?? value;
+            value = result?.clienteID ?? value;
           }
-          if (errors.calle?.hasError) {
-            runValidationTasks("calle", value);
+          if (errors.clienteID?.hasError) {
+            runValidationTasks("clienteID", value);
           }
-          setCalle(value);
+          setClienteID(value);
         }}
-        onBlur={() => runValidationTasks("calle", calle)}
-        errorMessage={errors.calle?.errorMessage}
-        hasError={errors.calle?.hasError}
-        {...getOverrideProps(overrides, "calle")}
-      ></TextField>
-      <TextField
-        label="Codigo postal"
-        value={codigoPostal}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              matricula,
-              marca,
-              modelo,
-              color,
-              kilometros,
-              combustible,
-              cambio,
-              anio,
-              potencia,
-              cc,
-              localidadVendedor,
-              nifVendedor,
-              numeroFactura,
-              numeroFacturaVenta,
-              precioCompra,
-              fechaCompra,
-              nombreVendedor,
-              direccionVendedor,
-              telefonoVendedor,
-              precioVentaPublico,
-              precioReparaciones,
-              vendido,
-              precioVenta,
-              notasVenta,
-              fechaVenta,
-              clienteID,
-              alerta,
-              notas,
-              nombre,
-              apellido1,
-              apellido2,
-              email,
-              telefono,
-              dni,
-              ciudad,
-              calle,
-              codigoPostal: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.codigoPostal ?? value;
-          }
-          if (errors.codigoPostal?.hasError) {
-            runValidationTasks("codigoPostal", value);
-          }
-          setCodigoPostal(value);
-        }}
-        onBlur={() => runValidationTasks("codigoPostal", codigoPostal)}
-        errorMessage={errors.codigoPostal?.errorMessage}
-        hasError={errors.codigoPostal?.hasError}
-        {...getOverrideProps(overrides, "codigoPostal")}
-      ></TextField>
+        onBlur={() => runValidationTasks("clienteID", clienteID)}
+        errorMessage={errors.clienteID?.errorMessage}
+        hasError={errors.clienteID?.hasError}
+        labelHidden={false}
+        {...getOverrideProps(overrides, "clienteID")}
+      ></Autocomplete>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
