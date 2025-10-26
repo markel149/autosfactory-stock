@@ -9,6 +9,8 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import LightModeIcon from '@mui/icons-material/LightMode'
@@ -41,6 +43,25 @@ export default function App() {
     localStorage.setItem('theme', mode)
   }, [mode])
 
+  // tabs state and random texts for each tab
+  const [tab, setTab] = useState(0)
+  const [tabTexts, setTabTexts] = useState(['', ''])
+
+  const samples = [
+    'Texto aleatorio: velocidad, estilo y pasión.',
+    'Texto aleatorio: gestión de flotas y mantenimiento.',
+    'Texto aleatorio: clientes satisfechos hacen crecer el negocio.',
+    'Texto aleatorio: estadísticas recientes muestran crecimiento.',
+    'Texto aleatorio: optimiza tus procesos con data-driven decisions.',
+  ]
+
+  const randText = () => samples[Math.floor(Math.random() * samples.length)]
+
+  // generate initial random texts for both tabs
+  useEffect(() => {
+    setTabTexts([randText(), randText()])
+  }, [])
+
   // Add a lightweight body class so global CSS can react to light/dark mode
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -71,7 +92,7 @@ export default function App() {
           <AppBar position="static">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                autosfactory-stock
+                autosfactory
               </Typography>
               <IconButton color="inherit" onClick={() => setMode((m) => (m === 'dark' ? 'light' : 'dark'))}>
                 {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
@@ -103,15 +124,30 @@ export default function App() {
     )
   }
 
+  // TabPanel helper
+  function TabPanel({ children, value, index }) {
+    return (
+      <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} aria-labelledby={`tab-${index}`}>
+        {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
+      </div>
+    )
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              autosfactory-stock
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1 }}>
+              <Typography variant="h6" component="div">
+                autosfactory
+              </Typography>
+              <Tabs value={tab} onChange={(e, v) => setTab(v)} aria-label="coches-clientes-tabs" textColor="inherit" sx={{ ml: 2 }}>
+                <Tab label="Coches" id="tab-0" />
+                <Tab label="Clientes" id="tab-1" />
+              </Tabs>
+            </Box>
             <IconButton color="inherit" onClick={() => setMode((m) => (m === 'dark' ? 'light' : 'dark'))}>
               {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
@@ -131,13 +167,16 @@ export default function App() {
 
         <Container maxWidth="md">
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h4" gutterBottom>
-              Bienvenido, {user.displayName || user.email}
-            </Typography>
-
             <Box sx={{ mt: 2 }}>
-              <Typography variant="h6">Home</Typography>
-              <Typography>Contenido protegido visible solo tras iniciar sesión.</Typography>
+              <TabPanel value={tab} index={0}>
+                <Typography variant="h6">Coches</Typography>
+                <Typography>{tabTexts[0]}</Typography>
+              </TabPanel>
+
+              <TabPanel value={tab} index={1}>
+                <Typography variant="h6">Clientes</Typography>
+                <Typography>{tabTexts[1]}</Typography>
+              </TabPanel>
             </Box>
           </Box>
         </Container>
